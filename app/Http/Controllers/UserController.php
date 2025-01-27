@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
 
@@ -33,16 +35,35 @@ class UserController extends Controller
     function users_store(Request $request)
     {
         
-        $user = User::insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            
-
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8', // Ensure password confirmation is checked
+            'role' => 'required'
         ]);
-
-        $user->syncRoles($request->role);
-        //return redirect()->route("users");
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+        }
+        
+        try {
+            DB::transaction(function () use($request) {
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+                // dd($request->role);
+                $user->syncRoles($request->role); 
+            });
+            return redirect()->route("users");
+            //code...
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     function users_delete($user_id)
