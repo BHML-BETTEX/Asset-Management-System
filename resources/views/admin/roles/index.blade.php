@@ -30,7 +30,9 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $role->name }}</td>
                                         <td>{{ $role->email }}</td>
-                                        <td></td>
+                                        <td>
+                                            
+                                        </td>
                                         <td>
                                             <button class="border-0 bg-white"><a class="text-primary" href="{{route('roles_edit', $role->id)}}"><i
                                                         class="fa fa-edit " style="font-size:20px;"></a></i></button>

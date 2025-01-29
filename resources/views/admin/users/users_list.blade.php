@@ -30,7 +30,11 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td></td>
+                                    <td>
+                                        @foreach ($user->getRoleNames() as $role)
+                                            <button class="btn btn-success btn-sm">{{$role}}</button>
+                                        @endforeach
+                                    </td>
                                     <td><a href="{{ route('users.delete', $user->id) }}" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>

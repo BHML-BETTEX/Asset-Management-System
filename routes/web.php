@@ -122,7 +122,6 @@ Route::get('/store/status/{stores_id}', [StoreController::class, 'store_status']
 Route::get('/store/invoice/{stores_id}', [StoreController::class, 'invoice'])->name('invoice');
 Route::get('/store/search', [StoreController::class, 'store_search'])->name('store_search');
 Route::get('/history', [StoreController::class, 'history'])->name('history');
-Route::get('/history/rr', [StoreController::class, 'history_rr'])->name('history_rr');
 
 
 
