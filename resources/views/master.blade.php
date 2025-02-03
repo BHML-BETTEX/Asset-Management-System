@@ -99,7 +99,9 @@
                                 </li>
                                 <li><a><i class="fa fa-clone"></i>Permision <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
+                                        @can('role-list')
                                         <li><a href="{{route('roles.index')}}">Manage Role</a></li>
+                                        @endcan
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
                                     </ul>
                                 </li>
