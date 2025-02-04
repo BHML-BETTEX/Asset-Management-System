@@ -16,7 +16,7 @@
                         <form action="" method="GET">
                             <div class="input-group">
                                 <input type="search" class="form-control" name="search" placeholder="Search for..."
-                                    value={{ $search }}>
+                                    value={{ request('search') }}>
                                 <span class="input-group-btn">
                                     <button class="btn btn-secondary" type="submit">Go!</button>
                                 </span>

@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Mail_pass extends Model
 {
     use HasFactory;
+    protected $fillable = ['display_name', 'mail_address', 'password', 'company', 'others'];
 }

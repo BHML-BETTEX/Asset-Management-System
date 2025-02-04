@@ -1,20 +1,44 @@
 @extends('master')
 @section('content')
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-        data-whatever="@mdo">Add</button>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left p-1">
+                <h4 class="text-white">Computer password List</h4>
+            </div>
+            <div class="title_right">
+                <div class="">
+                    <div class= "col-md-6">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm1">
+                            Add
+                        </button>
+                    </div>
+                    <div class= "col-md-6 top_search">
+                        <form action="" method="GET">
+                            <div class="input-group">
+                                <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                    value={{ $search }}>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="submit">Go!</button>
+                                </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <!--First Model-->
+    <div class="modal fade" id="modalForm1" tabindex="-1" aria-labelledby="modalForm1Label" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="modalForm1Label">Add Info</h5>
+                    <button type="button" class="btn-close btn-border-none" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('mail_pass_store')}}" Method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('mail_pass_store') }}" Method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Display Name</label>
@@ -22,42 +46,44 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Mail Address</label>
-                            <input class="form-control" name="mail_address"></input>
+                            <input class="form-control" type="mail" name="mail_address" required></input>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Password</label>
-                            <input class="form-control" name="password" required></input>
+                            <input class="form-control" type="password" name="password" required></input>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Company</label>
-                            <input class="form-control" type="text" name="company"></input>
+                            <label for="form_label">Company </span><a class="text-success" href=""><i
+                                        class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                            <select id="form_need" name="company" class="form-control" required>
+                                <option value="" selected disabled>--Select Your
+                                    Issue--</option>
+                                @foreach ($all_company as $all_company)
+                                    <option value="{{ $all_company->company }}">
+                                        {{ $all_company->company }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Note</label>
-                            <input class="form-control" type="note" name="company" ></input>
+                            <input class="form-control" type="note" name="others"></input>
                         </div>
                         <button class="btn btn-primary">Submit</button>
+                        
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!--Modal end-->
+    <!--First Modal end-->
 
     <!--display form start-->
 
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h3>Mail Password List</h3>
-                </div>
-                @if (session('delete_employee'))
-                    <div class="alert alert-success">{{ session('delete_employee') }}</div>
+                @if (session('delete_mail'))
+                    <div class="alert alert-success">{{ session('delete_mail') }}</div>
                 @endif
                 <div class="card-body">
                     <table class="table table-striped table table-bordered ">
@@ -73,28 +99,32 @@
                             </tr>
                         </thead>
                         <thead>
-                        @foreach ($Mail_pass as $key => $Mail_pass)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $Mail_pass->display_name }}</td>
-                                <td>{{ $Mail_pass->mail_address }}</td>
-                                <td>{{ $Mail_pass->password }}</td>
-                                <td>{{ $Mail_pass->company }}</td>
-                                <td>{{ $Mail_pass->others}}</td>
-                                <td>
-                                    <button class="border-0 bg-white"><a class="text-primary" href=""><i
+                            @foreach ($Mail_pass as $key => $Mail_pass)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $Mail_pass->display_name }}</td>
+                                    <td>{{ $Mail_pass->mail_address }}</td>
+                                    <td>{{ $Mail_pass->password }}</td>
+                                    <td>{{ $Mail_pass->company }}</td>
+                                    <td>{{ $Mail_pass->others }}</td>
+                                    <td>
+                                        <button class="border-0  bg-white"><a class="text-primary"
+                                            href="{{ route('mail_pass_edit', $Mail_pass->id) }}"><i
                                                 class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                    <button class="border-0  bg-white"><a class="text-danger" href=""><i
-                                                class="fa fa-trash " style="font-size:20px;"></a></i></button>
-                                </td>
-                            </tr>
-                        @endforeach
+                                        <button class="border-0  bg-white"><a class="text-danger"
+                                                href="{{ route('mail_pass_delete', $Mail_pass->id) }}"><i
+                                                    class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </thead>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Ajax code -->
 @endsection

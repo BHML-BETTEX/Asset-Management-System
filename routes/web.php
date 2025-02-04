@@ -130,17 +130,26 @@ Route::get('/history', [StoreController::class, 'history'])->name('history');
 Route::get('/computer_pass', [PasswordController::class, 'computer_pass'])->name('computer_pass');
 Route::post('/computer_pass/store', [PasswordController::class, 'computer_pass_store'])->name('computer_pass_store');
 Route::get('/computer_pass/delete/{id}', [PasswordController::class, 'computer_pass_delete'])->name('computer_pass_delete');
+Route::get('/search', [PasswordController::class, 'search'])->name('search');
+
 Route::get('/mail_pass', [PasswordController::class, 'mail_pass'])->name('mail_pass');
 Route::post('/mail_pass/store', [PasswordController::class, 'mail_pass_store'])->name('mail_pass_store');
+Route::get('/mail_pass/delete/{mail_id}', [PasswordController::class, 'mail_pass_delete'])->name('mail_pass_delete');
+Route::get('/mail_pass/edit/{mail_id}', [PasswordController::class, 'mail_pass_edit'])->name('mail_pass_edit');
+Route::post('/mail_pass/update', [PasswordController::class, 'mail_pass_update'])->name('mail_pass_update');
+
 Route::get('/camera_pass', [PasswordController::class, 'camera_pass'])->name('camera_pass');
 Route::post('/camera_pass/store', [PasswordController::class, 'camera_pass_store'])->name('camera_pass_store');
 Route::get('/camera_pass/delete/{camera_id}', [PasswordController::class, 'camera_pass_delete'])->name('camera_pass_delete');
+
 Route::get('/internet_pass', [PasswordController::class, 'internet_pass'])->name('internet_pass');
 Route::post('/internet_pass/store', [PasswordController::class, 'internet_pass_store'])->name('internet_pass_store');
 Route::get('/internet_pass/delete/{internet_id}', [PasswordController::class, 'internet_pass_delete'])->name('internet_pass_delete');
+
 Route::get('/ding_pass', [PasswordController::class, 'ding_pass'])->name('ding_pass');
 Route::post('/ding_pass/store', [PasswordController::class, 'ding_pass_store'])->name('ding_pass_store');
 Route::get('/ding_pass/delete/{ding_id}', [PasswordController::class, 'ding_pass_delete'])->name('ding_pass_delete');
+
 Route::get('/others_pass', [PasswordController::class, 'others_pass'])->name('others_pass');
 
 //employee Managment

@@ -1,7 +1,31 @@
 @extends('master')
 @section('content')
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-        data-whatever="@mdo">Add</button>
+
+        <div class="">
+            <div class="page-title">
+                <div class="title_left p-1">
+                    <h4 class="text-white">Computer password List</h4>
+                </div>
+                <div class="title_right">
+                    <div class="">
+                        <div class= "col-md-6">
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
+                                data-whatever="@mdo">Add</button>
+                        </div>
+                        <div class= "col-md-6 top_search">
+                            <form action="" method="GET">
+                                <div class="input-group">
+                                    <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                        value={{ $search }}>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-secondary" type="submit">Go!</button>
+                                    </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -49,9 +73,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h3>Computer Password List</h3>
-                </div>
+
                 @if (session('delete_employee'))
                     <div class="alert alert-success">{{ session('delete_employee') }}</div>
                 @endif
@@ -69,7 +91,7 @@
                             </tr>
                         </thead>
                         <thead>
-                            @foreach ($computer_pass as $key => $computer_pass)
+                            @foreach ($computer_password as $key => $computer_pass)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $computer_pass->asset_tag }}</td>
