@@ -25,6 +25,8 @@ class StoreController extends Controller
 {
     function store(Request $request)
     {
+        $role = auth()->user()->roles[0];
+        
         $search = $request['search'] ?? "";
         if($search != ""){
             $stores = Store::where('products_id', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")
@@ -35,7 +37,18 @@ class StoreController extends Controller
             ->get();
         }
         else{
-            $stores = Store::all();
+            $stores = Store::where(function($query) use($role){
+                // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));
+                $companies = [];
+                
+                $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
+                $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
+                $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
+                
+                $query->whereIn('company', $companies);
+
+                return $query;
+            })->get();
         }
 
         

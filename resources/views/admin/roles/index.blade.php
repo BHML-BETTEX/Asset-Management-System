@@ -34,10 +34,16 @@
                                             
                                         </td>
                                         <td>
+                                            @can('role-edit')
                                             <button class="border-0 bg-white"><a class="text-primary" href="{{route('roles_edit', $role->id)}}"><i
                                                         class="fa fa-edit " style="font-size:20px;"></a></i></button>
+                                            @endcan
+
+                                            @can('role-delete')
+                                                
                                             <button class="border-0 bg-white"><a class="text-danger" href="{{route('destroy', $role->id)}}"><i
                                                         class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                            @endcan
 
                                         </td>
                                     </tr>

@@ -44,12 +44,13 @@ Route::post('/name/change', [UserController::class, 'name_change'])->name('name.
 Route::post('/password/change', [UserController::class, 'password_change'])->name('password.change');
 
 //Role
-Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index');
-Route::get('/roles/create', [RoleController::class, 'roles_create'])->name('roles.create');
-Route::post('/roles/store', [RoleController::class, 'roles_store'])->name('roles_store');
-Route::get('/roles/edit/{role_id}', [RoleController::class, 'edit'])->name('roles_edit');
-Route::post('/roles/update', [RoleController::class, 'roles_update'])->name('roles_update');
-Route::get('/roles/destroy/{role_id}', [RoleController::class, 'destroy'])->name('destroy');
+
+Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index')->middleware('role_or_permission:admin|role-list');
+Route::get('/roles/create', [RoleController::class, 'roles_create'])->name('roles.create')->middleware('role_or_permission:admin|role-create');
+Route::post('/roles/store', [RoleController::class, 'roles_store'])->name('roles_store')->middleware('role_or_permission:admin|role-create');
+Route::get('/roles/edit/{role_id}', [RoleController::class, 'edit'])->name('roles_edit')->middleware(['role_or_permission:admin|role-edit']);
+Route::put('/roles/update/{id}', [RoleController::class, 'roles_update'])->name('roles_update')->middleware('role_or_permission:admin|role-edit');
+Route::get('/roles/destroy/{role_id}', [RoleController::class, 'destroy'])->name('destroy')->middleware('role_or_permission:admin|role-delete');
 
 
 

@@ -15,10 +15,21 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private $role;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->role = auth()->user()->roles[0];
+            return $next($request);
+        });
+    }
+    
     public function roles()
     {   
-       $roles =Role::all();
-       return view("admin.roles.index", compact("roles"));
+        $roles = Role::all();
+        return view("admin.roles.index", compact("roles"));
     }
 
     /**
