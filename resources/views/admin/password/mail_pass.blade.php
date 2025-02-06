@@ -3,12 +3,12 @@
     <div class="">
         <div class="page-title">
             <div class="title_left p-1">
-                <h4 class="text-white">Computer password List</h4>
+                <h4 class="text-white">Mail password List</h4>
             </div>
             <div class="title_right">
                 <div class="">
                     <div class= "col-md-6">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm1">
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalForm1">
                             Add
                         </button>
                     </div>

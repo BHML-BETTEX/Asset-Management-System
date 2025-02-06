@@ -27,13 +27,13 @@
 
                     <div class="mb-3">
                         <label for="" class="form-label">Password</label>
-                        <input type="hidden" value="{{ $mail_info->id }}" name="mail_password">
+                        <input type="hidden" value="{{ $mail_info->id }}" name="pass">
                         <input  class="form-control" name="password" value ={{$mail_info->password}}>
                     </div>
 
                     <div class="mb-3">
                         <label for="" class="form-label">Others</label>
-                        <input type="hidden" value="{{ $mail_info->id }}" name="mail_others">
+                        <input type="hidden" value="{{ $mail_info->id }}" name="pass_others">
                         <input  class="form-control" name="others" value ={{$mail_info->others}}>
                     </div>
 

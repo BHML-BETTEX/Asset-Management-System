@@ -1,7 +1,30 @@
 @extends('master')
 @section('content')
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-        data-whatever="@mdo">Add</button>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left p-1">
+                <h4 class="text-white">Computer password List</h4>
+            </div>
+            <div class="title_right">
+                <div class="">
+                    <div class= "col-md-6">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
+                            data-whatever="@mdo">Add</button>
+                    </div>
+                    <div class= "col-md-6 top_search">
+                        <form action="" method="GET">
+                            <div class="input-group">
+                                <input type="search" class="form-control" name="search" placeholder="Search for..." value={{ $search }}>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="submit">Go!</button>
+                                </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -14,7 +37,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('camera_pass_store')}}" Method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('camera_pass_store') }}" Method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Camera No</label>
@@ -29,12 +52,20 @@
                             <input class="form-control" name="password" required></input>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Company</label>
-                            <input class="form-control" type="text" name="company"></input>
+                            <label for="form_label">Company </span><a class="text-success" href=""><i
+                                        class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                            <select id="form_need" name="company" class="form-control" required>
+                                <option value="" selected disabled>--Select Your
+                                    Issue--</option>
+                                @foreach ($all_company as $all_company)
+                                    <option value="{{ $all_company->company }}">
+                                        {{ $all_company->company }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Note</label>
-                            <input class="form-control" type="text" name="others" ></input>
+                            <input class="form-control" type="text" name="others"></input>
                         </div>
                         <button class="btn btn-primary">Submit</button>
                     </form>
@@ -53,9 +84,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h3>Camera Password List</h3>
-                </div>
+
                 @if (session('delete_employee'))
                     <div class="alert alert-success">{{ session('delete_employee') }}</div>
                 @endif
@@ -73,22 +102,23 @@
                             </tr>
                         </thead>
                         <thead>
-                        @foreach ($camera_pass_info as $key => $camera_pass_info)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $camera_pass_info->camera_no }}</td>
-                                <td>{{ $camera_pass_info->possition }}</td>
-                                <td>{{ $camera_pass_info->password }}</td>
-                                <td>{{ $camera_pass_info->company }}</td>
-                                <td>{{ $camera_pass_info->others}}</td>
-                                <td>
-                                    <button class="border-0 bg-white"><a class="text-primary" href=""><i
-                                                class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                    <button class="border-0  bg-white"><a class="text-danger" href="{{route ('camera_pass_delete', $camera_pass_info->id)}}"><i
-                                                class="fa fa-trash " style="font-size:20px;"></a></i></button>
-                                </td>
-                            </tr>
-                        @endforeach
+                            @foreach ($camera_pass_info as $key => $camera_pass_info)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $camera_pass_info->camera_no }}</td>
+                                    <td>{{ $camera_pass_info->possition }}</td>
+                                    <td>{{ $camera_pass_info->password }}</td>
+                                    <td>{{ $camera_pass_info->company }}</td>
+                                    <td>{{ $camera_pass_info->others }}</td>
+                                    <td>
+                                        <button class="border-0 bg-white"><a class="text-primary" href="{{route('camera_edit',$camera_pass_info->id) }}"><i
+                                                    class="fa fa-edit " style="font-size:20px;"></a></i></button>
+                                        <button class="border-0  bg-white"><a class="text-danger"
+                                                href="{{ route('camera_pass_delete', $camera_pass_info->id) }}"><i
+                                                    class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </thead>
                     </table>
                 </div>

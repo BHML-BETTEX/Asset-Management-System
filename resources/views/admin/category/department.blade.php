@@ -33,7 +33,6 @@
             </div>
           </div>
         </div>
-       
     </div>
     <div class="col-lg-4">
         <div class="card p-1" >
@@ -49,7 +48,7 @@
                                 @error('department_name')
                                 <strong>{{$message}}</strong>
                                 @enderror
-                    </div>
+                        </div>
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>

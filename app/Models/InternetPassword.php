@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class InternetPassword extends Model
 {
+    protected $fillable = ['internet_name', 'position', 'password','note'];
     use HasFactory;
 }

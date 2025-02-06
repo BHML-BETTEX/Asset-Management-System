@@ -102,9 +102,19 @@ class PasswordController extends Controller
     //camera passwor start..
 
     function camera_pass(Request $request){
-        $camera_pass_info = Camera_pass::all();
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $camera_pass_info = Camera_pass::where('camera_no', 'LIKE',"%$search" )-> orwhere('company', 'LIKE',"%$search")->orwhere('possition', 'LIKE',"%$search")->get();
+        }
+        else{
+            $camera_pass_info = Camera_pass::all();
+        }    
+        
+        $all_company = Company::all();
         return view('admin.password.camera_pass',[
             'camera_pass_info'=>$camera_pass_info,
+            'all_company'=>$all_company,
+            'search'=>$search,
         ]);
     }
 
@@ -126,12 +136,38 @@ class PasswordController extends Controller
         return back();
     }
 
+    function camera_edit($camera_id){
+        $camera_info = Camera_pass::find($camera_id);
+        return view('admin.password.camera_edit',[
+            'camera_info'=>$camera_info,
+        ]);
+    }
+
+    function camera_update(Request $request){
+        Camera_pass::find($request->camera_id)->update([
+            'camera_no' => $request->camera_no,
+            'possition' => $request->possition,
+            'password' => $request->password,
+            'others' => $request->others,
+        ]);
+    }
+
     //camera password end..
 
-    function internet_pass(){
-        $internet_pass_info = InternetPassword::all();
+    function internet_pass(Request $request){
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $internet_pass_info = InternetPassword::where('internet_name', 'LIKE',"%$search" )-> orwhere('position', 'LIKE',"%$search")->orwhere('company', 'LIKE',"%$search")->get();
+        }
+        else{
+            $internet_pass_info = InternetPassword::all();
+        }    
+ 
+        $all_company = Company::all();
         return view('admin.password.internet_pass',[
             'internet_pass_info'=>$internet_pass_info,
+            'all_company' => $all_company,
+            'search'=>$search,
         ]);
     }
 
@@ -153,10 +189,47 @@ class PasswordController extends Controller
         return back();
     }
 
-    function ding_pass(){
-        $dingpass_info = DingPassword::all();
+    function internet_edit($internet_id){
+        $internet_pass_info = InternetPassword::find($internet_id);   
+        return view('admin.password.internet_edit',[
+            'internet_pass_info' => $internet_pass_info,
+        ]);
+    }
+
+    function internet_update(Request $request){
+        InternetPassword::find($request->internet_id)->update([
+            'internet_name'=>$request->internet_name,
+            'position'=>$request->position,
+            'password'=>$request->password,
+            'note'=>$request->note,
+            'others'=>$request->others,
+            'others1'=>$request->others1,
+        ]);
+        return back();
+    }
+
+
+
+    //Internet end
+
+
+    //Ding Start
+
+    function ding_pass(Request $request){
+
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $dingpass_info = DingPassword::where('display_name', 'LIKE',"%$search" )-> orwhere('mail_id', 'LIKE',"%$search")->orwhere('company', 'LIKE',"%$search")->get();
+        }
+        else{
+            $dingpass_info = DingPassword::all();
+        }
+        $all_company = Company::all();
+        
         return view('admin.password.ding_pass',[
             'dingpass_info'=>$dingpass_info,
+            'all_company'=> $all_company,
+            'search'=> $search,
         ]);
     }
 
@@ -179,6 +252,22 @@ class PasswordController extends Controller
         return back();
     }
 
+    function ding_edit($ding_id){
+        $dingpass_info = DingPassword::find($ding_id);
+        return view('admin.password.ding_edit',[
+            'dingpass_info'=>$dingpass_info,
+        ]);
+    }
+
+    function ding_update(Request $request){
+        DingPassword::find($request->ding_id)->update([
+            'display_name'=>$request->display_name,
+            'mail_id'=>$request->mail_id,
+            'phone'=>$request->phone,
+            'password'=>$request->password,
+            'note'=>$request->note,
+        ]);
+    }
 
     function others_pass(){
         return view('admin.password.others_pass');  

@@ -1,7 +1,31 @@
 @extends('master')
 @section('content')
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-        data-whatever="@mdo">Add</button>
+
+        <div class="">
+            <div class="page-title">
+                <div class="title_left p-1">
+                    <h4 class="text-white">Ding password List</h4>
+                </div>
+                <div class="title_right">
+                    <div class="">
+                        <div class= "col-md-6">
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
+                            data-whatever="@mdo">Add</button>
+                        </div>
+                        <div class= "col-md-6 top_search">
+                            <form action="" method="GET">
+                                <div class="input-group">
+                                    <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                    value={{ $search }} >
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-secondary" type="submit">Go!</button>
+                                    </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -18,11 +42,11 @@
                         @csrf
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Display Name</label>
-                            <input class="form-control" type="text" name="display_name"></input>
+                            <input class="form-control" type="text" name="display_name" required></input>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Mail Address</label>
-                            <input class="form-control" type="mail" name="mail_id"></input>
+                            <input class="form-control" type="mail" name="mail_id" required></input>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Phone</label>
@@ -33,8 +57,16 @@
                             <input class="form-control" type="text" name="password" required></input>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Company</label>
-                            <input class="form-control" type="text" name="company"></input>
+                            <label for="form_label">Company </span><a class="text-success" href=""><i
+                                        class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                            <select id="form_need" name="company" class="form-control" required>
+                                <option value="" selected disabled>--Select Your
+                                    Issue--</option>
+                                @foreach ($all_company as $all_company)
+                                    <option value="{{ $all_company->company }}">
+                                        {{ $all_company->company }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Note</label>
@@ -57,9 +89,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h3>Ding Password List</h3>
-                </div>
+
                 @if (session('delete_employee'))
                     <div class="alert alert-success">{{ session('delete_employee') }}</div>
                 @endif
@@ -89,7 +119,7 @@
                                     <td>{{ $dingpass_info->note }}</td>
                                     <td>
                                         <button class="border-0 bg-white"><a class="text-primary"
-                                                href=""><i class="fa fa-edit "
+                                                href="{{route('ding_edit', $dingpass_info->id)}}"><i class="fa fa-edit "
                                                     style="font-size:20px;"></a></i></button>
                                         <button class="border-0  bg-white"><a class="text-danger"
                                                 href="{{route('ding_pass_delete', $dingpass_info->id)}}"><i

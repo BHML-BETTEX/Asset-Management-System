@@ -142,14 +142,20 @@ Route::post('/mail_pass/update', [PasswordController::class, 'mail_pass_update']
 Route::get('/camera_pass', [PasswordController::class, 'camera_pass'])->name('camera_pass');
 Route::post('/camera_pass/store', [PasswordController::class, 'camera_pass_store'])->name('camera_pass_store');
 Route::get('/camera_pass/delete/{camera_id}', [PasswordController::class, 'camera_pass_delete'])->name('camera_pass_delete');
+Route::get('/camera_pass/edit/{camera_id}', [PasswordController::class, 'camera_edit'])->name('camera_edit');
+Route::post('/camera_pass/update', [PasswordController::class, 'camera_update'])->name('camera_update');
 
 Route::get('/internet_pass', [PasswordController::class, 'internet_pass'])->name('internet_pass');
 Route::post('/internet_pass/store', [PasswordController::class, 'internet_pass_store'])->name('internet_pass_store');
 Route::get('/internet_pass/delete/{internet_id}', [PasswordController::class, 'internet_pass_delete'])->name('internet_pass_delete');
+Route::get('/internet_pass/edit/{internet_id}', [PasswordController::class, 'internet_edit'])->name('internet_edit');
+Route::post('/internet_pass/update', [PasswordController::class, 'internet_update'])->name('internet_update');
 
 Route::get('/ding_pass', [PasswordController::class, 'ding_pass'])->name('ding_pass');
 Route::post('/ding_pass/store', [PasswordController::class, 'ding_pass_store'])->name('ding_pass_store');
 Route::get('/ding_pass/delete/{ding_id}', [PasswordController::class, 'ding_pass_delete'])->name('ding_pass_delete');
+Route::get('/ding_pass/edit/{ding_id}', [PasswordController::class, 'ding_edit'])->name('ding_edit');
+Route::post('/ding_pass/update', [PasswordController::class, 'ding_update'])->name('ding_update');
 
 Route::get('/others_pass', [PasswordController::class, 'others_pass'])->name('others_pass');
 
