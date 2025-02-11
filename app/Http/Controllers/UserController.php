@@ -10,7 +10,8 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UserExport;
 
 
 
@@ -101,5 +102,31 @@ class UserController extends Controller
         } else {
             return back()->with('wrong', 'Password Not Correct!');
         }
+    }
+
+
+    public function export(Request $request) 
+    {
+        if($request->type == "xlsx"){
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+        elseif($request->type == "csv"){
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        }
+        elseif($request->type == "xls"){
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        }
+        else{
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+
+        }
+        
+
+        $Filename = "users.$extension";
+        return Excel::download(new UserExport, $Filename, $exportFormat);
     }
 }

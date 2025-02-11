@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Store;
 
 use Illuminate\Http\Request;
 
@@ -23,7 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $stores =Store::all();
+        return view('home',[
+            'stores' => $stores,
+        ]);
     }
 
     public function master()

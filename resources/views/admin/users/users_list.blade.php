@@ -1,14 +1,40 @@
 @extends('master')
 
 @section('content')
-    <!-- Button trigger modal -->
-    <div class="row">
-        <div class="col-md-4">
-            <div class="row m-auto p-1">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left p-1">
                 <h4 class="text-white ">User List </h4>
             </div>
+            <div class="title_right">
+                <div class="">
+                    <div class="col-md-4">
+                        <form action="{{url('/users/export')}}" Method="GET">
+                            <div class="input-group">
+                                <select name="type" class="form-control">
+                                    <option value="">Select Type</option>
+                                    <option value="xlsx">XLSX</option>
+                                    <option value="csv">CSV</option>
+                                    <option value="xls">XLS</option>
+                                </select>
+                                <button type="submit" class="btn btn-success">Export</button>
+                            </div>  
+                        </form>
+                    </div>
+                    <div class= "col-md-6 top_search">
+                        <form action="" method="GET">
+                            <div class="input-group">
+                                <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                 >
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="submit">Go!</button>
+                                </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-
+    </div>
     
 
     <div class="container">

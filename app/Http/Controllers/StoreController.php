@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Image;
 use App\Models\Desktop;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\StoreExport;
 
 
 
@@ -302,6 +304,28 @@ class StoreController extends Controller
         return view('admin.store.history', [
             'issue_info' => $issue_info,
         ]);
+    }
+
+
+    function store_export(Request $request){
+        if ($request->type == "xlsx") {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($request->type == "csv") {
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        } elseif ($request->type == "xls") {
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+
+
+        $Filename = "assetlist-data.$extension";
+        return Excel::download(new StoreExport, $Filename, $exportFormat);
+
     }
 
 }

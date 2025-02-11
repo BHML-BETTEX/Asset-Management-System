@@ -8,8 +8,12 @@ use App\Models\Designation;
 use App\Models\Employee;
 use App\Models\ProductType;
 use Carbon\Carbon;
+use App\Exports\EmployeeDataExport;
 use Illuminate\Http\Request;
 use Image;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -150,6 +154,30 @@ class EmployeeController extends Controller
 
     
 
+public function export(Request $request) 
+{
+    if($request->type == "xlsx"){
+        $extension = "xlsx";
+        $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+    }
+    elseif($request->type == "csv"){
+        $extension = "csv";
+        $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+    }
+    elseif($request->type == "xls"){
+        $extension = "xls";
+        $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+    }
+    else{
+        $extension = "xlsx";
+        $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+
+    }
+    
+
+    $Filename = "employee-data.$extension";
+    return Excel::download(new EmployeeDataExport, $Filename, $exportFormat);
+}
 
 
 }

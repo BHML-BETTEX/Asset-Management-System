@@ -1,31 +1,42 @@
 @extends('master')
 
 @section('content')
-    <div class="">
-        <div class="page-title">
-            <div class="title_left p-1">
-                <h4 class="text-white">Employee List</h4>
-            </div>
-            <div class="title_right">
-                <div class="row">
-                    <div class= "col-md-4">
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
-                            data-whatever="@mdo">Add</button>
-                    </div>
-                    <div class= "col-md-6 top_search">
-                        <form action="" method="GET">
-                            <div class="input-group">
-                                <input type="search" class="form-control" name="search" placeholder="Search for..."
-                                    value={{ request('search') }}>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-secondary" type="submit">Go!</button>
-                                </span>
-                        </form>
-                    </div>
+<div class="container">
+    <div class="page-title">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="col-md-5 p-2">
+                    <h5 class="text-white">Employee Password List</h5>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
+                        data-whatever="@mdo"><span class="fa fa-plus"> Add</span></button>
+                </div>
+
+                <div class="col-md-4 top_search">
+                    <form action="" method="GET">
+                        <div class="input-group">
+                            <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                value="{{ $search }}">
+                            <button class="btn btn-secondary" type="submit">Go!</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-2 ">
+                    <form action="{{route('export')}}" method="GET">
+                        <div class="input-group">
+                            <select name="type" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="xlsx">XLSX</option>
+                                <option value="csv">CSV</option>
+                                <option value="xls">XLS</option>
+                            </select>
+                            <button type="submit" class="btn btn-success">Export</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
 
     <!--Modal Start-->
 
@@ -127,8 +138,6 @@
                                     <th scope="col">EMAIL</th>
                                     <th scope="col">PICTURE</th>
                                     <th scope="col">ACTION</th>
-                                    
-
                                 </tr>
                             </thead>
 
@@ -163,6 +172,8 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 
     <!-- Ajax code -->
 
