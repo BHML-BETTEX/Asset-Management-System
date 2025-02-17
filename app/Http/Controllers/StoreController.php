@@ -328,4 +328,13 @@ class StoreController extends Controller
 
     }
 
+    function store_transfer(){
+        $issued_products = Store::all();
+        $employee = Employee::all();
+        return view('admin.store.transfer',[
+            'issued_products'=>$issued_products,
+            'employee'=>$employee,
+        ]);
+    }
+
 }

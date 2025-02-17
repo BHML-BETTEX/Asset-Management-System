@@ -125,7 +125,7 @@ Route::get('/store/invoice/{stores_id}', [StoreController::class, 'invoice'])->n
 Route::get('/store/search', [StoreController::class, 'store_search'])->name('store_search');
 Route::get('/history', [StoreController::class, 'history'])->name('history');
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
-
+Route::get('/store/transfer', [StoreController::class, 'store_transfer'])->name('transfer');
 
 
 

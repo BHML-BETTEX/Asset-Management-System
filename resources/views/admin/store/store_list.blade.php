@@ -1,6 +1,5 @@
 @extends('master')
 @section('content')
-
     <div class="container">
         <div class="page-title">
             <div class="row ">
@@ -9,19 +8,21 @@
                         <h5 class="text-white">Product List</h5>
                     </div>
 
-                    <div class= "col-md-4">
+                    <div class= "col-md-5">
                         <button type="button" class="btn btn-info " data-toggle="modal" data-target="#exampleModal"
                             data-whatever="@mdo"><span class="fa fa-plus"> Add</span></button>
-                        <button type="button" class="btn btn-info"> <a href="{{ route('issue') }}"
-                                class="text-white"><span class="fa fa-mail-forward"> Issue</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="{{ route('issue') }}" class="text-white"><span
+                                    class="fa fa-mail-forward"> Issue</span></a></button>
                         <button type="button" class="btn btn-info"> <a href="{{ route('return') }}"
                                 class="text-white"><span class="fa fa-mail-reply"> Return</span></a></button>
-                        <button type="button" class="btn btn-info"> <a href=""
-                                class="text-white"><span class="fa fa-send"> Transfar</span></a></button>
-                        <button type="button" class="btn btn-info"> <a href=""
-                                class="text-white"><span class="fa fa-gears"> Maintenance</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="{{ route('transfer') }}" class="text-white"><span
+                                    class="fa fa-send"> Transfer</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="" class="text-white"><span
+                                    class="fa fa-gears"> Maintenance</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="" class="text-white"><span
+                                    class="fa fa-gears"> Store Return</span></a></button>
                     </div>
-                    <div class="col-md-4 top_search">
+                    <div class="col-md-3 top_search">
                         <form action="" method="GET">
                             <div class="input-group">
                                 <input type="search" class="form-control" name="search" placeholder="Search for..."
@@ -31,7 +32,7 @@
                         </form>
                     </div>
                     <div class="col-md-2 ">
-                        <form action="{{route('store_export')}}" method="GET">
+                        <form action="{{ route('store_export') }}" method="GET">
                             <div class="input-group">
                                 <select name="type" class="form-control">
                                     <option value="">Select Type</option>
