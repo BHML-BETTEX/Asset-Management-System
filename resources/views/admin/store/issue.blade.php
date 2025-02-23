@@ -51,13 +51,13 @@
                         <div class="input-group input-group-outline mb-3">
                             <input type="hidden" value="" name="designation_id">
                             <input type="text" class="form-control" value="" id="designation_id"
-                                name="designation_id" placeholder="designation" readonly>
+                                name="designation_id" placeholder="Designation" readonly >
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
                             <input type="hidden" value="" name="department_id">
                             <input type="text" class="form-control" value="" id="department_id"
-                                name="department_id" placeholder="department" readonly>
+                                name="department_id" placeholder="Department" readonly>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">

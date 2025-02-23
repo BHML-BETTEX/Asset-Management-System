@@ -52,6 +52,19 @@ class PasswordController extends Controller
         return back();
     }
 
+    function computer_pass_edit($id){
+       $com_pass_info = computer_pass::find($id);
+        return view('admin.password.computer_pass_edit',[
+            'com_pass_info' => $com_pass_info,
+        ]);
+    }
+
+    function computer_update(Request $request){
+        computer_pass::find($request->id)->update([
+            'password' => $request->password,
+        ]);
+    }
+
     //Mail Password Start
     function mail_pass(Request $request)
     {
@@ -100,14 +113,16 @@ class PasswordController extends Controller
 
     function mail_pass_update(Request $request)
     {
+        
         Mail_pass::find($request->mail_id)->update([
+            
             'display_name' => $request->display_name,
             'mail_address' => $request->mail_address,
             'password' => $request->password,
             'others' => $request->others,
 
         ]);
-        return back();
+        return redirect()->route('mail_pass');
     }
     //mail password end.
 
@@ -160,12 +175,15 @@ class PasswordController extends Controller
 
     function camera_update(Request $request)
     {
+       //dd($request->all());
         Camera_pass::find($request->camera_id)->update([
             'camera_no' => $request->camera_no,
             'possition' => $request->possition,
             'password' => $request->password,
             'others' => $request->others,
         ]);
+
+        return redirect()->route('camera_pass');
     }
 
     //camera password end..
@@ -216,7 +234,8 @@ class PasswordController extends Controller
     }
 
     function internet_update(Request $request)
-    {
+    {   
+        
         InternetPassword::find($request->internet_id)->update([
             'internet_name' => $request->internet_name,
             'position' => $request->position,
@@ -225,7 +244,7 @@ class PasswordController extends Controller
             'others' => $request->others,
             'others1' => $request->others1,
         ]);
-        return back();
+    return redirect()->route('internet_pass');
     }
 
 
@@ -291,6 +310,8 @@ class PasswordController extends Controller
             'password' => $request->password,
             'note' => $request->note,
         ]);
+
+        return redirect()->route('ding_pass');
     }
 
     function others_pass()

@@ -250,4 +250,17 @@ class CategoryController extends Controller
         return back()->with('comapny_delete', 'Company delete success');
      }
 
+
+     function search_by_id($company_id)
+     {
+         $company = Company::find($company_id);
+         $company_data = [
+            'id' => $company->id,
+             'company' => $company->company,
+             'description' => $company->description,
+         ];
+         $company = Company::find($company_id);
+         return response()->json(['data' => $company_data]);
+     }
+
 }

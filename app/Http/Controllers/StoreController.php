@@ -20,6 +20,11 @@ use App\Models\Desktop;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StoreExport;
+use App\Exports\TransferExport;
+use App\Models\Transfer;
+use App\Models\Maintenance;
+use App\Exports\MaintenanceExport;
+use App\Models\WastProduct;
 
 
 
@@ -230,6 +235,10 @@ class StoreController extends Controller
             'products_id' => $issued_products->products_id,
             'asset_type' =>$issued_products->rel_to_ProductType->product,
             'model'=>$issued_products->model,
+            'purchase_date'=>$issued_products->purchase_date,
+            'asset_sl_no'=>$issued_products->asset_sl_no,
+
+
         ];
         $issued_products = Store::find($store_id);
         return response()->json(['data' => $issued_products_data]);
@@ -278,7 +287,7 @@ class StoreController extends Controller
     //autofill start...
     function return_search_by_id($store_id)
     {
-        $return_products = DB::table('stores')->select('id', 'products_id', 'asset_type', 'model')->where('id', $store_id)->first();
+        $return_products = DB::table('stores')->select('id', 'products_id', 'asset_type', 'model', 'asset_sl_no')->where('id', $store_id)->first();
         
         return response()->json(['data' => $return_products]);
     }
@@ -330,11 +339,210 @@ class StoreController extends Controller
 
     function store_transfer(){
         $issued_products = Store::all();
-        $employee = Employee::all();
+        $companys = Company::all();
         return view('admin.store.transfer',[
             'issued_products'=>$issued_products,
-            'employee'=>$employee,
+            'companys'=>$companys,
+
         ]);
     }
+
+    function transfer_store(Request $request){
+        Transfer::insertGetId([
+            'asset_tag' => $request->asset_tag,
+            'asset_type' => $request->asset_type,
+            'model' => $request->model,
+            'company' => $request->company,
+            'description' => $request->description,
+            'note' => $request->note,
+            'transfer_date' => $request->transfer_date,
+        ]);
+        return redirect()->route('transfer_list');
+    }
+
+    function transfer_list(Request $request){
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $transer_data = Transfer::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('company', 'LIKE',"%$search")->get();
+        }
+        else{
+            $transer_data = Transfer::all();
+        }
+        
+        return view('admin.store.transfer.transfer_list',[
+            'transer_data' => $transer_data,
+            'search' => $search,
+        ]);
+    }
+
+    function transfer_export(Request $request){
+        if ($request->type == "xlsx") {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($request->type == "csv") {
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        } elseif ($request->type == "xls") {
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+
+
+        $Filename = "transer-data.$extension";
+        return Excel::download(new TransferExport, $Filename, $exportFormat);
+    }
+
+
+    //maintenance start...
+
+    function maintenance(){
+        $issued_products = Store::all();
+        return view('admin.store.maintenance.maintenance',[
+            'issued_products'=>$issued_products,
+
+        ]);
+    }
+
+
+    function maintenance_store(Request $request){
+        Maintenance::insertGetId([
+            'asset_tag' => $request->asset_tag,
+            'asset_type' => $request->asset_type,
+            'model' => $request->model,
+            'purchase_date' => $request->purchase_date,
+            'description' => $request->description,
+            'strat_date' => $request->strat_date,
+            'end_date' => $request->end_date,
+            'note' => $request->note,
+            'amount' => $request->amount,
+            'currency' => $request->currency,
+            'vendor' => $request->vendor,
+            'others' => $request->others,
+        ]);
+        return redirect()->route('maintenance_list');
+    }
+
+    function maintenance_list(Request $request){
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $maintenance_data = Maintenance::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('vendor', 'LIKE',"%$search")->get();
+        }
+        else{
+            $maintenance_data = Maintenance::all();
+        }
+        return view('admin.store.maintenance.maintenance_list',[
+            'maintenance_data' => $maintenance_data,
+            'search'=> $search,
+        ]);
+    }
+
+
+    function maintenance_search_id ($store_id)
+    {
+        $issued_products = Maintenance::find($store_id);
+        $issued_products_data =[
+            'asset_tag' => $issued_products->asset_tag,
+            'asset_type' =>$issued_products->asset_type,
+            'model'=>$issued_products->model,
+            'purchase_date'=>$issued_products->purchase_date,
+            'asset_sl_no'=>$issued_products->asset_sl_no,
+        ];
+        $issued_products = Maintenance::find($store_id);
+        return response()->json(['data' => $issued_products_data]);
+    }
+
+    function maintenance_return(){
+        $issued_products = DB::select("CALL sp_maintenence_issue_list()");
+        $all_supplier = Supplier::all();
+        return view('admin.store.maintenance.maintenance_return',[       
+            'issued_products'=>$issued_products,
+            'all_supplier'=>$all_supplier,
+        ]);
+    }
+
+
+    
+    function ma_return_update(Request $request){
+        DB::table("maintenances")
+        ->where('asset_tag', $request->asset_tag)
+        ->update([
+            'end_date' => $request->end_date,
+            'amount' => $request->amount,
+            'currency' => $request->currency,
+            'vendor' => $request->vendor,
+        ]);
+
+        return redirect()->route('maintenance_list');
+
+    }
+
+
+    function maintenance_export(Request $request){
+        if ($request->type == "xlsx") {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($request->type == "csv") {
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        } elseif ($request->type == "xls") {
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+
+
+        $Filename = "maintenance-data.$extension";
+        return Excel::download(new MaintenanceExport, $Filename, $exportFormat);
+    }
+    //maintenance end...
+
+
+    //wastproduct start..
+    function wastproduct (){
+        $issued_products = Store::all();
+        return view('admin.store.wastproduct.wastproduct',[
+            'issued_products'=>$issued_products,
+        ]);
+    }
+
+    function wastproduct_store(Request $request){
+        WastProduct::insertGetId([
+            'asset_tag' => $request->asset_tag,
+            'asset_type' => $request->asset_type,
+            'model' => $request->model,
+            'purchase_date' => $request->purchase_date,
+            'description' => $request->description,
+            'asset_sl_no' => $request->asset_sl_no,
+            'date' => $request->date,
+            'note' => $request->note,
+            'others' => $request->others,
+            'others1' => $request->others1,
+        ]);
+        return back();
+        //return redirect()->route('admin.store.wastproduct.wastproduct');
+    }
+
+    function wastproduct_list(Request $request){
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $wastproduct = WastProduct::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('date', 'LIKE',"%$search")->get();
+        }
+        else{
+            $wastproduct = WastProduct::all();
+        }      
+        return view('admin.store.wastproduct.wastproduct_list',[
+            'wastproduct'=>$wastproduct,
+            'search'=>$search,
+        ]);
+    }
+    //wastproduct end..
+
+
+
 
 }

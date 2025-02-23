@@ -17,10 +17,10 @@
                                 class="text-white"><span class="fa fa-mail-reply"> Return</span></a></button>
                         <button type="button" class="btn btn-info"> <a href="{{ route('transfer') }}" class="text-white"><span
                                     class="fa fa-send"> Transfer</span></a></button>
-                        <button type="button" class="btn btn-info"> <a href="" class="text-white"><span
+                        <button type="button" class="btn btn-info"> <a href="{{route('maintenance')}}" class="text-white"><span
                                     class="fa fa-gears"> Maintenance</span></a></button>
-                        <button type="button" class="btn btn-info"> <a href="" class="text-white"><span
-                                    class="fa fa-gears"> Store Return</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="{{route('wastproduct')}}" class="text-white"><span
+                                    class="fa fa-gears"> Wast Product</span></a></button>
                     </div>
                     <div class="col-md-3 top_search">
                         <form action="" method="GET">

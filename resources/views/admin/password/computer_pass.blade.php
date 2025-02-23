@@ -110,7 +110,7 @@
                                             <td>{{ $computer_pass->password }}</td>
                                             <td></td>
                                             <td>
-                                                <button class="border-0 bg-white"><a class="text-primary" href=""><i
+                                                <button class="border-0 bg-white"><a class="text-primary" href="{{route('computer_pass_edit', $computer_pass->id)}}"><i
                                                             class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                                 <button class="border-0  bg-white"><a class="text-danger"
                                                         href="{{ route('computer_pass_delete', $computer_pass->id) }}"><i

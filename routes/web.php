@@ -105,7 +105,8 @@ Route::get('/color/delete/{color_id}', [CategoryController::class, 'color_delete
 //Company
 Route::get('/company', [CategoryController::class, 'company_list'])->name('company.list');
 Route::post('/company/store', [CategoryController::class, 'company_store'])->name('company.store');  
-Route::get('/company/delete/{company_id}', [CategoryController::class, 'company_delete'])->name('company.delete');     
+Route::get('/company/delete/{company_id}', [CategoryController::class, 'company_delete'])->name('company.delete');  
+Route::get('/company/search_by_id/{company_id}', [CategoryController::class, 'search_by_id'])->name('search.company');   
 
 //store
 Route::get('/store', [StoreController::class, 'store'])->name('store');
@@ -126,13 +127,37 @@ Route::get('/store/search', [StoreController::class, 'store_search'])->name('sto
 Route::get('/history', [StoreController::class, 'history'])->name('history');
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
 Route::get('/store/transfer', [StoreController::class, 'store_transfer'])->name('transfer');
+Route::post('/transfer/store', [StoreController::class, 'transfer_store'])->name('transfer.store');
+Route::get('/transfer/list', [StoreController::class, 'transfer_list'])->name('transfer_list');
+Route::get('/transfer/export', [StoreController::class, 'transfer_export'])->name('transfer_export');
 
+//Maintenance start
+Route::get('/store/maintenance', [StoreController::class, 'maintenance'])->name('maintenance');
+Route::post('/maintenance/store', [StoreController::class, 'maintenance_store'])->name('maintenance_store');
+Route::get('/maintenance/list', [StoreController::class, 'maintenance_list'])->name('maintenance_list');
+Route::get('/maintenance/return', [StoreController::class, 'maintenance_return'])->name('maintenance_return');
+Route::post('/maintenance/return/update', [StoreController::class, 'ma_return_update'])->name('ma_return_update');
+Route::get('/maintenance/maintenance_search_id/{store_id}', [StoreController::class, 'maintenance_search_id'])->name('maintenance_search_id');
+Route::get('/maintenance/export', [StoreController::class, 'maintenance_export'])->name('maintenance_export');
+
+//Maintenance end
+
+//wastproduct start
+Route::get('/store/wastproduct', [StoreController::class, 'wastproduct'])->name('wastproduct');
+Route::post('/wastproduct/store', [StoreController::class, 'wastproduct_store'])->name('wastproduct_store');
+Route::get('/wastproduct/list', [StoreController::class, 'wastproduct_list'])->name('wastproduct_list');
+
+
+
+//wastproductend
 
 
 //password
 Route::get('/computer_pass', [PasswordController::class, 'computer_pass'])->name('computer_pass');
 Route::post('/computer_pass/store', [PasswordController::class, 'computer_pass_store'])->name('computer_pass_store');
 Route::get('/computer_pass/delete/{id}', [PasswordController::class, 'computer_pass_delete'])->name('computer_pass_delete');
+Route::get('/computer_pass/edit/{id}', [PasswordController::class, 'computer_pass_edit'])->name('computer_pass_edit');
+Route::post('/computer_pass/update', [PasswordController::class, 'computer_update'])->name('computer_update');
 Route::get('/search', [PasswordController::class, 'search'])->name('search');
 Route::get('/computer_pass/export', [PasswordController::class, 'computer_pass_export'])->name('computer_export');
 

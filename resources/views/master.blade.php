@@ -31,7 +31,6 @@
     <!-- Custom Theme Style -->
     <link href="{{ asset('backend/build/css/custom.min.css') }}" rel="stylesheet">
 
-
 </head>
 
 <body class="nav-md">
@@ -66,6 +65,9 @@
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>Assets</a></li>
                                 <li><a href="{{ route('history') }}"><i class="fa fa-laptop"></i>History</a></li>
+                                <li><a href="{{route ('transfer_list')}}"><i class="fa fa-send"></i>Transfer List</a></li>
+                                <li><a href="{{route ('maintenance_list')}}"><i class="fa fa-gears"></i>Maintenance List</a></li>
+                                <li><a href="{{route('wastproduct_list')}}"><i class="fa fa-gears"></i>Wast Product</a></li>
                                 <li><a><i class="fa fa-tasks"></i>Pasword Managment<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
@@ -152,7 +154,7 @@
                                     <a class="dropdown-item" href="javascript:;">Help</a>
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-              document.getElementById('logout-form').submit();"class="dropdown-item ai-icon">
+                                        document.getElementById('logout-form').submit();"class="dropdown-item ai-icon">
                                         <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"

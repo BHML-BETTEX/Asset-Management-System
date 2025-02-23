@@ -14,7 +14,7 @@
 
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Camera No</label>
-                            <input type="hidden" value="{{ $camera_info->id }}" name="name">
+                            <input type="hidden" value="{{ $camera_info->id }}" name="camera_id">
                             <input class="form-control" name="camera_no" value ={{$camera_info->camera_no}}></input>
                         </div>
                         <div class="form-group">

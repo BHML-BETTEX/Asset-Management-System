@@ -5,7 +5,7 @@
     <div class="col-lg-6 m-auto">
         <div class="card">
             <div class="card-header">
-                <h3>Edit Products</h3>
+                <h3>Edit Mail Info</h3>
             </div>
             <div class="card-body">
 
@@ -15,7 +15,7 @@
 
                     <div class="mb-3">
                         <label for="" class="form-label">Display name</label>
-                        <input type="hidden" value="{{ $mail_info->id }}" name="name">
+                        <input type="hidden" value="{{ $mail_info->id }}" name="mail_id">
                         <input  class="form-control" name="display_name" value ={{$mail_info->display_name}}>
                     </div>
 

@@ -11,7 +11,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Display Name</label>
-                                <input class="form-control" type="hidden" name="name" value={{$dingpass_info->id}}>
+                                <input class="form-control" type="hidden" name="ding_id" value={{$dingpass_info->id}}>
                                 <input class="form-control" type="text" name="display_name" value={{$dingpass_info->display_name}}></input>
                             </div>
                             <div class="form-group">
