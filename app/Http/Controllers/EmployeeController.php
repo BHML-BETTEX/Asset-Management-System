@@ -10,13 +10,7 @@ use App\Models\ProductType;
 use Carbon\Carbon;
 use App\Exports\EmployeeDataExport;
 use Illuminate\Http\Request;
-use Image;
 use Maatwebsite\Excel\Facades\Excel;
-
-
-use Illuminate\Support\Facades\DB;
-
-
 
 class EmployeeController extends Controller
 {
@@ -53,13 +47,15 @@ class EmployeeController extends Controller
             'email' => $request->email,
             'created_at' => Carbon::now(),
         ]);
-        $picture_id = $request->picture;
-        $extension = $picture_id->getClientOriginalExtension();
-        $file_name = $employee_id . '.' . $extension;
-        Image::make($picture_id)->save(public_path('uploads/employees/' . $file_name));
-        Employee::where('id', $employee_id)->update([
-            'picture' => $file_name,
-        ]);
+        
+        if ($request->file('picture')) {
+            $imageName = $employee_id . '.' . $request->picture->extension();
+            $request->picture->move(public_path('uploads/employees/'), $imageName);
+
+            Employee::where('id', $employee_id)->update([
+                'picture' => $imageName,
+            ]);
+        }
         return back();
     }
 
@@ -94,14 +90,21 @@ class EmployeeController extends Controller
         return back();
        }
        else {
-        $image = Employee::find($request->employee_id);
-        $delete_from = public_path('/uploads/employees/' . $image->picture);
-        unlink($delete_from);
+        $employee = Employee::find($request->employee_id);
+        $delete_from = public_path('/uploads/employees/' . $employee->picture);
+        if (file_exists($delete_from)) {
+            unlink($delete_from);
+        }
 
-        $picture_info = $request->picture;
-        $extension = $picture_info->getClientOriginalExtension();
-        $file_name = $request->employee_id .'.'.$extension;
-        Image::make($picture_info)->save(public_path('uploads/employees/' . $file_name));
+        $imageName = null;
+        if ($request->file('picture')) {
+            $imageName = $request->employee_id . '.' . $request->picture->extension();
+            $request->picture->move(public_path('uploads/employees/'), $imageName);
+
+            Employee::where('id', $request->employee_id)->update([
+                'picture' => $imageName,
+            ]);
+        }
         
         Employee::find($request->employee_id)->update([
             'emp_id' => $request->emp_id,
@@ -109,7 +112,7 @@ class EmployeeController extends Controller
             'join_date' => $request->join_date,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
-            'picture'=>$file_name,
+            'picture'=>$imageName ?? 'default.png',
         ]);
         return back();
     }
