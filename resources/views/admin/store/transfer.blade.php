@@ -31,6 +31,11 @@
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
+                            <input type="text" id="company"  class="form-control " value="" name="oldcompany" readonly placeholder="Old Company">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">New Comapny</label>
                             <select id="id" name="company" class="form-control">
                                 @foreach ($companys as $companys)
                                     <option value="{{ $companys->company }}" data-id="{{ $companys->id }}">{{ $companys->company }}</option>
@@ -94,6 +99,8 @@
                        //console.log (result.data.products_id);
                     $('#asset_type').val(result.data.asset_type);
                     $('#model').val(result.data.model);
+                    $('#company').val(result.data.company);
+
                 }
             });
 

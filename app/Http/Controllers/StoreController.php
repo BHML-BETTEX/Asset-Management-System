@@ -25,6 +25,8 @@ use App\Models\Transfer;
 use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
+use App\Exports\WastProductExport;
+
 
 
 
@@ -108,18 +110,15 @@ class StoreController extends Controller
 
         ]);
 
-        // $asset_picture = $request->picture;
-        // $extension = $asset_picture->getClientOriginalExtension();
-        // $file_name = $picture_id . '.' . $extension;
+        if ($request->file('picture')) {
+            $imageName = $picture_id . '.' . $request->picture->extension();
+            $request->picture->move(public_path('uploads/store/'), $imageName);
 
+            Store::where('id', $picture_id)->update([
+                'picture' => $imageName,
+            ]);
+        }
 
-        // Image::make($asset_picture)->save(public_path('/uploads/store/' . $file_name));
-
-        // dd($file_name);
-
-        // Store::where('id', $picture_id)->update([
-        //     'picture' => $file_name,
-        // ]);
         return back();
     }
     //delete start
@@ -157,21 +156,53 @@ class StoreController extends Controller
 
     //update
     function store_update(Request $request)
-    
+
     {
-        if($request->picture==''){
+        if($request->picture ==''){
             Store::find($request->stores_id)->update([
-                'asset_type'=>$request->asset_type,
-                'model'=> $request->model,
-                
+                'products_id' => $request->products_id,
+                'asset_type' => $request->asset_type,
+                'model' => $request->model,
+                'brand' => $request->brand,
+                'description' => $request->description,
+                'asset_sl_no' => $request->asset_sl_no,
+                'qty' => $request->qty,
+                'units' => $request->units,
+                'warrenty' => $request->warrenty,
+                'durablity' => $request->durablity,
+                'cost' => $request->cost,
+                'currency' => $request->currency,
+                'vendor' => $request->vendor,
+                'purchase_date' => $request->purchase_date,
+                'challan_no' => $request->challan_no,
+                'status' => $request->status,
+                'location' => $request->location,
+                'company' => $request->company,
+                'others' => $request->others,
+                'others2' => $request->others2,
+                    
             ]);
-        }
-        else{
-            Store::find($request->stores_id)->update([
-                
-            ]);
-        }
+            return back();
+           }
+           else {
+            $store = Store::find($request->stores_id);
+            $delete_from = public_path('/uploads/store/' . $store->picture);
+            if (file_exists($delete_from)) {
+                unlink($delete_from);
+            }
+    
+            $imageName = null;
+            if ($request->file('picture')) {
+                $imageName = $request->stores_id . '.' . $request->picture->extension();
+                $request->picture->move(public_path('uploads/store/'), $imageName);
+    
+                Store::where('id', $request->stores_id)->update([
+                    'picture' => $imageName,
+                ]);
+                return back();
+            }
     }
+}
     //Edit end
 
 
@@ -222,6 +253,8 @@ class StoreController extends Controller
             'others' => $request->others,
             'issue_date' => $request->issue_date,
             'return_date' => $request->return_date,
+            'created_at' => Carbon::now(),
+
         ]);
         return back();
     }
@@ -237,7 +270,7 @@ class StoreController extends Controller
             'model'=>$issued_products->model,
             'purchase_date'=>$issued_products->purchase_date,
             'asset_sl_no'=>$issued_products->asset_sl_no,
-
+            'company'=>$issued_products->rel_to_Company->company,
 
         ];
         $issued_products = Store::find($store_id);
@@ -287,7 +320,9 @@ class StoreController extends Controller
     //autofill start...
     function return_search_by_id($store_id)
     {
-        $return_products = DB::table('stores')->select('id', 'products_id', 'asset_type', 'model', 'asset_sl_no')->where('id', $store_id)->first();
+        $return_products = DB::table('stores')->select('products_id', 'asset_type', 'model', 'asset_sl_no', 'checkstatus')->where('id', $store_id)->first();
+
+        
         
         return response()->json(['data' => $return_products]);
     }
@@ -308,13 +343,20 @@ class StoreController extends Controller
 
 
     //History
-    function history(){
-        $issue_info = issue::all();
+    function history(Request $request){
+        $search = $request['search'] ?? "";
+        if($search != ""){
+            $issue_info = issue::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")-> orwhere('emp_id', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")->get();
+        }
+        else{
+            $issue_info = issue::all();
+        }
+        
         return view('admin.store.history', [
             'issue_info' => $issue_info,
+            'search'=> $search,
         ]);
     }
-
 
     function store_export(Request $request){
         if ($request->type == "xlsx") {
@@ -337,6 +379,8 @@ class StoreController extends Controller
 
     }
 
+    //Transfer Start
+
     function store_transfer(){
         $issued_products = Store::all();
         $companys = Company::all();
@@ -356,6 +400,9 @@ class StoreController extends Controller
             'description' => $request->description,
             'note' => $request->note,
             'transfer_date' => $request->transfer_date,
+            'oldcompany'=> $request->oldcompany,
+            'others'=> $request->others,
+
         ]);
         return redirect()->route('transfer_list');
     }
@@ -395,6 +442,34 @@ class StoreController extends Controller
         return Excel::download(new TransferExport, $Filename, $exportFormat);
     }
 
+    function transfer_edit($id){
+        $transfer_data = Transfer::find($id);
+        $companys = Company::all();
+        return view('admin.store.transfer.transfer_edit',[
+            'transfer_data' => $transfer_data,
+            'companys'=>$companys,
+        ]);
+    }
+
+    function transfer_update(Request $request){
+        Transfer::find($request->id)->update([
+            'company' =>$request->companys,
+            'note' => $request->note,
+            'transfer_date' => $request->transfer_date,
+        ]);
+
+        return redirect()->route('transfer_list');
+            
+    }
+
+    // function transfer_search_by_id($id){
+    //     $issued_product = DB::select("CALL sp_issued_products(?)",  [$id]);
+    //     return response()->json(['data' => $issued_product]);
+        
+    // }
+
+    //Transfer end..
+
 
     //maintenance start...
 
@@ -421,6 +496,8 @@ class StoreController extends Controller
             'currency' => $request->currency,
             'vendor' => $request->vendor,
             'others' => $request->others,
+            'created_at' => Carbon::now(),
+
         ]);
         return redirect()->route('maintenance_list');
     }
@@ -443,12 +520,13 @@ class StoreController extends Controller
     function maintenance_search_id ($store_id)
     {
         $issued_products = Maintenance::find($store_id);
+        
         $issued_products_data =[
             'asset_tag' => $issued_products->asset_tag,
             'asset_type' =>$issued_products->asset_type,
             'model'=>$issued_products->model,
             'purchase_date'=>$issued_products->purchase_date,
-            'asset_sl_no'=>$issued_products->asset_sl_no,
+            'asset_sl_no'=>$issued_products->asset_sl_no,  
         ];
         $issued_products = Maintenance::find($store_id);
         return response()->json(['data' => $issued_products_data]);
@@ -499,6 +577,17 @@ class StoreController extends Controller
         $Filename = "maintenance-data.$extension";
         return Excel::download(new MaintenanceExport, $Filename, $exportFormat);
     }
+
+    function maintenance_edit($id){
+        $maintenance_data = Maintenance::find($id);
+        return view('admin.store.maintenance.maintenance_edit',[
+            'maintenance_data'=>$maintenance_data,
+        ]);
+    }
+
+    function maintenance_update(){
+        
+    }
     //maintenance end...
 
 
@@ -511,6 +600,7 @@ class StoreController extends Controller
     }
 
     function wastproduct_store(Request $request){
+    
         WastProduct::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
@@ -522,6 +612,8 @@ class StoreController extends Controller
             'note' => $request->note,
             'others' => $request->others,
             'others1' => $request->others1,
+            'created_at' => Carbon::now(),
+
         ]);
         return back();
         //return redirect()->route('admin.store.wastproduct.wastproduct');
@@ -540,8 +632,50 @@ class StoreController extends Controller
             'search'=>$search,
         ]);
     }
-    //wastproduct end..
 
+
+    function wastproduct_edit($id){
+        $wastproduct = WastProduct::find($id);
+        return view('admin.store.wastproduct.wastproduct_edit',[
+            'wastproduct'=>$wastproduct,
+        ]);
+    }
+    //wastproduct end..
+    function wastproduct_update(Request $request){
+
+        WastProduct::find($request->id)->update([
+            'description' => $request->description,
+            'date' => $request->date,
+            'note' => $request->note,
+        ]);
+
+        return redirect()->route('wastproduct_list');
+    }
+
+    function wastproduct_delete($id){
+        WastProduct::find($id)->delete();
+        return back();
+    }
+
+    function wastproduct_export(Request $request){
+        if ($request->type == "xlsx") {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($request->type == "csv") {
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        } elseif ($request->type == "xls") {
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+
+
+        $Filename = "wastproduct-data.$extension";
+        return Excel::download(new WastProductExport, $Filename, $exportFormat);
+    }
 
 
 

@@ -1,6 +1,36 @@
 @extends('master')
 
 @section('content')
+<div class="row ">
+    <div class="col-md-12">
+        <div class="col-md-7 p-2">
+            <h5 class="text-white">History List</h5>
+        </div>
+
+        <div class="col-md-3 top_search">
+            <form action="" method="GET">
+                <div class="input-group">
+                    <input type="search" class="form-control" name="search" placeholder="Search for..."
+                        value="{{$search}}">
+                    <button class="btn btn-secondary" type="submit">Go!</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2 ">
+            <form action="" method="GET">
+                <div class="input-group">
+                    <select name="type" class="form-control">
+                        <option value="">Select Type</option>
+                        <option value="xlsx">XLSX</option>
+                        <option value="csv">CSV</option>
+                        <option value="xls">XLS</option>
+                    </select>
+                    <button type="submit" class="btn btn-success">Export</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -16,6 +46,7 @@
                                     <th>ASSET TYPE</th>
                                     <th>MODEL</th>
                                     <th>DESCRIPTION</th>
+                                    <th>COMPANY</th>
                                     <th>EMP ID</th>
                                     <th>EMP NAME</th>
                                     <th>DESIGNATION</th>
@@ -36,6 +67,7 @@
                                     <td>{{ $issue_info->asset_type }}</td>
                                     <td>{{ $issue_info->model }}</td>
                                     <td>{{ $issue_info->description }}</td>
+                                    <td>{{ $issue_info->others }}</td>
                                     <td>{{ $issue_info->emp_id }}</td>
                                     <td>{{ $issue_info->emp_name }}</td>
                                     <td>{{ $issue_info->designation_id }}</td>

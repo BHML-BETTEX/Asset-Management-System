@@ -10,7 +10,7 @@
 
                     <div class="col-md-1 ">
                         <button type="button" class="btn btn-info"> <a href="{{route('wastproduct')}}" class="text-white"><span
-                            class="fa fa-mail-forward"> Add</span></a></button>
+                            class="fa fa-plus"> Add</span></a></button>
                     </div>
 
                     <div class="col-md-3 top_search">
@@ -23,7 +23,7 @@
                         </form>
                     </div>
                     <div class="col-md-2 ">
-                        <form action="" method="GET">
+                        <form action="{{route('wastproduct_export')}}" method="GET">
                             <div class="input-group">
                                 <select name="type" class="form-control">
                                     <option value="">Select Type</option>
@@ -58,6 +58,7 @@
                                             <th>PURCHASE DATE</th>
                                             <th>DESCRIPTION</th>
                                             <th>ASSET SERISL NO</th>
+                                            <th>COMPANY</th>
                                             <th>DATE</th>
                                             <th>NOTE</th>
                                             <th>ACTION</th>
@@ -73,15 +74,16 @@
                                                 <td>{{ $wastproduct->purchase_date }}</td>
                                                 <td>{{ $wastproduct->description }}</td>
                                                 <td>{{ $wastproduct->asset_sl_no }}</td>
+                                                <td>{{ $wastproduct->others }}</td>
                                                 <td>{{ $wastproduct->date }}</td>
                                                 <td>{{ $wastproduct->note }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href=""><i
+                                                            href="{{route('wastproduct_edit', $wastproduct->id)}}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
                                                     <button class="border-0 bg-white"><a class="text-danger"
-                                                            href=""><i
+                                                            href="{{route('wastproduct_delete', $wastproduct->id)}}"><i
                                                                 class="fa fa-trash "
                                                                 style="font-size:20px;"></a></i></button>
                                                 </td>

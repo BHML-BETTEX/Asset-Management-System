@@ -58,14 +58,14 @@
                                             <th>ASSET TYPE</th>
                                             <th>MODEL</th>
                                             <th>Purchase Date</th>
+                                            <th>Company</th>
                                             <th>DESCRIPTION</th>
                                             <th>Strat Date</th>
                                             <th>End Date</th>
                                             <th>note</th>
-                                            <th>Amount</th>
+                                            <th>Total Cost</th>
                                             <th>Currency</th>
                                             <th>Vendor</th>
-                                            <th>Others</th>
                                             <th>action</th>
                                         </tr>
                                     </thead>
@@ -77,6 +77,7 @@
                                                 <td>{{ $maintenance_data->asset_type }}</td>
                                                 <td>{{ $maintenance_data->model }}</td>
                                                 <td>{{ $maintenance_data->purchase_date }}</td>
+                                                <td>{{ $maintenance_data->others }}</td>
                                                 <td>{{ $maintenance_data->description }}</td>
                                                 <td>{{ $maintenance_data->strat_date }}</td>
                                                 <td>{{ $maintenance_data->end_date }}</td>
@@ -84,16 +85,12 @@
                                                 <td>{{ $maintenance_data->amount }}</td>
                                                 <td>{{ $maintenance_data->currency }}</td>
                                                 <td>{{ $maintenance_data->vendor }}</td>
-                                                <td>{{ $maintenance_data->others }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href=""><i
+                                                            href="{{route('maintenance_edit', $maintenance_data->id)}}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
-                                                    <button class="border-0 bg-white"><a class="text-danger"
-                                                            href=""><i
-                                                                class="fa fa-trash "
-                                                                style="font-size:20px;"></a></i></button>
+                                                
                                                 </td>
                                         @endforeach
                                     </tbody>

@@ -35,6 +35,10 @@
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
+                            <input type="text" id="company"  class="form-control " value="{{ $issued_products->company }}" name="others" readonly>
+                        </div>
+
+                        <div class="input-group input-group-outline mb-3">
                             <select id="empl_id" name="emp_id" class="form-control">
                                 @foreach ($employee as $employee)
                                     <option value="{{ $employee->emp_id }}"  data-emp_id="{{ $employee->id }}">{{ $employee->emp_id }}</option>
@@ -122,6 +126,7 @@
                         //   console.log (result.data.products_id);
                         $('#asset_type').val(result.data.asset_type);
                         $('#model').val(result.data.model);
+                        $('#company').val(result.data.company);
                     }
                 });
 

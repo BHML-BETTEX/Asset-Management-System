@@ -15,6 +15,7 @@ use App\Exports\MailExport;
 use App\Exports\CameraPassExport;
 use App\Exports\InternetPassExport;
 use App\Exports\DingpassExport;
+use Carbon\Carbon;
 
 class PasswordController extends Controller
 {
@@ -42,6 +43,8 @@ class PasswordController extends Controller
             'emp_id' => $request->emp_id,
             'emp_name' => $request->emp_name,
             'password' => $request->password,
+            'created_at' => Carbon::now(),
+            
         ]);
         return back();
     }
@@ -63,6 +66,8 @@ class PasswordController extends Controller
         computer_pass::find($request->id)->update([
             'password' => $request->password,
         ]);
+
+        return redirect()->route('computer_pass');
     }
 
     //Mail Password Start
@@ -92,6 +97,7 @@ class PasswordController extends Controller
             'company' => $request->company,
             'others' => $request->others,
             'others1' => $request->others1,
+            'created_at' => Carbon::now(),
         ]);
         return back();
     }
@@ -215,6 +221,7 @@ class PasswordController extends Controller
             'note' => $request->note,
             'others' => $request->others,
             'others1' => $request->others1,
+            'created_at' => Carbon::now(),
         ]);
         return back();
     }

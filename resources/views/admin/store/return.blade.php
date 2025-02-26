@@ -15,10 +15,10 @@
                             @csrf
 
                             <div class="input-group input-group-outline mb-3">
-                                <select id="asset_tag" name="asset_tag" class="form-control">
+                                <select id="products_id" name="asset_tag" class="form-control">
                                     @foreach ($return_products as $return_products)
-                                        <option value="{{ $return_products->products_id }}">{{ $return_products->products_id }}
-                                        </option>
+                                        <option value="{{ $return_products->products_id }} " data-products_id="{{ $return_products->id }}">{{ $return_products->products_id }}
+                                        </option> 
                                     @endforeach
                                 </select>
                             </div>
@@ -71,14 +71,15 @@
 @push('script')
     <script>
         $(document).ready(function() {
-            $('#asset_tag').on('change', function() {
-                let asset_tag = $('#asset_tag').val()
+            $('#products_id').on('change', function() {
+                
+                let products_id = $('#products_id option:selected').data("products_id")
 
                 $.ajax({
-                    url: "{{ route('return.search.product', '') }}/" + asset_tag,
+                    url: "{{ route('return.search.product', '') }}/" + products_id,
                     success: function(result) {
                         //$("#div1").html(result);
-                        //  console.log (result.data.products_id);
+                          //console.log (result.data.asset_tag);
                         $('#asset_type').val(result.data.asset_type);
                         $('#model').val(result.data.model);
                     }
@@ -87,4 +88,6 @@
             });
         });
     </script>
+
+
 @endpush

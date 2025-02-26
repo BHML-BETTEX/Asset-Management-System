@@ -115,21 +115,36 @@ Route::get('/store/delete/{stores_id}', [StoreController::class, 'store_delete']
 Route::get('/store/edit/{stores_id}', [StoreController::class, 'store_edit'])->name('store.edit');
 Route::post('/store/update', [StoreController::class, 'store_update'])->name('store.update');
 Route::get('/store/view/{stores_id}', [StoreController::class, 'store_view'])->name('store.view');
+
 Route::get('/store/issue', [StoreController::class, 'issue'])->name('issue');
 Route::post('/store/issue/store', [StoreController::class, 'issue_store'])->name('issue.store');
 Route::get('/store/search_by_id/{store_id}', [StoreController::class, 'search_by_id'])->name('search.product');
+
 Route::get('/store/return', [StoreController::class, 'return'])->name('return');
 Route::get('/store/return_search_by_id/{store_id}', [StoreController::class, 'return_search_by_id'])->name('return.search.product');
 Route::post('/store/return/update', [StoreController::class, 'return_update'])->name('return_update');
+
 Route::get('/store/status/{stores_id}', [StoreController::class, 'store_status'])->name('store.status');
 Route::get('/store/invoice/{stores_id}', [StoreController::class, 'invoice'])->name('invoice');
 Route::get('/store/search', [StoreController::class, 'store_search'])->name('store_search');
+
 Route::get('/history', [StoreController::class, 'history'])->name('history');
+
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
+
+//Transfer start
 Route::get('/store/transfer', [StoreController::class, 'store_transfer'])->name('transfer');
 Route::post('/transfer/store', [StoreController::class, 'transfer_store'])->name('transfer.store');
 Route::get('/transfer/list', [StoreController::class, 'transfer_list'])->name('transfer_list');
 Route::get('/transfer/export', [StoreController::class, 'transfer_export'])->name('transfer_export');
+Route::get('/transfer/edit/{id}', [StoreController::class, 'transfer_edit'])->name('transfer_edit');
+Route::post('/transfer/update', [StoreController::class, 'transfer_update'])->name('transfer_update');
+Route::post('/transfer/transfer_search_by_id/{id}', [StoreController::class, 'transfer_search_by_id'])->name('transfer_search');
+
+
+
+//Transfer end
+
 
 //Maintenance start
 Route::get('/store/maintenance', [StoreController::class, 'maintenance'])->name('maintenance');
@@ -139,6 +154,8 @@ Route::get('/maintenance/return', [StoreController::class, 'maintenance_return']
 Route::post('/maintenance/return/update', [StoreController::class, 'ma_return_update'])->name('ma_return_update');
 Route::get('/maintenance/maintenance_search_id/{store_id}', [StoreController::class, 'maintenance_search_id'])->name('maintenance_search_id');
 Route::get('/maintenance/export', [StoreController::class, 'maintenance_export'])->name('maintenance_export');
+Route::get('/maintenance/edit/{id}', [StoreController::class, 'maintenance_edit'])->name('maintenance_edit');
+Route::post('/maintenance/update', [StoreController::class, 'maintenance_update'])->name('maintenance_update');
 
 //Maintenance end
 
@@ -146,7 +163,10 @@ Route::get('/maintenance/export', [StoreController::class, 'maintenance_export']
 Route::get('/store/wastproduct', [StoreController::class, 'wastproduct'])->name('wastproduct');
 Route::post('/wastproduct/store', [StoreController::class, 'wastproduct_store'])->name('wastproduct_store');
 Route::get('/wastproduct/list', [StoreController::class, 'wastproduct_list'])->name('wastproduct_list');
-
+Route::get('/wastproduct/edit/{id}', [StoreController::class, 'wastproduct_edit'])->name('wastproduct_edit');
+Route::post('/wastproduct/update', [StoreController::class, 'wastproduct_update'])->name('wastproduct_update');
+Route::get('/wastproduct/delete/{id}', [StoreController::class, 'wastproduct_delete'])->name('wastproduct_delete');
+Route::get('/wastproduct/export', [StoreController::class, 'wastproduct_export'])->name('wastproduct_export');
 
 
 //wastproductend

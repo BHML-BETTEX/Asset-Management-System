@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class computer_pass extends Model
 {
     use HasFactory;
-    
+    protected $fillable  = ['password'];
 
 }

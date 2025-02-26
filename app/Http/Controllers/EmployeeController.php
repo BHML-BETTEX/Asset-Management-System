@@ -86,6 +86,7 @@ class EmployeeController extends Controller
             'join_date' => $request->join_date,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
+            
         ]);
         return back();
        }

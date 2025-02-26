@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Transfer extends Model
 {
     use HasFactory;
+    protected $fillable = ['asset_tag', 'asset_type', 'model', 'description', 'asset_sl_no', 'transfer_date','note'];
+
 }

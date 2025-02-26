@@ -55,6 +55,7 @@
                                             <th>ASSET TAG</th>
                                             <th>ASSET TYPE</th>
                                             <th>MODEL</th>
+                                            <th>OLD COMAPANY</th>
                                             <th>Company</th>
                                             <th>DESCRIPTION</th>
                                             <th>Note</th>
@@ -69,19 +70,17 @@
                                                 <td>{{ $transer_data->asset_tag }}</td>
                                                 <td>{{ $transer_data->asset_type }}</td>
                                                 <td>{{ $transer_data->model }}</td>
+                                                <td>{{ $transer_data->oldcompany }}</td>
                                                 <td>{{ $transer_data->company }}</td>
                                                 <td>{{ $transer_data->description }}</td>
                                                 <td>{{ $transer_data->note }}</td>
                                                 <td>{{ $transer_data->transfer_date }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href=""><i
+                                                            href="{{route('transfer_edit', $transer_data->id)}}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
-                                                    <button class="border-0 bg-white"><a class="text-danger"
-                                                            href=""><i
-                                                                class="fa fa-trash "
-                                                                style="font-size:20px;"></a></i></button>
+                                                
                                                 </td>
                                         @endforeach
                                     </tbody>

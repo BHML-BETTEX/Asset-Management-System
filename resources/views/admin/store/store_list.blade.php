@@ -438,6 +438,7 @@
                                             <th>STATUS</th>
                                             <th>COMPANY</th>
                                             <th>OTHERS</th>
+                                            <th>Balance</th>
                                             <th>CHECKSTATUS</th>
                                             <th>PICTURE</th>
                                             <th>ACTION</th>
@@ -465,6 +466,7 @@
                                                 <td>{{ $store->rel_to_Status->status_name }}</td>
                                                 <td>{{ $store->rel_to_Company->company }}</td>
                                                 <td>{{ $store->others }}</td>
+                                                <td></td>
                                                 <td style="background-color: #feefe6;">{{ $store->checkstatus }}</td>
                                                 <td><img width="50" height="25"
                                                         src="{{ asset('/uploads/store/' . $store->picture) }}"

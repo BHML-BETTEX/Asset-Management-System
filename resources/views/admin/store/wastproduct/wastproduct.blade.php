@@ -39,6 +39,10 @@
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
+                            <input type="text" id="company"  class="form-control " value="" name="others" readonly placeholder="Comapny">
+                        </div>
+
+                        <div class="input-group input-group-outline mb-3">
                             <textarea class="form-control" rows="3" id="description" name="description" placeholder="Type Reason..." required></textarea>
                         </div>
 
@@ -78,6 +82,8 @@
                     $('#model').val(result.data.model);
                     $('#purchase_date').val(result.data.purchase_date);
                     $('#asset_sl_no').val(result.data.asset_sl_no);
+                    $('#company').val(result.data.company);
+
 
                 }
             });
