@@ -22,7 +22,7 @@
                         </form>
                     </div>
                     <div class="col-md-2 ">
-                        <form action="{{route('computer_export')}}" method="GET">
+                        <form action="{{ route('computer_export') }}" method="GET">
                             <div class="input-group">
                                 <select name="type" class="form-control">
                                     <option value="">Select Type</option>
@@ -66,6 +66,19 @@
                                     <label for="message-text" class="col-form-label">Password</label>
                                     <input class="form-control" type="text" name="password" required></input>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="form_label">Company </span><a class="text-success" href=""><i
+                                                class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                                    <select id="form_need" name="company" class="form-control" required>
+                                        <option value="" selected disabled>--Select Your
+                                            Issue--</option>
+                                        @foreach ($all_company as $all_company)
+                                            <option value="{{ $all_company->company }}">
+                                                {{ $all_company->company }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <button class="btn btn-primary">Submit</button>
                             </form>
                         </div>
@@ -96,6 +109,7 @@
                                         <th scope="col">Employee Id</th>
                                         <th scope="col">Employee Name</th>
                                         <th scope="col">Password</th>
+                                        <th scope="col">Company</th>
                                         <th scope="col">Note</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -108,9 +122,11 @@
                                             <td>{{ $computer_pass->emp_id }}</td>
                                             <td>{{ $computer_pass->emp_name }}</td>
                                             <td>{{ $computer_pass->password }}</td>
+                                            <td>{{ $computer_pass->company }}</td>
                                             <td></td>
                                             <td>
-                                                <button class="border-0 bg-white"><a class="text-primary" href="{{route('computer_pass_edit', $computer_pass->id)}}"><i
+                                                <button class="border-0 bg-white"><a class="text-primary"
+                                                        href="{{ route('computer_pass_edit', $computer_pass->id) }}"><i
                                                             class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                                 <button class="border-0  bg-white"><a class="text-danger"
                                                         href="{{ route('computer_pass_delete', $computer_pass->id) }}"><i

@@ -16,6 +16,7 @@ class AddOldcompanyFieldToTransfers extends Migration
         Schema::table('transfers', function (Blueprint $table) {
             $table->string('oldcompany')->nullable()->after('model');
             $table->string('others')->nullable()->after('oldcompany');
+            $table->date('return_date')->nullable()->after('transfer_date');
 
         });
     }
@@ -30,7 +31,7 @@ class AddOldcompanyFieldToTransfers extends Migration
         Schema::table('transfers', function (Blueprint $table) {
             $table->dropColumn('oldcompany');
             $table->dropColumn('others');
-
+            $table->dropColumn('return_date');
         });
     }
 }

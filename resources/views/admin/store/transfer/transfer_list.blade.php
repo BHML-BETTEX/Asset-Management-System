@@ -4,13 +4,15 @@
         <div class="page-title">
             <div class="row ">
                 <div class="col-md-12">
-                    <div class="col-md-6 p-2">
+                    <div class="col-md-5 p-2">
                         <h5 class="text-white">Product Transfer List</h5>
                     </div>
 
-                    <div class="col-md-1 ">
+                    <div class="col-md-2 ">
                         <button type="button" class="btn btn-info"> <a href="{{ route('transfer') }}" class="text-white"><span
-                            class="fa fa-send"> Transfer</span></a></button>
+                                    class="fa fa-send"> Transfer</span></a></button>
+                        <button type="button" class="btn btn-info"> <a href="{{ route('transfer_return') }}"
+                                class="text-white"><span class="fa fa-reply"> Return</span></a></button>
                     </div>
 
                     <div class="col-md-3 top_search">
@@ -58,8 +60,9 @@
                                             <th>OLD COMAPANY</th>
                                             <th>Company</th>
                                             <th>DESCRIPTION</th>
-                                            <th>Note</th>
-                                            <th>Date</th>
+                                            <th>NOTE</th>
+                                            <th>TRANSFER DATE</th>
+                                            <th>RETURN DATE</th>
                                             <th>ACTION</th>
                                         </tr>
                                     </thead>
@@ -75,12 +78,13 @@
                                                 <td>{{ $transer_data->description }}</td>
                                                 <td>{{ $transer_data->note }}</td>
                                                 <td>{{ $transer_data->transfer_date }}</td>
+                                                <td>{{ $transer_data->return_date }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href="{{route('transfer_edit', $transer_data->id)}}"><i
+                                                            href="{{ route('transfer_edit', $transer_data->id) }}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
-                                                
+
                                                 </td>
                                         @endforeach
                                     </tbody>

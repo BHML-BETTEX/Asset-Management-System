@@ -157,7 +157,7 @@ class CategoryController extends Controller
             'brand_name'=>$request->brand_name,
             'others'=>$request->others,
         ]);
-        return back()->with('brand_add', 'Brand Add');
+        return back()->with('');
      }
 
      function brand_delete($brand_id){

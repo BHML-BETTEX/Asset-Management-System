@@ -129,8 +129,13 @@ Route::get('/store/invoice/{stores_id}', [StoreController::class, 'invoice'])->n
 Route::get('/store/search', [StoreController::class, 'store_search'])->name('store_search');
 
 Route::get('/history', [StoreController::class, 'history'])->name('history');
+Route::get('/history/export', [StoreController::class, 'history_export'])->name('history_export');
+
 
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
+
+Route::get('/store/QrCode/{stores_id}', [StoreController::class, 'qr_code'])->name('qr_code');
+
 
 //Transfer start
 Route::get('/store/transfer', [StoreController::class, 'store_transfer'])->name('transfer');
@@ -140,6 +145,12 @@ Route::get('/transfer/export', [StoreController::class, 'transfer_export'])->nam
 Route::get('/transfer/edit/{id}', [StoreController::class, 'transfer_edit'])->name('transfer_edit');
 Route::post('/transfer/update', [StoreController::class, 'transfer_update'])->name('transfer_update');
 Route::post('/transfer/transfer_search_by_id/{id}', [StoreController::class, 'transfer_search_by_id'])->name('transfer_search');
+Route::get('/transfer/return', [StoreController::class, 'transfer_return'])->name('transfer_return');
+Route::get('/transfer/return/search_by_id/{id}', [StoreController::class, 'transfer_return_search_id'])->name('transfer_return_search_id');
+Route::post('/transfer/return/update', [StoreController::class, 'transfer_return_update'])->name('transfer_return_update');
+
+
+
 
 
 
@@ -167,8 +178,6 @@ Route::get('/wastproduct/edit/{id}', [StoreController::class, 'wastproduct_edit'
 Route::post('/wastproduct/update', [StoreController::class, 'wastproduct_update'])->name('wastproduct_update');
 Route::get('/wastproduct/delete/{id}', [StoreController::class, 'wastproduct_delete'])->name('wastproduct_delete');
 Route::get('/wastproduct/export', [StoreController::class, 'wastproduct_export'])->name('wastproduct_export');
-
-
 //wastproductend
 
 

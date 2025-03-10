@@ -19,7 +19,8 @@
                         @endforeach
                         @csrf
                         <div class="input-group input-group-outline mb-3">
-                            <select id="products_id" name="asset_tag" class="form-control">
+                            <select id="products_id" name="asset_tag" class="form-control select2">
+                            <option value="">Select a Product</option>
                                 @foreach ($issued_products as $issued_products)
                                     <option  value="{{ $issued_products->products_id }}" data-products_id="{{ $issued_products->id }}" >{{ $issued_products->products_id }}</option>
                                 @endforeach
@@ -133,4 +134,10 @@
             });
         });
     </script>
+
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
 @endpush

@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>Gentelella Alela!</title>
+    <title>Asset Managment</title>
 
     <!-- Bootstrap -->
     <link href="{{ asset('backend/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -30,6 +30,7 @@
 
     <!-- Custom Theme Style -->
     <link href="{{ asset('backend/build/css/custom.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -39,7 +40,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view ">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>BETTEX</span></a>
+                        <a href="index.html" class="site_title"> <span>BETTEX HK LTD</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -47,10 +48,10 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix ">
                         <div class="profile_pic">
-                            <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                            <img src="uploads/employees/default.png" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
-                            <span>Welcome,</span>
+                           
                             <h2></h2>
                         </div>
                     </div>
@@ -65,9 +66,12 @@
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>Assets</a></li>
                                 <li><a href="{{ route('history') }}"><i class="fa fa-laptop"></i>History</a></li>
-                                <li><a href="{{route ('transfer_list')}}"><i class="fa fa-send"></i>Transfer List</a></li>
-                                <li><a href="{{route ('maintenance_list')}}"><i class="fa fa-gears"></i>Maintenance List</a></li>
-                                <li><a href="{{route('wastproduct_list')}}"><i class="fa fa-gears"></i>Wast Product</a></li>
+                                <li><a href="{{ route('transfer_list') }}"><i class="fa fa-send"></i>Transfer List</a>
+                                </li>
+                                <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
+                                        List</a></li>
+                                <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
+                                        Product</a></li>
                                 <li><a><i class="fa fa-tasks"></i>Pasword Managment<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
@@ -104,7 +108,7 @@
                                 <li><a><i class="fa fa-clone"></i>Permision <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         @can('role-list')
-                                        <li><a href="{{route('roles.index')}}">Manage Role</a></li>
+                                            <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
                                         @endcan
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
                                     </ul>
@@ -142,7 +146,7 @@
                             <li class="nav-item dropdown open" style="padding-left: 15px;">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
                                     id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="images/img.jpg" alt="">
+                                    <img src="uploads/employees/default.png" alt="">
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right"
                                     aria-labelledby="navbarDropdown">
@@ -331,6 +335,8 @@
     <!-- bootstrap-daterangepicker -->
     <script src="{{ asset('backend/vendors/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('backend/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="{{ asset('backend/build/js/custom.min.js') }}"></script>

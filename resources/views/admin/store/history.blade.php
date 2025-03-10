@@ -17,7 +17,7 @@
             </form>
         </div>
         <div class="col-md-2 ">
-            <form action="" method="GET">
+            <form action="{{route('history_export')}}" method="GET">
                 <div class="input-group">
                     <select name="type" class="form-control">
                         <option value="">Select Type</option>

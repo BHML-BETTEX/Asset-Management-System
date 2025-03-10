@@ -22,19 +22,23 @@ class PasswordController extends Controller
 
     function computer_pass(Request $request)
     {
+
         $search = $request['search'] ?? "";
         if ($search != "") {
             $computer_password = computer_pass::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('asset_tag', 'LIKE', "%$search")->get();
         } else {
             $computer_password = computer_pass::all();
         }
+
+        $all_company = Company::all();
+
         return view('admin.password.computer_pass', [
             'computer_password' => $computer_password,
             'search' => $search,
+            'all_company'=>$all_company,
 
         ]);
     }
-
 
     function computer_pass_store(Request $request)
     {
@@ -42,6 +46,7 @@ class PasswordController extends Controller
             'asset_tag' => $request->asset_tag,
             'emp_id' => $request->emp_id,
             'emp_name' => $request->emp_name,
+            'company' => $request->company,
             'password' => $request->password,
             'created_at' => Carbon::now(),
             

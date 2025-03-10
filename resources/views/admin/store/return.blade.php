@@ -15,9 +15,10 @@
                             @csrf
 
                             <div class="input-group input-group-outline mb-3">
-                                <select id="products_id" name="asset_tag" class="form-control">
+                                <select id="asset_tag" name="asset_tag" class="form-control select2">
+                                <option value="">Select a Product</option>
                                     @foreach ($return_products as $return_products)
-                                        <option value="{{ $return_products->products_id }} " data-products_id="{{ $return_products->id }}">{{ $return_products->products_id }}
+                                        <option value="{{ $return_products->asset_tag }} " data-asset_tag="{{ $return_products->id }}">{{ $return_products->asset_tag }}
                                         </option> 
                                     @endforeach
                                 </select>
@@ -37,23 +38,25 @@
 
                             <div class="input-group input-group-outline mb-3">
                                 <input type="hidden" value="" name="">
-                                <input type="text" class="form-control" value="" placeholder= "Employee ID"
+                                <input type="text" id="emp_id" name="emp_id" class="form-control" value="" placeholder= "Employee ID"
                                     readonly>
                             </div>
 
                             <div class="input-group input-group-outline mb-3">
                                 <input type="hidden" value="" name="">
-                                <input type="text" class="form-control" value="" placeholder= "Employee Name"
+                                <input type="text" id="emp_name" name="emp_name" class="form-control" value="" placeholder= "Employee Name"
                                     readonly>
                             </div>
 
-                            <div class="input-group input-group-outline mb-3">
-                                <input type="hidden" value="" name="">
-                                <input type="text" class="form-control" value="" placeholder= "issue Date"
+                            <div class="form-group mb-3">
+                                <input type="hidden" value="" name="return_date">
+                                <input type="date" id="issue_date" name="issue_date" class="form-control" name="return_date" value=""
                                     readonly>
                             </div>
 
-                            <div class="input-group input-group-outline mb-3">
+
+                            <div class="form-group mb-3">
+                                <label class="form-label">Return Date</label>
                                 <input type="hidden" value="" name="return_date">
                                 <input type="date" class="form-control" name="return_date" value=""
                                     placeholder= "Return Date">
@@ -71,17 +74,22 @@
 @push('script')
     <script>
         $(document).ready(function() {
-            $('#products_id').on('change', function() {
+            $('#asset_tag').on('change', function() {
                 
-                let products_id = $('#products_id option:selected').data("products_id")
+                let asset_tag = $('#asset_tag option:selected').data("asset_tag")
 
                 $.ajax({
-                    url: "{{ route('return.search.product', '') }}/" + products_id,
+                    url: "{{ route('return.search.product', '') }}/" + asset_tag,
                     success: function(result) {
                         //$("#div1").html(result);
-                          //console.log (result.data.asset_tag);
+                          console.log (result.data.asset_tag);
                         $('#asset_type').val(result.data.asset_type);
                         $('#model').val(result.data.model);
+                        $('#emp_id').val(result.data.emp_id);
+                        $('#emp_name').val(result.data.emp_name);
+                        $('#issue_date').val(result.data.issue_date);
+
+
                     }
                 });
 
@@ -89,5 +97,9 @@
         });
     </script>
 
-
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
 @endpush
