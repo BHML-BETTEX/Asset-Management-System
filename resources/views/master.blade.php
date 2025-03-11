@@ -32,6 +32,9 @@
     <link href="{{ asset('backend/build/css/custom.min.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+
+
+
 </head>
 
 <body class="nav-md">
@@ -49,10 +52,10 @@
                     <div class="profile clearfix ">
                         <div class="profile_pic">
                             <img src="uploads/employees/default.png" alt="..." class="img-circle profile_img">
+
                         </div>
                         <div class="profile_info">
-                           
-                            <h2></h2>
+                            <h6>{{ Auth::user()->name }}</h6>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -64,8 +67,9 @@
                         <div class="menu_section">
                             <h3>General</h3>
                             <ul class="nav side-menu">
+                                <li><a href="{{ route('home') }}"><i class="fa fa-home"></i>Dashboard</a></li>
                                 <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>Assets</a></li>
-                                <li><a href="{{ route('history') }}"><i class="fa fa-laptop"></i>History</a></li>
+                                <li><a href="{{ route('history') }}"><i class="fa fa-newspaper-o"></i>History</a></li>
                                 <li><a href="{{ route('transfer_list') }}"><i class="fa fa-send"></i>Transfer List</a>
                                 </li>
                                 <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
@@ -108,7 +112,7 @@
                                 <li><a><i class="fa fa-clone"></i>Permision <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         @can('role-list')
-                                            <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
+                                        <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
                                         @endcan
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
                                     </ul>
@@ -122,7 +126,7 @@
                     <div class="sidebar-footer hidden-small">
                         <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top"
                             onclick="event.preventDefault();
-              document.getElementById('logout-form').submit();"class="dropdown-item ai-icon">
+              document.getElementById('logout-form').submit();" class="dropdown-item ai-icon">
                             <span class="glyphicon glyphicon-off text-white" aria-hidden="true"></span>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -150,6 +154,8 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right"
                                     aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="javascript:;">{{ Auth::user()->name }}
+                                    </a>
                                     <a class="dropdown-item" href="javascript:;"> Profile</a>
                                     <a class="dropdown-item" href="javascript:;">
                                         <span class="badge bg-red pull-right">50%</span>
@@ -158,7 +164,7 @@
                                     <a class="dropdown-item" href="javascript:;">Help</a>
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();"class="dropdown-item ai-icon">
+                                        document.getElementById('logout-form').submit();" class="dropdown-item ai-icon">
                                         <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -260,26 +266,26 @@
             </div>
 
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <strong>Whoops! Something went wrong.</strong>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="alert alert-danger">
+                <strong>Whoops! Something went wrong.</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
             @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
             @endif
 
             @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
             @endif
 
             <!-- /top navigation -->
@@ -335,7 +341,7 @@
     <!-- bootstrap-daterangepicker -->
     <script src="{{ asset('backend/vendors/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('backend/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Custom Theme Scripts -->

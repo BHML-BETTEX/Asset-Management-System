@@ -159,14 +159,15 @@
                                             <button class="border-0 bg-white"><a class="text-primary"
                                                     href="{{ route('employee_edit', $employees->id) }}"><i
                                                         class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                            <button class="border-0  bg-white"><a class="text-danger"
+                                            <!-- <button class="border-0  bg-white"><a class="text-danger"
                                                     href="{{ route('employee.delete', $employees->id) }}"><i
-                                                        class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                                        class="fa fa-trash " style="font-size:20px;"></a></i></button> -->
                                         </td>
                                     </tr>
                                 @endforeach
                             </thead>
                         </table>
+                        
                     </div>
                 </div>
             </div>

@@ -240,7 +240,7 @@
                                                                 <label for="form_label">Quantity <span
                                                                         class="text-danger">*</span></label>
                                                                 <input id="" type="number" name="qty"
-                                                                    required="required" class="form-control">
+                                                                    required="required" class="form-control" value="1" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -482,8 +482,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive text-nowrap">
-                            <table class="table table-striped table-bordered">
-                                <thead class="bg-info text-white">
+                            <table class="table table-striped table-bordered ">
+                                <thead class="bg-info text-white ">
                                     <tr>
                                         <th>SL</th>
                                         <th>ASSET TAG</th>
@@ -539,7 +539,7 @@
                                             @elseif($store->checkstatus == "MAINTENANCE")
                                                 <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
                                             @else
-                                            <span class="badge bg-primay text-white">{{ $store->checkstatus }}</span>
+                                            <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                             @endif
                                             
                                         </td>
@@ -569,7 +569,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            
                         </div>
+                        
                     </div>
                 </div>
             </div>

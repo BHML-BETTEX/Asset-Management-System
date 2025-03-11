@@ -18,11 +18,10 @@ class EmployeeController extends Controller
     function employee(Request $request)
     {
         $search = $request['search'] ?? "";
-        if($search != ""){
-            $employees = Employee::where('emp_id', 'LIKE',"%$search" )-> orwhere('emp_name', 'LIKE',"%$search")->orwhere ('designation_id', 'LIKE',"%$search")->get();
-        }
-        else{
-            $employees = Employee::all();
+        if ($search != "") {
+            $employees = Employee::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('designation_id', 'LIKE', "%$search")->get();
+        } else {
+            $employees = Employee::paginate(5);
         }
         $product_types = ProductType::all();
         $departments = Department::all();
@@ -47,7 +46,7 @@ class EmployeeController extends Controller
             'email' => $request->email,
             'created_at' => Carbon::now(),
         ]);
-        
+
         if ($request->file('picture')) {
             $imageName = $employee_id . '.' . $request->picture->extension();
             $request->picture->move(public_path('uploads/employees/'), $imageName);
@@ -79,45 +78,44 @@ class EmployeeController extends Controller
 
     function employee_update(Request $request)
     {
-       if($request->picture ==''){
-        Employee::find($request->employee_id)->update([
-            'emp_id' => $request->emp_id,
-            'emp_name' => $request->emp_name,
-            'join_date' => $request->join_date,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            
-        ]);
-        return back();
-       }
-       else {
-        $employee = Employee::find($request->employee_id);
-        $delete_from = public_path('/uploads/employees/' . $employee->picture);
-        if (file_exists($delete_from)) {
-            unlink($delete_from);
-        }
+        if ($request->picture == '') {
+            Employee::find($request->employee_id)->update([
+                'emp_id' => $request->emp_id,
+                'emp_name' => $request->emp_name,
+                'join_date' => $request->join_date,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
 
-        $imageName = null;
-        if ($request->file('picture')) {
-            $imageName = $request->employee_id . '.' . $request->picture->extension();
-            $request->picture->move(public_path('uploads/employees/'), $imageName);
-
-            Employee::where('id', $request->employee_id)->update([
-                'picture' => $imageName,
             ]);
+            return back();
+        } else {
+            $employee = Employee::find($request->employee_id);
+            $delete_from = public_path('/uploads/employees/' . $employee->picture);
+            if (file_exists($delete_from)) {
+                unlink($delete_from);
+            }
+
+            $imageName = null;
+            if ($request->file('picture')) {
+                $imageName = $request->employee_id . '.' . $request->picture->extension();
+                $request->picture->move(public_path('uploads/employees/'), $imageName);
+
+                Employee::where('id', $request->employee_id)->update([
+                    'picture' => $imageName,
+                ]);
+            }
+
+            Employee::find($request->employee_id)->update([
+                'emp_id' => $request->emp_id,
+                'emp_name' => $request->emp_name,
+                'join_date' => $request->join_date,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'picture' => $imageName ?? 'default.png',
+            ]);
+            return back();
         }
-        
-        Employee::find($request->employee_id)->update([
-            'emp_id' => $request->emp_id,
-            'emp_name' => $request->emp_name,
-            'join_date' => $request->join_date,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'picture'=>$imageName ?? 'default.png',
-        ]);
-        return back();
     }
-}
 
 
     //Edit end
@@ -134,7 +132,7 @@ class EmployeeController extends Controller
             'department_id' => $employee->rel_to_departmet->department_name,
             'department_id' => $employee->rel_to_departmet->department_name,
             'phone_number' => $employee->phone_number,
-            'email' => $employee-> email,
+            'email' => $employee->email,
         ];
         $employee = Employee::find($employee_id);
         return response()->json(['data' => $employee_data]);
@@ -143,45 +141,39 @@ class EmployeeController extends Controller
 
 
     //List Search
-//    function search(Request $request)
-//     {
-        
-//         $data = $request->input('search');
-//         $all_employees = DB::table('employees')->where('emp_id', 'LIKE', '%' . $data . '%')
-//         ->orwhere('emp_name', 'LIKE', '%' . $data . '%')
-//         ->get();
+    //    function search(Request $request)
+    //     {
+
+    //         $data = $request->input('search');
+    //         $all_employees = DB::table('employees')->where('emp_id', 'LIKE', '%' . $data . '%')
+    //         ->orwhere('emp_name', 'LIKE', '%' . $data . '%')
+    //         ->get();
 
 
 
-//         return view ('employee_list',  compact('all_employees'));
-//     }
+    //         return view ('employee_list',  compact('all_employees'));
+    //     }
 
-    
 
-public function export(Request $request) 
-{
-    if($request->type == "xlsx"){
-        $extension = "xlsx";
-        $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+
+    public function export(Request $request)
+    {
+        if ($request->type == "xlsx") {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($request->type == "csv") {
+            $extension = "csv";
+            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+        } elseif ($request->type == "xls") {
+            $extension = "xls";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $extension = "xlsx";
+            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        }
+
+
+        $Filename = "employee-data.$extension";
+        return Excel::download(new EmployeeDataExport, $Filename, $exportFormat);
     }
-    elseif($request->type == "csv"){
-        $extension = "csv";
-        $exportFormat = \Maatwebsite\Excel\Excel::CSV;
-    }
-    elseif($request->type == "xls"){
-        $extension = "xls";
-        $exportFormat = \Maatwebsite\Excel\Excel::XLS;
-    }
-    else{
-        $extension = "xlsx";
-        $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
-
-    }
-    
-
-    $Filename = "employee-data.$extension";
-    return Excel::download(new EmployeeDataExport, $Filename, $exportFormat);
-}
-
-
 }
