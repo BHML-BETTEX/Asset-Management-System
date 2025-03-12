@@ -37,7 +37,6 @@
                             <button class="btn btn-primary">Submit</button>
                             <a href="{{route('ding_pass')}}" class="btn btn-info">Back</a>
                         </form>
-
                 </div>
             </div>
         </div>
