@@ -65,31 +65,32 @@
                                         </tr>
                                     </thead>
                                     <tbody style="height: 5px !important; overflow: scroll; ">
-                                        @foreach ($wastproduct as $key => $wastproduct)
+                                        @foreach ($wastproduct as $key => $wastproducts)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $wastproduct->asset_tag }}</td>
-                                                <td>{{ $wastproduct->asset_type }}</td>
-                                                <td>{{ $wastproduct->model }}</td>
-                                                <td>{{ $wastproduct->purchase_date }}</td>
-                                                <td>{{ $wastproduct->description }}</td>
-                                                <td>{{ $wastproduct->asset_sl_no }}</td>
-                                                <td>{{ $wastproduct->others }}</td>
-                                                <td>{{ $wastproduct->date }}</td>
-                                                <td>{{ $wastproduct->note }}</td>
+                                                <td>{{ $wastproducts->asset_tag }}</td>
+                                                <td>{{ $wastproducts->asset_type }}</td>
+                                                <td>{{ $wastproducts->model }}</td>
+                                                <td>{{ $wastproducts->purchase_date }}</td>
+                                                <td>{{ $wastproducts->description }}</td>
+                                                <td>{{ $wastproducts->asset_sl_no }}</td>
+                                                <td>{{ $wastproducts->others }}</td>
+                                                <td>{{ $wastproducts->date }}</td>
+                                                <td>{{ $wastproducts->note }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href="{{route('wastproduct_edit', $wastproduct->id)}}"><i
+                                                            href="{{route('wastproduct_edit', $wastproducts->id)}}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
                                                     <button class="border-0 bg-white"><a class="text-danger"
-                                                            href="{{route('wastproduct_delete', $wastproduct->id)}}"><i
+                                                            href="{{route('wastproduct_delete', $wastproducts->id)}}"><i
                                                                 class="fa fa-trash "
                                                                 style="font-size:20px;"></a></i></button>
                                                 </td>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                {{$wastproduct->links()}}
                             </div>
                         </div>
                     </div>

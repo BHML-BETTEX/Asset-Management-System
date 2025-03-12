@@ -70,24 +70,24 @@
                                         </tr>
                                     </thead>
                                     <tbody style="height: 5px !important; overflow: scroll; ">
-                                        @foreach ($maintenance_data as $key => $maintenance_data)
+                                        @foreach ($maintenance_data as $key => $maintenances_data)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $maintenance_data->asset_tag }}</td>
-                                                <td>{{ $maintenance_data->asset_type }}</td>
-                                                <td>{{ $maintenance_data->model }}</td>
-                                                <td>{{ $maintenance_data->purchase_date }}</td>
-                                                <td>{{ $maintenance_data->others }}</td>
-                                                <td>{{ $maintenance_data->description }}</td>
-                                                <td>{{ $maintenance_data->strat_date }}</td>
-                                                <td>{{ $maintenance_data->end_date }}</td>
-                                                <td>{{ $maintenance_data->note }}</td>
-                                                <td>{{ $maintenance_data->amount }}</td>
-                                                <td>{{ $maintenance_data->currency }}</td>
-                                                <td>{{ $maintenance_data->vendor }}</td>
+                                                <td>{{ $maintenances_data->asset_tag }}</td>
+                                                <td>{{ $maintenances_data->asset_type }}</td>
+                                                <td>{{ $maintenances_data->model }}</td>
+                                                <td>{{ $maintenances_data->purchase_date }}</td>
+                                                <td>{{ $maintenances_data->others }}</td>
+                                                <td>{{ $maintenances_data->description }}</td>
+                                                <td>{{ $maintenances_data->strat_date }}</td>
+                                                <td>{{ $maintenances_data->end_date }}</td>
+                                                <td>{{ $maintenances_data->note }}</td>
+                                                <td>{{ $maintenances_data->amount }}</td>
+                                                <td>{{ $maintenances_data->currency }}</td>
+                                                <td>{{ $maintenances_data->vendor }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href="{{route('maintenance_edit', $maintenance_data->id)}}"><i
+                                                            href="{{route('maintenance_edit', $maintenances_data->id)}}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
                                                 
@@ -95,6 +95,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                {{$maintenance_data->links()}}
                             </div>
                         </div>
                     </div>

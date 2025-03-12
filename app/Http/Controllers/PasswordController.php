@@ -27,10 +27,10 @@ class PasswordController extends Controller
         if ($search != "") {
             $computer_password = computer_pass::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('asset_tag', 'LIKE', "%$search")->get();
         } else {
-            $computer_password = computer_pass::all();
+            $computer_password = computer_pass::paginate(13);
         }
 
-        $all_company = Company::all();
+        $all_company = Company::paginate(13);
 
         return view('admin.password.computer_pass', [
             'computer_password' => $computer_password,
@@ -82,9 +82,9 @@ class PasswordController extends Controller
         if ($search != "") {
             $Mail_pass = Mail_pass::where('display_name', 'LIKE', "%$search")->orwhere('mail_address', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->get();
         } else {
-            $Mail_pass = Mail_pass::all();
+            $Mail_pass = Mail_pass::paginate(13);
         }
-        $all_company = Company::all();
+        $all_company = Company::paginate(13);
 
         return view('admin.password.mail_pass', [
             'Mail_pass' => $Mail_pass,
@@ -143,9 +143,9 @@ class PasswordController extends Controller
     {
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $camera_pass_info = Camera_pass::where('camera_no', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->orwhere('possition', 'LIKE', "%$search")->get();
+            $camera_pass_info = Camera_pass::where('camera_no', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->orwhere('possition', 'LIKE', "%$search")->paginate(13);
         } else {
-            $camera_pass_info = Camera_pass::all();
+            $camera_pass_info = Camera_pass::paginate(13);
         }
 
         $all_company = Company::all();
@@ -203,9 +203,9 @@ class PasswordController extends Controller
     {
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $internet_pass_info = InternetPassword::where('internet_name', 'LIKE', "%$search")->orwhere('position', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->get();
+            $internet_pass_info = InternetPassword::where('internet_name', 'LIKE', "%$search")->orwhere('position', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(13);
         } else {
-            $internet_pass_info = InternetPassword::all();
+            $internet_pass_info = InternetPassword::paginate(13);
         }
 
         $all_company = Company::all();
@@ -271,9 +271,9 @@ class PasswordController extends Controller
 
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $dingpass_info = DingPassword::where('display_name', 'LIKE', "%$search")->orwhere('mail_id', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->get();
+            $dingpass_info = DingPassword::where('display_name', 'LIKE', "%$search")->orwhere('mail_id', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(13);
         } else {
-            $dingpass_info = DingPassword::all();
+            $dingpass_info = DingPassword::paginate(13);
         }
         $all_company = Company::all();
 

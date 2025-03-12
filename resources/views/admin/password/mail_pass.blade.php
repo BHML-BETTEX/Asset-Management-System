@@ -109,26 +109,27 @@
                                 </tr>
                             </thead>
                             <thead>
-                                @foreach ($Mail_pass as $key => $Mail_pass)
+                                @foreach ($Mail_pass as $key => $Mail_password)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $Mail_pass->display_name }}</td>
-                                        <td>{{ $Mail_pass->mail_address }}</td>
-                                        <td>{{ $Mail_pass->password }}</td>
-                                        <td>{{ $Mail_pass->company }}</td>
-                                        <td>{{ $Mail_pass->others }}</td>
+                                        <td>{{ $Mail_password->display_name }}</td>
+                                        <td>{{ $Mail_password->mail_address }}</td>
+                                        <td>{{ $Mail_password->password }}</td>
+                                        <td>{{ $Mail_password->company }}</td>
+                                        <td>{{ $Mail_password->others }}</td>
                                         <td>
                                             <button class="border-0  bg-white"><a class="text-primary"
-                                                    href="{{ route('mail_pass_edit', $Mail_pass->id) }}"><i
+                                                    href="{{ route('mail_pass_edit', $Mail_password->id) }}"><i
                                                         class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                             <button class="border-0  bg-white"><a class="text-danger"
-                                                    href="{{ route('mail_pass_delete', $Mail_pass->id) }}"><i
+                                                    href="{{ route('mail_pass_delete', $Mail_password->id) }}"><i
                                                         class="fa fa-trash " style="font-size:20px;"></a></i></button>
                                         </td>
                                     </tr>
                                 @endforeach
                             </thead>
                         </table>
+                        {{$Mail_pass->links()}}
                     </div>
                 </div>
             </div>

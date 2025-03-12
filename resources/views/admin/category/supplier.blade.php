@@ -28,7 +28,7 @@
                     <td>{{$supplier->web}}</td>
                     <td>
                     <button class="border-0 bg-white"><a class="text-primary" href=""><i class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                    <button class="border-0  bg-white"><a class="text-danger" href="{{route('supplier.delete', $supplier->id)}}"><i class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                    <!--<button class="border-0  bg-white"><a class="text-danger" href="{{route('supplier.delete', $supplier->id)}}"><i class="fa fa-trash " style="font-size:20px;"></a></i></button>-->
                     </td>
                 </tr>
             @endforeach

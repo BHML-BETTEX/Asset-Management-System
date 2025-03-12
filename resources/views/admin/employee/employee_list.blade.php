@@ -142,32 +142,36 @@
                             </thead>
 
                             <thead>
-                                @foreach ($employees as $key => $employees)
+                                @foreach ($employees as $key => $employee)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $employees->emp_id }}</td>
-                                        <td>{{ $employees->emp_name }}</td>
-                                        <td>{{ $employees->rel_to_departmet->department_name}}</td> <!-- Assuming the column is 'name' -->
-                                        <td>{{ $employees->rel_to_designation->designation_name}}</td>
-                                        <td>{{ $employees->join_date }}</td>
-                                        <td>{{ $employees->phone_number }}</td>
-                                        <td>{{ $employees->email }}</td>
+                                        <td>{{ $employee->emp_id }}</td>
+                                        <td>{{ $employee->emp_name }}</td>
+                                        <td>{{ $employee->rel_to_departmet->department_name}}</td> <!-- Assuming the column is 'name' -->
+                                        <td>{{ $employee->rel_to_designation->designation_name}}</td>
+                                        <td>{{ $employee->join_date }}</td>
+                                        <td>{{ $employee->phone_number }}</td>
+                                        <td>{{ $employee->email }}</td>
                                         <td><img width="50"
-                                                src="{{ asset('uploads/employees') }}/{{ $employees->picture }}"
+                                                src="{{ asset('uploads/employees') }}/{{ $employee->picture }}"
                                                 alt=""></td>
                                         <td>
                                             <button class="border-0 bg-white"><a class="text-primary"
-                                                    href="{{ route('employee_edit', $employees->id) }}"><i
+                                                    href="{{ route('employee_edit', $employee->id) }}"><i
                                                         class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                             <!-- <button class="border-0  bg-white"><a class="text-danger"
-                                                    href="{{ route('employee.delete', $employees->id) }}"><i
+                                                    href="{{ route('employee.delete', $employee->id) }}"><i
                                                         class="fa fa-trash " style="font-size:20px;"></a></i></button> -->
                                         </td>
                                     </tr>
                                 @endforeach
+                                
                             </thead>
                         </table>
+                            {{$employees->links()}}
+                        <div>
                         
+                        </div>
                     </div>
                 </div>
             </div>

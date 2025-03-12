@@ -136,6 +136,7 @@
                                     @endforeach
                                 </thead>
                             </table>
+                            {{$computer_password->links()}}
                         </div>
                     </div>
                 </div>

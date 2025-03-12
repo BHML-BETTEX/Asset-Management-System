@@ -112,26 +112,27 @@
                                     </tr>
                                 </thead>
                                 <thead>
-                                    @foreach ($internet_pass_info as $key => $internet_pass_info)
+                                    @foreach ($internet_pass_info as $key => $internet_pass)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $internet_pass_info->internet_name }}</td>
-                                            <td>{{ $internet_pass_info->position }}</td>
-                                            <td>{{ $internet_pass_info->password }}</td>
-                                            <td>{{ $internet_pass_info->company }}</td>
-                                            <td>{{ $internet_pass_info->note }}</td>
+                                            <td>{{ $internet_pass->internet_name }}</td>
+                                            <td>{{ $internet_pass->position }}</td>
+                                            <td>{{ $internet_pass->password }}</td>
+                                            <td>{{ $internet_pass->company }}</td>
+                                            <td>{{ $internet_pass->note }}</td>
                                             <td>
                                                 <button class="border-0 bg-white"><a class="text-primary"
-                                                        href="{{ route('internet_edit', $internet_pass_info->id) }}"><i
+                                                        href="{{ route('internet_edit', $internet_pass->id) }}"><i
                                                             class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                                 <button class="border-0  bg-white"><a class="text-danger"
-                                                        href="{{ route('internet_pass_delete', $internet_pass_info->id) }}"><i
+                                                        href="{{ route('internet_pass_delete', $internet_pass->id) }}"><i
                                                             class="fa fa-trash " style="font-size:20px;"></a></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </thead>
                             </table>
+                            {{$internet_pass_info->links()}}
                         </div>
                     </div>
                 </div>

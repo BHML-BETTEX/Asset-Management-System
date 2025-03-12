@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 class CategoryController extends Controller
 {
     function department (){
-        $all_departments = Department::all();
+        $all_departments = Department::paginate(13);
         return view('admin.category.department', [
             'all_departments'=>$all_departments,
         ]);
@@ -60,7 +60,7 @@ class CategoryController extends Controller
      
    //designation
    function designation (){
-    $all_designations= Designation::all();
+    $all_designations= Designation::paginate(13);
     return view('admin.category.designation',[
         'all_designations'=>$all_designations,
     ]);
@@ -95,7 +95,7 @@ class CategoryController extends Controller
 
       //product Type
       function product_type(){
-        $all_producttypes= ProductType::all();
+        $all_producttypes= ProductType::paginate(13);
         return view ('admin.category.producttype.producttype_list',[
             'all_producttypes'=>$all_producttypes,
         ]);
@@ -118,7 +118,7 @@ class CategoryController extends Controller
 
 // Supplier
      function supplier(){
-        $all_supplier = Supplier::all();
+        $all_supplier = Supplier::paginate(13);
         return view('admin.category.supplier',[
             'all_supplier' =>$all_supplier,
         ]);
@@ -146,7 +146,7 @@ class CategoryController extends Controller
 
 //brand
      function brand (){
-        $all_brand = Brand::all();
+        $all_brand = Brand::paginate(13);
         return view('admin.category.brand.brand',[
             'all_brand'=>$all_brand,
         ]);
@@ -167,7 +167,7 @@ class CategoryController extends Controller
 
 //status
      function status(){
-        $all_status = Status::all();
+        $all_status = Status::paginate(13);
         return view('admin.category.status.status',[
            'all_status' => $all_status,
         ]);
@@ -188,7 +188,7 @@ class CategoryController extends Controller
 
 //size_mesurment
      function size_mesurment(){
-        $all_SizeMaseurment = SizeMaseurment::all();
+        $all_SizeMaseurment = SizeMaseurment::paginate(13);
         return view('admin.category.size_mesurment.size',[
             'all_SizeMaseurment'=>$all_SizeMaseurment,
         ]);
@@ -209,7 +209,7 @@ class CategoryController extends Controller
 
 //color
      function color(){
-        $all_color = Color::all();
+        $all_color = Color::paginate(13);
         return view('admin.category.color.color',[
             'all_color'=>$all_color,
         ]);
@@ -230,7 +230,7 @@ class CategoryController extends Controller
 
 //company
      function company_list(){
-        $all_company = Company::all();
+        $all_company = Company::paginate(13);
         return view('admin.category.company.company',[
             'all_company'=>$all_company,
         ]);

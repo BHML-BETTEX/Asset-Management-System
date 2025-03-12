@@ -26,9 +26,9 @@
                                 <td>
                                     <button class="border-0 bg-white"><a class="text-primary" href="{{ route('designation.edit', $designation->id) }}"><i
                                                 class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                    <button class="border-0 bg-white"><a class="text-danger"
+                                    <!--<button class="border-0 bg-white"><a class="text-danger"
                                             href="{{ route('designation.delete', $designation->id) }}"><i
-                                                class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                                class="fa fa-trash " style="font-size:20px;"></a></i></button>-->
                                 </td>
                             </tr>
                         @endforeach
@@ -36,6 +36,7 @@
 
                         </tr>
                     </table>
+                    {{ $all_designations->links() }}
                 </div>
             </div>
         </div>

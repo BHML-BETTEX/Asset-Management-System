@@ -41,7 +41,8 @@ class StoreController extends Controller
             ->orwhere('vendor', 'LIKE', "%$search")
             ->orwhere('company', 'LIKE', "%$search")
             ->orwhere('checkstatus', 'LIKE', "%$search")
-            ->get();
+            ->orwhere('asset_sl_no', 'LIKE', "%$search")
+            ->paginate(13);
         }
         else{
             $stores = Store::where(function($query) use($role){
@@ -55,7 +56,7 @@ class StoreController extends Controller
                 $query->whereIn('company', $companies);
 
                 return $query;
-            })->get();
+            })->paginate(13);
         }
 
         
@@ -390,10 +391,10 @@ class StoreController extends Controller
         
         $search = $request['search'] ?? "";
         if($search != ""){
-            $issue_info = issue::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")-> orwhere('emp_id', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")->get();
+            $issue_info = issue::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")-> orwhere('emp_id', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")->paginate(13);
         }
         else{
-            $issue_info = issue::all();
+            $issue_info = issue::paginate(13);
         }
         
         return view('admin.store.history', [
@@ -437,10 +438,10 @@ class StoreController extends Controller
     function transfer_list(Request $request){
         $search = $request['search'] ?? "";
         if($search != ""){
-            $transer_data = Transfer::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('company', 'LIKE',"%$search")->get();
+            $transer_data = Transfer::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('company', 'LIKE',"%$search")->paginate(5);
         }
         else{
-            $transer_data = Transfer::all();
+            $transer_data = Transfer::paginate(5);
         }
         
         return view('admin.store.transfer.transfer_list',[
@@ -528,10 +529,8 @@ class StoreController extends Controller
         $issued_products = Store::all();
         return view('admin.store.maintenance.maintenance',[
             'issued_products'=>$issued_products,
-
         ]);
     }
-
 
     function maintenance_store(Request $request){
         Maintenance::insertGetId([
@@ -556,10 +555,10 @@ class StoreController extends Controller
     function maintenance_list(Request $request){
         $search = $request['search'] ?? "";
         if($search != ""){
-            $maintenance_data = Maintenance::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('vendor', 'LIKE',"%$search")->get();
+            $maintenance_data = Maintenance::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('vendor', 'LIKE',"%$search")->paginate(13);
         }
         else{
-            $maintenance_data = Maintenance::all();
+            $maintenance_data = Maintenance::paginate(13);
         }
         return view('admin.store.maintenance.maintenance_list',[
             'maintenance_data' => $maintenance_data,
@@ -673,10 +672,10 @@ class StoreController extends Controller
     function wastproduct_list(Request $request){
         $search = $request['search'] ?? "";
         if($search != ""){
-            $wastproduct = WastProduct::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('date', 'LIKE',"%$search")->get();
+            $wastproduct = WastProduct::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('date', 'LIKE',"%$search")->paginate(13);
         }
         else{
-            $wastproduct = WastProduct::all();
+            $wastproduct = WastProduct::paginate(13);
         }      
         return view('admin.store.wastproduct.wastproduct_list',[
             'wastproduct'=>$wastproduct,

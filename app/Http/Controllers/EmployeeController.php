@@ -19,9 +19,9 @@ class EmployeeController extends Controller
     {
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $employees = Employee::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('designation_id', 'LIKE', "%$search")->get();
+            $employees = Employee::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('designation_id', 'LIKE', "%$search")->paginate(13);
         } else {
-            $employees = Employee::paginate(5);
+            $employees = Employee::paginate(13);
         }
         $product_types = ProductType::all();
         $departments = Department::all();

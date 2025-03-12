@@ -27,7 +27,8 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$ProductType->product}}</td>
-                            <td><a href="{{ route ('product.delete', $ProductType->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>
+                            <!--<td><a href="{{ route ('product.delete', $ProductType->id)}}" class="text-danger"><i class="fa fa-trash"></i></a>-->
+                            <td><a href="" class="text-primary"><i class="fa fa-edit"></i></a>
 
                             </td>
                         </tr>
@@ -38,6 +39,7 @@
 
                     </tr>
                 </table>
+                {{$all_producttypes->links()}}
             </div>
         </div>
     </div>

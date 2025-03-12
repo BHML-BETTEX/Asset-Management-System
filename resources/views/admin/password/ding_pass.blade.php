@@ -119,27 +119,29 @@
                                     </tr>
                                 </thead>
                                 <thead>
-                                    @foreach ($dingpass_info as $key => $dingpass_info)
+                                    @foreach ($dingpass_info as $key => $dingpass)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $dingpass_info->display_name }}</td>
-                                            <td>{{ $dingpass_info->mail_id }}</td>
-                                            <td>{{ $dingpass_info->phone }}</td>
-                                            <td>{{ $dingpass_info->password }}</td>
-                                            <td>{{ $dingpass_info->company }}</td>
-                                            <td>{{ $dingpass_info->note }}</td>
+                                            <td>{{ $dingpass->display_name }}</td>
+                                            <td>{{ $dingpass->mail_id }}</td>
+                                            <td>{{ $dingpass->phone }}</td>
+                                            <td>{{ $dingpass->password }}</td>
+                                            <td>{{ $dingpass->company }}</td>
+                                            <td>{{ $dingpass->note }}</td>
                                             <td>
                                                 <button class="border-0 bg-white"><a class="text-primary"
-                                                        href="{{ route('ding_edit', $dingpass_info->id) }}"><i
+                                                        href="{{ route('ding_edit', $dingpass->id) }}"><i
                                                             class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                                 <button class="border-0  bg-white"><a class="text-danger"
-                                                        href="{{ route('ding_pass_delete', $dingpass_info->id) }}"><i
+                                                        href="{{ route('ding_pass_delete', $dingpass->id) }}"><i
                                                             class="fa fa-trash " style="font-size:20px;"></a></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </thead>
                             </table>
+
+                            {{$dingpass_info->links()}}
                         </div>
                     </div>
                 </div>

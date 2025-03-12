@@ -67,21 +67,21 @@
                                         </tr>
                                     </thead>
                                     <tbody style="height: 5px !important; overflow: scroll; ">
-                                        @foreach ($transer_data as $key => $transer_data)
+                                        @foreach ($transer_data as $key => $transers_data)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $transer_data->asset_tag }}</td>
-                                                <td>{{ $transer_data->asset_type }}</td>
-                                                <td>{{ $transer_data->model }}</td>
-                                                <td>{{ $transer_data->oldcompany }}</td>
-                                                <td>{{ $transer_data->company }}</td>
-                                                <td>{{ $transer_data->description }}</td>
-                                                <td>{{ $transer_data->note }}</td>
-                                                <td>{{ $transer_data->transfer_date }}</td>
-                                                <td>{{ $transer_data->return_date }}</td>
+                                                <td>{{ $transers_data->asset_tag }}</td>
+                                                <td>{{ $transers_data->asset_type }}</td>
+                                                <td>{{ $transers_data->model }}</td>
+                                                <td>{{ $transers_data->oldcompany }}</td>
+                                                <td>{{ $transers_data->company }}</td>
+                                                <td>{{ $transers_data->description }}</td>
+                                                <td>{{ $transers_data->note }}</td>
+                                                <td>{{ $transers_data->transfer_date }}</td>
+                                                <td>{{ $transers_data->return_date }}</td>
                                                 <td>
                                                     <button class="border-0 bg-white"><a class="text-primary"
-                                                            href="{{ route('transfer_edit', $transer_data->id) }}"><i
+                                                            href="{{ route('transfer_edit', $transers_data->id) }}"><i
                                                                 class="fa fa-edit "
                                                                 style="font-size:20px;"></a></i></button>
 
@@ -89,6 +89,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                {{$transer_data->links()}}
                             </div>
                         </div>
                     </div>

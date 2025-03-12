@@ -25,11 +25,13 @@
                     <td>{{$department->department_name}}</td>
                     <td>
                     <button class="border-0 bg-white"><a class="text-primary" href="{{route('department_edit',$department->id)}}"><i class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                    <button class="border-0  bg-white"><a class="text-danger" href="{{route('department.delete',$department->id)}}"><i class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                   <!-- <button class="border-0  bg-white"><a class="text-danger" href="{{route('department.delete',$department->id)}}"><i class="fa fa-trash " style="font-size:20px;"></a></i></button>-->
                     </td>
                 </tr>
             @endforeach
         </table>
+
+        {{$all_departments->links()}}
             </div>
           </div>
         </div>

@@ -114,26 +114,27 @@
                                     </tr>
                                 </thead>
                                 <thead>
-                                    @foreach ($camera_pass_info as $key => $camera_pass_info)
+                                    @foreach ($camera_pass_info as $key => $camera_pass)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $camera_pass_info->camera_no }}</td>
-                                            <td>{{ $camera_pass_info->possition }}</td>
-                                            <td>{{ $camera_pass_info->password }}</td>
-                                            <td>{{ $camera_pass_info->company }}</td>
-                                            <td>{{ $camera_pass_info->others }}</td>
+                                            <td>{{ $camera_pass->camera_no }}</td>
+                                            <td>{{ $camera_pass->possition }}</td>
+                                            <td>{{ $camera_pass->password }}</td>
+                                            <td>{{ $camera_pass->company }}</td>
+                                            <td>{{ $camera_pass->others }}</td>
                                             <td>
                                                 <button class="border-0 bg-white"><a class="text-primary"
-                                                        href="{{ route('camera_edit', $camera_pass_info->id) }}"><i
+                                                        href="{{ route('camera_edit', $camera_pass->id) }}"><i
                                                             class="fa fa-edit " style="font-size:20px;"></a></i></button>
                                                 <button class="border-0  bg-white"><a class="text-danger"
-                                                        href="{{ route('camera_pass_delete', $camera_pass_info->id) }}"><i
+                                                        href="{{ route('camera_pass_delete', $camera_pass->id) }}"><i
                                                             class="fa fa-trash " style="font-size:20px;"></a></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </thead>
                             </table>
+                            {{$camera_pass_info->links()}}
                         </div>
                     </div>
                 </div>
