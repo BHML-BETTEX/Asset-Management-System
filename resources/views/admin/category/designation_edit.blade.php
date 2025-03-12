@@ -26,6 +26,7 @@
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-primary" type="submit">submit</button>
+                            <a href="{{route('designation')}}" class="btn btn-info">Back</a>
                         </div>
                     </form>
                 </div>

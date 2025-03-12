@@ -46,7 +46,7 @@
                 @csrf
                     <div class="mb-3">
                         <label for="" class="form-label">Department_name</label>
-                            <input type="text" class="form-control" name="department_name" placeholder="Enter email">
+                            <input type="text" class="form-control" name="department_name" placeholder="Department Name">
                                 @error('department_name')
                                 <strong>{{$message}}</strong>
                                 @enderror

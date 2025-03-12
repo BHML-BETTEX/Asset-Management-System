@@ -53,7 +53,7 @@ class CategoryController extends Controller
         Department::find($request->department_id)->update([
             'department_name'=>$request->department_name,
         ]);
-        return back()->with('category_update', 'Category Update Successfull');
+        return redirect('department')->with('category_update', 'Category Update Successfull');
     }
     
 
@@ -90,7 +90,7 @@ class CategoryController extends Controller
         Designation::find($request->designation_id)->update([
             'designation_name'=>$request->designation_name,
         ]);
-        return back()->with('designation_update', 'Designation Update Successfull');
+        return redirect('designation')->with('designation_update', 'Designation Update Successfull');
     }
 
       //product Type
@@ -177,6 +177,7 @@ class CategoryController extends Controller
         Status::insert([
             'status_name'=>$request->status_name,
             'description'=>$request->description,
+            'created_at' => Carbon::now(),
         ]);
         return back()->with('status_delete', 'status added');
      }

@@ -1,5 +1,7 @@
 @extends('master')
 @section('content')
+
+
     <div class="row">
         <div class="col-lg-8 m-auto">
             @if (session('category_update'))
@@ -23,6 +25,7 @@
                         </div>
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="{{route('department')}}" class="btn btn-info">Back</a>
                         </div>
                     </form>
                 </div>

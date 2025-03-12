@@ -78,7 +78,7 @@
                         <div class="form-group">
                             <input id="email" type="email"
                                 class="form-control @error('email') is-invalid @enderror" name="email"
-                                value="{{ old('email') }}" placeholder="gmail" required autocomplete="email" autofocus>
+                                value="{{ old('email') }}" placeholder="mail" required autocomplete="email" autofocus>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -107,9 +107,9 @@
                             </div>
                         </div>
                         <button type="submit">{{ __('Login') }}</button>
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                        <!-- <a class="btn btn-link" href="{{ route('password.request') }}">
                             {{ __('Forgot Your Password?') }}
-                        </a>
+                        </a> -->
                 </div>
 
             </div>
