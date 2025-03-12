@@ -33,6 +33,7 @@
                             <input class="form-control" type="text" name="others" value ={{$camera_info->others}}></input>
                         </div>
                         <button class="btn btn-primary">Submit</button>
+                        <a href="{{route('camera_pass')}}" class="btn btn-info">Back</a>
                     </form>
                 </div>
 

@@ -38,6 +38,7 @@
                     </div>
 
                     <button class="btn btn-success" type="submit">submit</button>
+                    <a href="{{route('mail_pass')}}" class="btn btn-info">Back</a>
                 </form>
 
             </div>

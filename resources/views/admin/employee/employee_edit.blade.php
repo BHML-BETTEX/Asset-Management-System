@@ -5,7 +5,7 @@
         <div class="col-lg-8 m-auto">
             <div class="card">
                 <div class="card-header">
-                    <h3>Edit Products</h3>
+                    <h3>Edit Employee</h3>
                 </div>
                 <div class="card-body">
 
@@ -48,9 +48,9 @@
                                 alt="" width="200">
                         </div>
                         <button class="btn btn-success" type="submit">submit</button>
-
+                        <a href="{{route('employee')}}" class="btn btn-info">Back</a>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        
                         </div>
 
                     </form>

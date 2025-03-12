@@ -34,6 +34,7 @@
                             <input type="text" class="form-control" name="password" value={{$com_pass_info->password}}></input>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="{{route('computer_pass')}}" class="btn btn-info">Back</a>
                     </form>
                 </div>
             </div>

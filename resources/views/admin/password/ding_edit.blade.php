@@ -35,6 +35,7 @@
                                 <input class="form-control" type="text" name="note" value={{$dingpass_info->note}}></input>
                             </div>
                             <button class="btn btn-primary">Submit</button>
+                            <a href="{{route('ding_pass')}}" class="btn btn-info">Back</a>
                         </form>
 
                 </div>
