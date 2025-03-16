@@ -81,6 +81,25 @@ class StoreController extends Controller
         ]);
     }
 
+    function add_product(){
+        $all_product_types = ProductType::all();
+        $all_departments = Department::all();
+        $all_brands = Brand::all();
+        $all_SizeMaseurment = SizeMaseurment::all();
+        $all_status = Status::all();
+        $all_supplier = Supplier::all();
+        $all_company = Company::all();
+        return view('admin.store.add_product',[
+            'all_product_types' => $all_product_types,
+            'all_departments' => $all_departments,
+            'all_brands' => $all_brands,
+            'all_SizeMaseurment' => $all_SizeMaseurment,
+            'all_status' => $all_status,
+            'all_supplier' => $all_supplier,
+            'all_company' => $all_company,
+        ]);
+    }
+
     function store_store(Request $request)
     {
         $picture_id = Store::insertGetId([
