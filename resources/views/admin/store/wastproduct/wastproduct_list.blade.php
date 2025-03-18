@@ -31,11 +31,13 @@
                                     <option value="csv">CSV</option>
                                     <option value="xls">XLS</option>
                                 </select>
-                                <button type="submit" class="btn btn-success">Export</button>
+                                <button type="submit" id="export-btn" class="btn btn-success">Export</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+
             </div>
 
             <!-- Modal End -->
@@ -100,3 +102,8 @@
     </div>
     <!-- Display Table End -->
 @endsection
+
+
+@push('script')
+
+@endpush

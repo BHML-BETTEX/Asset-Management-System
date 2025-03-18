@@ -16,4 +16,3 @@ class WastProductExport implements FromView
         ]);
     }
 }
-

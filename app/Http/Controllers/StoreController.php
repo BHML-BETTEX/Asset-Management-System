@@ -33,33 +33,32 @@ class StoreController extends Controller
     function store(Request $request)
     {
         $role = auth()->user()->roles[0];
-        
+
         $search = $request['search'] ?? "";
-        if($search != ""){
+        if ($search != "") {
             $stores = Store::where('products_id', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")
-            ->orwhere('brand', 'LIKE', "%$search")
-            ->orwhere('vendor', 'LIKE', "%$search")
-            ->orwhere('company', 'LIKE', "%$search")
-            ->orwhere('checkstatus', 'LIKE', "%$search")
-            ->orwhere('asset_sl_no', 'LIKE', "%$search")
-            ->paginate(13);
-        }
-        else{
-            $stores = Store::where(function($query) use($role){
+                ->orwhere('brand', 'LIKE', "%$search")
+                ->orwhere('vendor', 'LIKE', "%$search")
+                ->orwhere('company', 'LIKE', "%$search")
+                ->orwhere('checkstatus', 'LIKE', "%$search")
+                ->orwhere('asset_sl_no', 'LIKE', "%$search")
+                ->paginate(13);
+        } else {
+            $stores = Store::where(function ($query) use ($role) {
                 // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));
                 $companies = [];
-                
+
                 $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
                 $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
                 $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
-                
+
                 $query->whereIn('company', $companies);
 
                 return $query;
             })->paginate(13);
         }
 
-        
+
         $all_product_types = ProductType::all();
         $all_departments = Department::all();
         $all_brands = Brand::all();
@@ -76,12 +75,13 @@ class StoreController extends Controller
             'all_status' => $all_status,
             'all_supplier' => $all_supplier,
             'all_company' => $all_company,
-            'search'=> $search,
+            'search' => $search,
 
         ]);
     }
 
-    function add_product(){
+    function add_product()
+    {
         $all_product_types = ProductType::all();
         $all_departments = Department::all();
         $all_brands = Brand::all();
@@ -89,7 +89,7 @@ class StoreController extends Controller
         $all_status = Status::all();
         $all_supplier = Supplier::all();
         $all_company = Company::all();
-        return view('admin.store.add_product',[
+        return view('admin.store.add_product', [
             'all_product_types' => $all_product_types,
             'all_departments' => $all_departments,
             'all_brands' => $all_brands,
@@ -176,7 +176,7 @@ class StoreController extends Controller
     function store_update(Request $request)
 
     {
-        if($request->picture ==''){
+        if ($request->picture == '') {
             Store::find($request->stores_id)->update([
                 'products_id' => $request->products_id,
                 'asset_type' => $request->asset_type,
@@ -198,29 +198,28 @@ class StoreController extends Controller
                 'company' => $request->company,
                 'others' => $request->others,
                 'others2' => $request->others2,
-                    
+
             ]);
             return back();
-           }
-           else {
+        } else {
             $store = Store::find($request->stores_id);
             $delete_from = public_path('/uploads/store/' . $store->picture);
             if (file_exists($delete_from)) {
                 unlink($delete_from);
             }
-    
+
             $imageName = null;
             if ($request->file('picture')) {
                 $imageName = $request->stores_id . '.' . $request->picture->extension();
                 $request->picture->move(public_path('uploads/store/'), $imageName);
-    
+
                 Store::where('id', $request->stores_id)->update([
                     'picture' => $imageName,
                 ]);
                 return back();
             }
+        }
     }
-}
     //Edit end
 
 
@@ -282,20 +281,21 @@ class StoreController extends Controller
     function search_by_id($store_id)
     {
         $issued_products = Store::find($store_id);
-        $issued_products_data =[
+        $issued_products_data = [
             'products_id' => $issued_products->products_id,
-            'asset_type' =>$issued_products->rel_to_ProductType->product,
-            'model'=>$issued_products->model,
-            'purchase_date'=>$issued_products->purchase_date,
-            'asset_sl_no'=>$issued_products->asset_sl_no,
-            'company'=>$issued_products->rel_to_Company->company,
+            'asset_type' => $issued_products->rel_to_ProductType->product,
+            'model' => $issued_products->model,
+            'purchase_date' => $issued_products->purchase_date,
+            'asset_sl_no' => $issued_products->asset_sl_no,
+            'company' => $issued_products->rel_to_Company->company,
 
         ];
         $issued_products = Store::find($store_id);
         return response()->json(['data' => $issued_products_data]);
     }
 
-    function store_export(Request $request){
+    function store_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -313,7 +313,6 @@ class StoreController extends Controller
 
         $Filename = "assetlist-data.$extension";
         return Excel::download(new StoreExport, $Filename, $exportFormat);
-
     }
     //autofill end
 
@@ -322,7 +321,7 @@ class StoreController extends Controller
     {
         $stores_info = Store::find($stores_id);
 
-        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->first();  
+        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->first();
 
         return view('admin.store.invoice', [
             'stores_info' => $stores_info,
@@ -330,10 +329,11 @@ class StoreController extends Controller
         ]);
     }
 
-    function qr_code($stores_id){
+    function qr_code($stores_id)
+    {
         $qrCode = Store::find($stores_id);
-        return view('admin.store.qr_code',[
-            'qrCode'=>$qrCode,
+        return view('admin.store.qr_code', [
+            'qrCode' => $qrCode,
         ]);
     }
     //invoice end.
@@ -353,8 +353,8 @@ class StoreController extends Controller
     function return_update(Request $request)
     {
         DB::table("issues")
-        ->where(['asset_tag' => $request->asset_tag])
-        ->update(['return_date' => $request->return_date]);
+            ->where(['asset_tag' => $request->asset_tag])
+            ->update(['return_date' => $request->return_date]);
 
         return back();
     }
@@ -365,12 +365,13 @@ class StoreController extends Controller
     //autofill start...
     function return_search_by_id($store_id)
     {
-        $return_products = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date')->where('id', $store_id)->first();  
-        
+        $return_products = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date')->where('id', $store_id)->first();
+
         return response()->json(['data' => $return_products]);
     }
 
-    function history_export(Request $request){
+    function history_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -393,52 +394,55 @@ class StoreController extends Controller
 
     //store search start...
 
-    function store_search(Request $request) {
+    function store_search(Request $request)
+    {
         $data = $request->input('search');
         $all_product_types = DB::table('stores')->where('products_id', 'LIKE', '%' . $data . '%')
-        //->orwhere('asset_type', 'LIKE', '%' . $data . '%')
-        ->get();
-        
-        return view ('admin.store.store_list',  compact('all_product_types'));
+            //->orwhere('asset_type', 'LIKE', '%' . $data . '%')
+            ->get();
+
+        return view('admin.store.store_list',  compact('all_product_types'));
     }
     //store search end.
 
 
 
     //History
-    function history(Request $request){
-        
+    function history(Request $request)
+    {
+
         $search = $request['search'] ?? "";
-        if($search != ""){
-            $issue_info = issue::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")-> orwhere('emp_id', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")-> orwhere('emp_name', 'LIKE',"%$search")->paginate(13);
-        }
-        else{
+        if ($search != "") {
+            $issue_info = issue::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->paginate(13);
+        } else {
             $issue_info = issue::paginate(13);
         }
-        
+
         return view('admin.store.history', [
             'issue_info' => $issue_info,
-            'search'=> $search,
+            'search' => $search,
         ]);
     }
 
-    
+
 
 
 
     //Transfer Start
 
-    function store_transfer(){
+    function store_transfer()
+    {
         $issued_products = Store::all();
         $companys = Company::all();
-        return view('admin.store.transfer',[
-            'issued_products'=>$issued_products,
-            'companys'=>$companys,
+        return view('admin.store.transfer', [
+            'issued_products' => $issued_products,
+            'companys' => $companys,
 
         ]);
     }
 
-    function transfer_store(Request $request){
+    function transfer_store(Request $request)
+    {
         Transfer::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
@@ -447,29 +451,30 @@ class StoreController extends Controller
             'description' => $request->description,
             'note' => $request->note,
             'transfer_date' => $request->transfer_date,
-            'oldcompany'=> $request->oldcompany,
-            'others'=> $request->others,
+            'oldcompany' => $request->oldcompany,
+            'others' => $request->others,
 
         ]);
         return redirect()->route('transfer_list');
     }
 
-    function transfer_list(Request $request){
+    function transfer_list(Request $request)
+    {
         $search = $request['search'] ?? "";
-        if($search != ""){
-            $transer_data = Transfer::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('company', 'LIKE',"%$search")->paginate(5);
-        }
-        else{
+        if ($search != "") {
+            $transer_data = Transfer::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(5);
+        } else {
             $transer_data = Transfer::paginate(5);
         }
-        
-        return view('admin.store.transfer.transfer_list',[
+
+        return view('admin.store.transfer.transfer_list', [
             'transer_data' => $transer_data,
             'search' => $search,
         ]);
     }
 
-    function transfer_export(Request $request){
+    function transfer_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -489,52 +494,55 @@ class StoreController extends Controller
         return Excel::download(new TransferExport, $Filename, $exportFormat);
     }
 
-    function transfer_edit($id){
+    function transfer_edit($id)
+    {
         $transfer_data = Transfer::find($id);
         $companys = Company::all();
-        return view('admin.store.transfer.transfer_edit',[
+        return view('admin.store.transfer.transfer_edit', [
             'transfer_data' => $transfer_data,
-            'companys'=>$companys,
+            'companys' => $companys,
         ]);
     }
 
-    function transfer_update(Request $request){
+    function transfer_update(Request $request)
+    {
         Transfer::find($request->id)->update([
-            'company' =>$request->companys,
+            'company' => $request->companys,
             'note' => $request->note,
             'transfer_date' => $request->transfer_date,
         ]);
 
         return redirect()->route('transfer_list');
-            
     }
 
-    function transfer_return(){
+    function transfer_return()
+    {
         $transfer_return = DB::select("CALL sp_transfer_return()");
         return view('admin.store.transfer.transfer_return', [
             'transfer_return' => $transfer_return,
         ]);
-
     }
 
-    function transfer_return_search_id($id){
+    function transfer_return_search_id($id)
+    {
         $transfer_data = DB::select("CALL sp_transfer_return()", [$id]);
 
-            $transfer_return_data = [
-                'asset_tag' => $transfer_data[0]->asset_tag,
-                'asset_type' => $transfer_data[0]->asset_type,
-                'oldcompany' => $transfer_data[0]->oldcompany ,
-                'company' => $transfer_data[0]->company,
-                'transfer_date' => $transfer_data[0]->transfer_date,
-            ];
-    
-            return response()->json(['data' => $transfer_return_data]);
+        $transfer_return_data = [
+            'asset_tag' => $transfer_data[0]->asset_tag,
+            'asset_type' => $transfer_data[0]->asset_type,
+            'oldcompany' => $transfer_data[0]->oldcompany,
+            'company' => $transfer_data[0]->company,
+            'transfer_date' => $transfer_data[0]->transfer_date,
+        ];
+
+        return response()->json(['data' => $transfer_return_data]);
     }
 
-    function transfer_return_update(Request $request){
+    function transfer_return_update(Request $request)
+    {
         DB::table("transfers")
-        ->where(['asset_tag' => $request->asset_tag])
-        ->update(['return_date' => $request->return_date]);
+            ->where(['asset_tag' => $request->asset_tag])
+            ->update(['return_date' => $request->return_date]);
 
         return back();
     }
@@ -544,14 +552,16 @@ class StoreController extends Controller
 
     //maintenance start...
 
-    function maintenance(){
+    function maintenance()
+    {
         $issued_products = Store::all();
-        return view('admin.store.maintenance.maintenance',[
-            'issued_products'=>$issued_products,
+        return view('admin.store.maintenance.maintenance', [
+            'issued_products' => $issued_products,
         ]);
     }
 
-    function maintenance_store(Request $request){
+    function maintenance_store(Request $request)
+    {
         Maintenance::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
@@ -571,63 +581,65 @@ class StoreController extends Controller
         return redirect()->route('maintenance_list');
     }
 
-    function maintenance_list(Request $request){
+    function maintenance_list(Request $request)
+    {
         $search = $request['search'] ?? "";
-        if($search != ""){
-            $maintenance_data = Maintenance::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('vendor', 'LIKE',"%$search")->paginate(13);
-        }
-        else{
+        if ($search != "") {
+            $maintenance_data = Maintenance::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('vendor', 'LIKE', "%$search")->paginate(13);
+        } else {
             $maintenance_data = Maintenance::paginate(13);
         }
-        return view('admin.store.maintenance.maintenance_list',[
+        return view('admin.store.maintenance.maintenance_list', [
             'maintenance_data' => $maintenance_data,
-            'search'=> $search,
+            'search' => $search,
         ]);
     }
 
 
-    function maintenance_search_id ($store_id)
+    function maintenance_search_id($store_id)
     {
         $issued_products = Maintenance::find($store_id);
-        
-        $issued_products_data =[
+
+        $issued_products_data = [
             'asset_tag' => $issued_products->asset_tag,
-            'asset_type' =>$issued_products->asset_type,
-            'model'=>$issued_products->model,
-            'purchase_date'=>$issued_products->purchase_date,
-            'asset_sl_no'=>$issued_products->asset_sl_no,  
+            'asset_type' => $issued_products->asset_type,
+            'model' => $issued_products->model,
+            'purchase_date' => $issued_products->purchase_date,
+            'asset_sl_no' => $issued_products->asset_sl_no,
         ];
         $issued_products = Maintenance::find($store_id);
         return response()->json(['data' => $issued_products_data]);
     }
 
-    function maintenance_return(){
+    function maintenance_return()
+    {
         $issued_products = DB::select("CALL sp_maintenence_issue_list()");
         $all_supplier = Supplier::all();
-        return view('admin.store.maintenance.maintenance_return',[       
-            'issued_products'=>$issued_products,
-            'all_supplier'=>$all_supplier,
+        return view('admin.store.maintenance.maintenance_return', [
+            'issued_products' => $issued_products,
+            'all_supplier' => $all_supplier,
         ]);
     }
 
 
-    
-    function ma_return_update(Request $request){
+
+    function ma_return_update(Request $request)
+    {
         DB::table("maintenances")
-        ->where('asset_tag', $request->asset_tag)
-        ->update([
-            'end_date' => $request->end_date,
-            'amount' => $request->amount,
-            'currency' => $request->currency,
-            'vendor' => $request->vendor,
-        ]);
+            ->where('asset_tag', $request->asset_tag)
+            ->update([
+                'end_date' => $request->end_date,
+                'amount' => $request->amount,
+                'currency' => $request->currency,
+                'vendor' => $request->vendor,
+            ]);
 
         return redirect()->route('maintenance_list');
-
     }
 
 
-    function maintenance_export(Request $request){
+    function maintenance_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -647,29 +659,30 @@ class StoreController extends Controller
         return Excel::download(new MaintenanceExport, $Filename, $exportFormat);
     }
 
-    function maintenance_edit($id){
+    function maintenance_edit($id)
+    {
         $maintenance_data = Maintenance::find($id);
-        return view('admin.store.maintenance.maintenance_edit',[
-            'maintenance_data'=>$maintenance_data,
+        return view('admin.store.maintenance.maintenance_edit', [
+            'maintenance_data' => $maintenance_data,
         ]);
     }
 
-    function maintenance_update(){
-        
-    }
+    function maintenance_update() {}
     //maintenance end...
 
 
     //wastproduct start..
-    function wastproduct (){
+    function wastproduct()
+    {
         $issued_products = Store::all();
-        return view('admin.store.wastproduct.wastproduct',[
-            'issued_products'=>$issued_products,
+        return view('admin.store.wastproduct.wastproduct', [
+            'issued_products' => $issued_products,
         ]);
     }
 
-    function wastproduct_store(Request $request){
-    
+    function wastproduct_store(Request $request)
+    {
+
         WastProduct::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
@@ -688,29 +701,31 @@ class StoreController extends Controller
         //return redirect()->route('admin.store.wastproduct.wastproduct');
     }
 
-    function wastproduct_list(Request $request){
+    function wastproduct_list(Request $request)
+    {
         $search = $request['search'] ?? "";
-        if($search != ""){
-            $wastproduct = WastProduct::where('asset_tag', 'LIKE',"%$search" )-> orwhere('asset_type', 'LIKE',"%$search")->orwhere ('date', 'LIKE',"%$search")->paginate(13);
-        }
-        else{
+        if ($search != "") {
+            $wastproduct = WastProduct::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('date', 'LIKE', "%$search")->paginate(13);
+        } else {
             $wastproduct = WastProduct::paginate(13);
-        }      
-        return view('admin.store.wastproduct.wastproduct_list',[
-            'wastproduct'=>$wastproduct,
-            'search'=>$search,
+        }
+        return view('admin.store.wastproduct.wastproduct_list', [
+            'wastproduct' => $wastproduct,
+            'search' => $search,
         ]);
     }
 
 
-    function wastproduct_edit($id){
+    function wastproduct_edit($id)
+    {
         $wastproduct = WastProduct::find($id);
-        return view('admin.store.wastproduct.wastproduct_edit',[
-            'wastproduct'=>$wastproduct,
+        return view('admin.store.wastproduct.wastproduct_edit', [
+            'wastproduct' => $wastproduct,
         ]);
     }
     //wastproduct end..
-    function wastproduct_update(Request $request){
+    function wastproduct_update(Request $request)
+    {
 
         WastProduct::find($request->id)->update([
             'description' => $request->description,
@@ -721,31 +736,51 @@ class StoreController extends Controller
         return redirect()->route('wastproduct_list');
     }
 
-    function wastproduct_delete($id){
+    function wastproduct_delete($id)
+    {
         WastProduct::find($id)->delete();
         return back();
     }
 
-    function wastproduct_export(Request $request){
-        if ($request->type == "xlsx") {
-            $extension = "xlsx";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
-        } elseif ($request->type == "csv") {
-            $extension = "csv";
-            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
-        } elseif ($request->type == "xls") {
-            $extension = "xls";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
-        } else {
-            $extension = "xlsx";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
-        }
+    // function wastproduct_export(Request $request){
+    //     if ($request->type == "xlsx") {
+    //         $extension = "xlsx";
+    //         $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+    //     } elseif ($request->type == "csv") {
+    //         $extension = "csv";
+    //         $exportFormat = \Maatwebsite\Excel\Excel::CSV;
+    //     } elseif ($request->type == "xls") {
+    //         $extension = "xls";
+    //         $exportFormat = \Maatwebsite\Excel\Excel::XLS;
+    //     } else {
+    //         $extension = "xlsx";
+    //         $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+    //     }
 
 
+    //     $Filename = "wastproduct-data.$extension";
+    //     return Excel::download(new WastProductExport, $Filename, $exportFormat);
+    // }
+
+
+    public function wastproduct_export(Request $request)
+    {
+        // Determine file type
+        $extensionMap = [
+            "xlsx" => \Maatwebsite\Excel\Excel::XLSX,
+            "csv" => \Maatwebsite\Excel\Excel::CSV,
+            "xls" => \Maatwebsite\Excel\Excel::XLS,
+        ];
+
+        $extension = $request->type ?? "xlsx";
+        $exportFormat = $extensionMap[$extension] ?? \Maatwebsite\Excel\Excel::XLSX;
+
+        // Get filtered data from request
+        $filteredData = json_decode($request->input('filtered_data'), true);
+
+        // Set filename
         $Filename = "wastproduct-data.$extension";
-        return Excel::download(new WastProductExport, $Filename, $exportFormat);
+
+        return Excel::download(new WastProductExport($filteredData), $Filename, $exportFormat);
     }
-
-
-
 }

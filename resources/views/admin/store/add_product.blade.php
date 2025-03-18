@@ -95,7 +95,7 @@
                                                 class="text-success" href=""><i
                                                     style="font-size:10px;"></a></i></label>
                                         <select id="form_need" name="currency"
-                                            class="form-control" required="required"
+                                            class="form-control"
                                             data-error="brand">
                                             <option value="" selected disabled>--Select
                                                 Your
@@ -124,7 +124,7 @@
                                                     class="fa fa-plus"
                                                     style="font-size:10px;"></a></i></label>
                                         <select id="form_label" name="durablity"
-                                            class="form-control" required="required"
+                                            class="form-control"
                                             data-error="brand">
                                             <option value="" selected disabled>--Select
                                                 Your
@@ -157,7 +157,7 @@
                                         </label>
 
                                         <select id="form_label" name="units"
-                                            class="form-control">
+                                            class="form-control" required="required">
                                             <option value="" selected disabled>--Select
                                                 Your
                                                 Issue--</option>
@@ -210,7 +210,7 @@
                                                     style="font-size:10px;"></i></span>
                                         </label>
                                         <select id="company" name="company"
-                                            class="form-control select2">
+                                            class="form-control select2" required="required">
                                             <option value="" selected disabled>--Select
                                                 Your
                                                 Issue--</option>
@@ -255,7 +255,7 @@
                                                     style="font-size:10px;"></i></span>
                                         </label>
                                         <select id="form_need" name="status"
-                                            class="form-control" data-error="status">
+                                            class="form-control" data-error="status" required>
                                             <option value="" selected disabled>--Select
                                                 Your
                                                 Issue--</option>
@@ -293,8 +293,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="form_label">Picture</label>
-                                        <input id="form_email" type="file" name="picture"
-                                            required="required" class="form-control">
+                                        <input id="form_email" type="file" name="picture" class="form-control">
                                     </div>
                                 </div>
                             </div>

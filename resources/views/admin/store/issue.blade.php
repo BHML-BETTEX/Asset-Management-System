@@ -1,5 +1,4 @@
 @extends('master')
-
 @section('content')
     <div class="container position-sticky z-index-sticky top-0">
         <div class="row d-flex justify-content-center">
@@ -40,7 +39,7 @@
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
-                            <select id="empl_id" name="emp_id" class="form-control">
+                            <select id="empl_id" name="emp_id" class="form-control select2">
                                 @foreach ($employee as $employee)
                                     <option value="{{ $employee->emp_id }}"  data-emp_id="{{ $employee->id }}">{{ $employee->emp_id }}</option>
                                 @endforeach
