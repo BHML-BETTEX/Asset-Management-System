@@ -79,10 +79,23 @@ class PasswordController extends Controller
     function mail_pass(Request $request)
     {
         $search = $request['search'] ?? "";
+        
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX') : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+
         if ($search != "") {
-            $Mail_pass = Mail_pass::where('display_name', 'LIKE', "%$search")->orwhere('mail_address', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->get();
+            $Mail_pass = Mail_pass::where(function($query) use($companies){
+                $query->whereIn('company', $companies);
+            })->where(function($query) use($search){
+                $query-> where('display_name', 'LIKE', "%$search")->orwhere('mail_address', 'LIKE', "%$search%")->orwhere('company', 'LIKE', "%$search%");
+            })->paginate(13);
         } else {
-            $Mail_pass = Mail_pass::paginate(13);
+            $Mail_pass = Mail_pass::where(function($query) use($companies){
+                $query->whereIn('company', $companies);
+            })->paginate(13);
         }
         $all_company = Company::paginate(13);
 
