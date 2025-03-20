@@ -27,6 +27,10 @@
                     <div class="col-md-2 ">
                         <form action="{{route('maintenance_export')}}" method="GET">
                             <div class="input-group">
+                                @foreach ($_GET as $key=> $item)
+                                    <input type="hidden" name="{{$key}}" value="{{$item}}">
+                                @endforeach
+                                
                                 <select name="type" class="form-control">
                                     <option value="">Select Type</option>
                                     <option value="xlsx">XLSX</option>

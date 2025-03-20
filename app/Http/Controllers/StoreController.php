@@ -585,7 +585,7 @@ class StoreController extends Controller
     {
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $maintenance_data = Maintenance::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('vendor', 'LIKE', "%$search")->paginate(13);
+            $maintenance_data = Maintenance::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('vendor', 'LIKE', "%$search")->orwhere('others', 'LIKE', "%$search")->paginate(13);
         } else {
             $maintenance_data = Maintenance::paginate(13);
         }
@@ -640,6 +640,7 @@ class StoreController extends Controller
 
     function maintenance_export(Request $request)
     {
+        //dd($request->all());
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -654,9 +655,8 @@ class StoreController extends Controller
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
         }
 
-
         $Filename = "maintenance-data.$extension";
-        return Excel::download(new MaintenanceExport, $Filename, $exportFormat);
+        return Excel::download(new MaintenanceExport($request->input("search")) , $Filename, $exportFormat);
     }
 
     function maintenance_edit($id)
@@ -765,22 +765,16 @@ class StoreController extends Controller
 
     public function wastproduct_export(Request $request)
     {
-        // Determine file type
-        $extensionMap = [
-            "xlsx" => \Maatwebsite\Excel\Excel::XLSX,
-            "csv" => \Maatwebsite\Excel\Excel::CSV,
-            "xls" => \Maatwebsite\Excel\Excel::XLS,
-        ];
-
-        $extension = $request->type ?? "xlsx";
-        $exportFormat = $extensionMap[$extension] ?? \Maatwebsite\Excel\Excel::XLSX;
-
-        // Get filtered data from request
-        $filteredData = json_decode($request->input('filtered_data'), true);
-
-        // Set filename
-        $Filename = "wastproduct-data.$extension";
-
-        return Excel::download(new WastProductExport($filteredData), $Filename, $exportFormat);
+        {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+            ]);
+    
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+    
+            return Excel::download(new WastProductExport($startDate, $endDate), 'filtered_data.xlsx');
+        }
     }
 }
