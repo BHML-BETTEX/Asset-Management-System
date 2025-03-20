@@ -411,11 +411,21 @@ class StoreController extends Controller
     function history(Request $request)
     {
 
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX') : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $issue_info = issue::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->paginate(13);
+            $issue_info = issue::where(function($query) use($companies){
+                $query->whereIn('others', $companies);
+            })->where(function($query) use($search){
+                $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%");
+            })->paginate(13);
         } else {
-            $issue_info = issue::paginate(13);
+            $issue_info = issue::whereIn('others', $companies)->paginate(13);
         }
 
         return view('admin.store.history', [
