@@ -25,7 +25,7 @@ class PasswordController extends Controller
 
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $computer_password = computer_pass::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('asset_tag', 'LIKE', "%$search")->get();
+            $computer_password = computer_pass::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('asset_tag', 'LIKE', "%$search")->paginate(13);
         } else {
             $computer_password = computer_pass::paginate(13);
         }
@@ -381,9 +381,8 @@ class PasswordController extends Controller
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
         }
 
-
         $Filename = "computerpass-data.$extension";
-        return Excel::download(new ComputerpassExport, $Filename, $exportFormat);
+        return Excel::download(new ComputerpassExport($request->input("search")), $Filename, $exportFormat);
     }
 
 
@@ -404,7 +403,7 @@ class PasswordController extends Controller
 
 
         $Filename = "camerapass-data.$extension";
-        return Excel::download(new CameraPassExport, $Filename, $exportFormat);
+        return Excel::download(new CameraPassExport($request->input("search")), $Filename, $exportFormat);
     }
 
 
@@ -425,7 +424,7 @@ class PasswordController extends Controller
 
 
         $Filename = "internet-data.$extension";
-        return Excel::download(new InternetPassExport, $Filename, $exportFormat);
+        return Excel::download(new InternetPassExport($request->input("search")), $Filename, $exportFormat);
     }
 
     function ding_export(Request $request){
@@ -445,6 +444,6 @@ class PasswordController extends Controller
 
 
         $Filename = "ding-data.$extension";
-        return Excel::download(new DingpassExport, $Filename, $exportFormat);
+        return Excel::download(new DingpassExport($request->input("search")), $Filename, $exportFormat);
     }
 }
