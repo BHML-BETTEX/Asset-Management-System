@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\HistoryExport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
@@ -36,7 +37,8 @@ class StoreController extends Controller
 
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $stores = Store::where('products_id', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")
+            $stores = Store::where('products_id', 'LIKE', "%$search")
+                ->orWhere('asset_type', 'LIKE', "%$search%")
                 ->orwhere('brand', 'LIKE', "%$search")
                 ->orwhere('vendor', 'LIKE', "%$search")
                 ->orwhere('company', 'LIKE', "%$search")
@@ -296,6 +298,7 @@ class StoreController extends Controller
 
     function store_export(Request $request)
     {
+       
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -312,7 +315,7 @@ class StoreController extends Controller
 
 
         $Filename = "assetlist-data.$extension";
-        return Excel::download(new StoreExport, $Filename, $exportFormat);
+        return Excel::download(new StoreExport($request->input("search")) , $Filename, $exportFormat);
     }
     //autofill end
 
@@ -386,9 +389,8 @@ class StoreController extends Controller
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
         }
 
-
         $Filename = "history-data.$extension";
-        return Excel::download(new StoreExport, $Filename, $exportFormat);
+        return Excel::download(new HistoryExport ($request->input("search")), $Filename, $exportFormat);
     }
     //autofill end
 
@@ -422,7 +424,7 @@ class StoreController extends Controller
             $issue_info = issue::where(function($query) use($companies){
                 $query->whereIn('others', $companies);
             })->where(function($query) use($search){
-                $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%");
+                $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%");
             })->paginate(13);
         } else {
             $issue_info = issue::whereIn('others', $companies)->paginate(13);
@@ -501,7 +503,7 @@ class StoreController extends Controller
 
 
         $Filename = "transer-data.$extension";
-        return Excel::download(new TransferExport, $Filename, $exportFormat);
+        return Excel::download(new TransferExport ($request->input("search")), $Filename, $exportFormat);
     }
 
     function transfer_edit($id)

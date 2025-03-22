@@ -23,7 +23,7 @@
                     </form>
                 </div>
                 <div class="col-md-2 ">
-                    <!-- <form action="{{route('wastproduct_export')}}" method="GET">
+                    <form action="{{route('wastproduct_export')}}" method="GET">
                             <div class="input-group">
                                 <select name="type" class="form-control">
                                     <option value="">Select Type</option>
@@ -33,13 +33,7 @@
                                 </select>
                                 <button type="submit" id="export-btn" class="btn btn-success">Export</button>
                             </div>
-                        </form> -->
-                    <form action="{{route('wastproduct_export')}}" method="GET"> 
-                        @csrf
-                        <input type="date" name="start_date" >
-                        <input type="date" name="end_date" >
-                        <button type="submit">Export to Excel</button>
-                    </form>
+                        </form>
                 </div>
             </div>
 

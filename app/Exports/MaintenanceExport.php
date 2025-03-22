@@ -32,6 +32,7 @@ class MaintenanceExport implements FromView
         else{
             return view('admin.store.maintenance.maintenance_export', [
                 'maintenance' => Maintenance::all(),
+                
             ]);
         }
 
