@@ -24,7 +24,7 @@
                 <div class="col-md-2 ">
                     <form action="{{route('ding_export')}}" method="GET">
                         @foreach ($_GET as $key=> $item)
-                        <input type="hidden" name="{{$key}}" value="{{$item}}">
+                            <input type="hidden" name="{{$key}}" value="{{$item}}">
                         @endforeach
                         <div class="input-group">
                             <select name="type" class="form-control">

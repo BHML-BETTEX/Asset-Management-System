@@ -76,7 +76,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="form_label">Description</label>
-                                        <textarea id="form_message" name="description" class="form-control" rows="4"></textarea>
+                                        <textarea id="form_message" name="description" class="form-control" rows="6"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -150,15 +150,16 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="form_label">Units
-                                            <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
+                                        <label for="form_label">Units <span
+                                        class="text-danger">*</span></label>
+                                            <span class="text-success" data-toggle="modal" data-target="#addUnitModal" ><i
                                                     class="fa fa-plus"
                                                     style="font-size:10px;"></i></span>
                                         </label>
 
                                         <select id="form_label" name="units"
                                             class="form-control" required="required">
-                                            <option value="" selected disabled>--Select
+                                            <option value="" selected disabled >--Select
                                                 Your
                                                 Issue--</option>
                                             @foreach ($all_SizeMaseurment as $all_SizeMaseurment)
