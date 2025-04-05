@@ -27,7 +27,7 @@ use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
 use App\Exports\WastProductExport;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
@@ -391,6 +391,36 @@ class StoreController extends Controller
 
         $Filename = "history-data.$extension";
         return Excel::download(new HistoryExport ($request->input("search")), $Filename, $exportFormat);
+    }
+
+    function history_generatePDF(Request $request){
+
+
+
+        $issue_info = Issue::all(); // Fetch all issues
+        $employee_info = Issue::all();
+        // Fetch store information based on each issue
+        $store_info = [];
+        foreach ($issue_info as $issue) {
+            $store = DB::table('stores')
+                ->select('products_id', 'asset_type', 'model', 'brand', 'description', 'asset_sl_no', 'qty', 'units', 'picture')
+                ->where('products_id', $issue->asset_tag) // Make sure 'asset_tag' exists in 'issues' table
+                ->first();
+            
+            $store_info[] = $store; // Store each record
+        }
+    
+        $data = [
+            'title' => 'BETTEX HK Ltd',
+            'date' => date('Y-m-d'),
+            'content' => 'Acknowledgement Form.',
+            'issue_info' => $issue_info,
+            'store_info' => $store_info,
+            'employee_info'=> $employee_info,
+        ];
+    
+        $pdf = Pdf::loadView('admin.store.pdf_history', $data)->setPaper('a4', 'portrait');
+        return $pdf->download('history.pdf' ); // Display PDF in browser
     }
     //autofill end
 

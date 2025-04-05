@@ -98,7 +98,7 @@
                                             <th>Product Tag</th>
                                             <th>Model</th>
                                             <th>Serial #</th>
-                                            <th style="">Description</th>
+                                            <th>Description</th>
                                             <th>Qty</th>
                                             <th>Unit</th>
                                         </tr>

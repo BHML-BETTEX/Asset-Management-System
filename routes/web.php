@@ -131,10 +131,9 @@ Route::get('/store/search', [StoreController::class, 'store_search'])->name('sto
 
 Route::get('/history', [StoreController::class, 'history'])->name('history');
 Route::get('/history/export', [StoreController::class, 'history_export'])->name('history_export');
-
+Route::get('/history/generatePDF', [StoreController::class, 'history_generatePDF'])->name('pdf.history');
 
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
-
 Route::get('/store/QrCode/{stores_id}', [StoreController::class, 'qr_code'])->name('qr_code');
 
 

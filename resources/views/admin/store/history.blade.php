@@ -7,7 +7,7 @@
             <h5 class="text-white">History List</h5>
         </div>
 
-        <div class="col-md-3 top_search">
+        <div class="col-md-2 top_search">
             <form action="" method="GET">
                 <div class="input-group">
                     <input type="search" class="form-control" name="search" placeholder="Search for..."
@@ -20,7 +20,7 @@
             <form action="{{route('history_export')}}" method="GET">
                 <div class="input-group">
                     @foreach ($_GET as $key=> $item)
-                        <input type="hidden" name="{{$key}}" value="{{$item}}">
+                    <input type="hidden" name="{{$key}}" value="{{$item}}">
                     @endforeach
                     <select name="type" class="form-control">
                         <option value="">Select Type</option>
@@ -31,6 +31,14 @@
                     <button type="submit" class="btn btn-success">Export</button>
                 </div>
             </form>
+        </div>
+        <div class="col-md-1 ">
+            <a href="{{route('pdf.history')}}">
+                <div class="input-group">
+
+                </div>
+                <button>Download PDF</button>
+            </a>
         </div>
     </div>
 </div>

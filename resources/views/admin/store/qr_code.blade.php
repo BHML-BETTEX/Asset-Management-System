@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html>
 
+
+
 <head>
     <title>QR Code</title>
 </head>
+@push('css_or_js')
+    <link rel="stylesheet" href="{{ asset('public/assets/back-end') }}/css/qrcode.css"/>
+@endpush
+
 
 <body>
     <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0" cellspacing="0">
