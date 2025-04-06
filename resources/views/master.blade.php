@@ -89,9 +89,9 @@
                                 </li>
                                 <li><a href="{{ route('employee') }}"><i class="fa fa-group"></i>Employee List</a></li>
                                 <li><a href="{{ route('users') }}"><i class="fa fa-user"></i>User List</a></li>
-                                <li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-table"></i> Import Data <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="tables.html">Tables</a></li>
+                                        <li><a href="{{route('employee_import')}}">Employee Data</a></li>
                                         <li><a href="tables_dynamic.html">Table Dynamic</a></li>
                                     </ul>
                                 </li>

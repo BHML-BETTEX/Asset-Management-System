@@ -9,6 +9,8 @@ use App\Models\Employee;
 use App\Models\ProductType;
 use Carbon\Carbon;
 use App\Exports\EmployeeDataExport;
+use App\Imports\EmployeeImport;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -26,11 +28,13 @@ class EmployeeController extends Controller
         $product_types = ProductType::all();
         $departments = Department::all();
         $designation = designation::all();
+        $company = Company::all();
         return view('admin.employee.employee_list', [
             'product_types' => $product_types,
             'departments' => $departments,
             'designation' => $designation,
             'employees' => $employees,
+            'company'=> $company,
             'search' => $search,
         ]);
     }
@@ -44,6 +48,7 @@ class EmployeeController extends Controller
             'join_date' => $request->join_date,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
+            'company' => $request->company,
             'created_at' => Carbon::now(),
         ]);
 
@@ -175,5 +180,21 @@ class EmployeeController extends Controller
 
         $Filename = "employee-data.$extension";
         return Excel::download(new EmployeeDataExport, $Filename, $exportFormat);
+    }
+
+    function employee_import(){
+        return view('admin.employee.employee_import');
+    }
+
+    function employee_importexceldata(Request $request){
+        $request->validate([
+            'import_file'=>[
+                'required',
+                'file'
+            ],
+        ]);
+        Excel::import(new EmployeeImport, $request->file('import_file'));
+
+        return back()->with('import_data', 'Data Import Successfully');
     }
 }

@@ -56,8 +56,8 @@
                     <form action="{{ route('employee.store') }}" Method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Employee id</label>
-                            <input class="form-control" name="emp_id"></input>
+                            <label for="message-text" class="col-form-label" >Employee id *</label>
+                            <input class="form-control" name="emp_id" required></input>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Employee Name</label>
@@ -93,6 +93,17 @@
                             <label for="message-text" class="col-form-label">Email</label>
                             <input class="form-control" type="email" name="email"></input>
                         </div>
+
+                        <div class="form-group">
+                            <label for="message-text">Company *</label>
+                            <select class="form-control" id="sel1" name="company" required>
+                                @foreach ($company as $companys)
+                                    <option class="" value="{{ $companys->id }}">
+                                        {{ $companys->company }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Oters info</label>
                             <input class="form-control" type="text" name="text"></input>
@@ -136,6 +147,7 @@
                                     <th scope="col">JOINING DATE</th>
                                     <th scope="col">PHONE NUMBER</th>
                                     <th scope="col">EMAIL</th>
+                                    <th scope="col">Company</th>
                                     <th scope="col">PICTURE</th>
                                     <th scope="col">ACTION</th>
                                 </tr>
@@ -152,6 +164,7 @@
                                         <td>{{ $employee->join_date }}</td>
                                         <td>{{ $employee->phone_number }}</td>
                                         <td>{{ $employee->email }}</td>
+                                        <td>{{ $employee->company}}</td>
                                         <td><img width="50"
                                                 src="{{ asset('uploads/employees') }}/{{ $employee->picture }}"
                                                 alt=""></td>

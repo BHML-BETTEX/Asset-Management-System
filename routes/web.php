@@ -229,6 +229,8 @@ Route::post('/employee/update', [EmployeeController::class, 'employee_update'])-
 Route::get('/employee/search_by_id/{employee_id}', [EmployeeController::class, 'search_by_id'])->name('search.empl');
 Route::get('/search', [EmployeeController::class, 'search'])->name('search');
 Route::get('/employee/export', [EmployeeController::class, 'export'])->name('export');
+Route::get('/employee/import', [EmployeeController::class, 'employee_import'])->name('employee_import');
+Route::post('/employee/importexceldata', [EmployeeController::class, 'employee_importexceldata'])->name('employee_importexceldata');
 
 
 //desktop
