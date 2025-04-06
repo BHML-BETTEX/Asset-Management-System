@@ -92,7 +92,7 @@
                                 <li><a><i class="fa fa-table"></i> Import Data <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{route('employee_import')}}">Employee Data</a></li>
-                                        <li><a href="tables_dynamic.html">Table Dynamic</a></li>
+                                        <li><a href="{{route('store_import')}}">Assets data</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-bar-chart-o"></i> References <span

@@ -27,6 +27,7 @@ use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
 use App\Exports\WastProductExport;
+use App\Imports\StoreImport;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
@@ -317,7 +318,27 @@ class StoreController extends Controller
         $Filename = "assetlist-data.$extension";
         return Excel::download(new StoreExport($request->input("search")) , $Filename, $exportFormat);
     }
-    //autofill end
+    //store Import start...
+    function store_import(){
+        return view('admin.store.store_import');
+    }
+
+    function store_importexceldata(Request $request){
+        $request->validate([
+            'asset_import'=>[
+                'required',
+                'file'
+            ],
+        ]);
+         Excel::import(new StoreImport, $request->file('asset_import'));
+
+         return back();
+    }
+
+
+
+    //store Import start...
+
 
     //invoice start...
     function invoice($stores_id)

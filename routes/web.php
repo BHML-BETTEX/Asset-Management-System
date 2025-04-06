@@ -135,6 +135,10 @@ Route::get('/history/generatePDF', [StoreController::class, 'history_generatePDF
 
 Route::get('/store/export', [StoreController::class, 'store_export'])->name('store_export');
 Route::get('/store/QrCode/{stores_id}', [StoreController::class, 'qr_code'])->name('qr_code');
+Route::get('/store/import', [StoreController::class, 'store_import'])->name('store_import');
+Route::post('/store/importexceldata', [StoreController::class, 'store_importexceldata'])->name('store_importexceldata');
+
+
 
 
 //Transfer start
