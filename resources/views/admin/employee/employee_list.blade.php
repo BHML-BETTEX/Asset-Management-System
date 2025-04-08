@@ -153,7 +153,7 @@
                                 </tr>
                             </thead>
 
-                            <thead>
+                            <tbody style="height: 5px !important; overflow: scroll; ">
                                 @foreach ($employees as $key => $employee)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
@@ -165,7 +165,7 @@
                                         <td>{{ $employee->phone_number }}</td>
                                         <td>{{ $employee->email }}</td>
                                         <td>{{ $employee->company}}</td>
-                                        <td><img width="50"
+                                        <td><img width="40" height="30"
                                                 src="{{ asset('uploads/employees') }}/{{ $employee->picture }}"
                                                 alt=""></td>
                                         <td>
@@ -179,7 +179,7 @@
                                     </tr>
                                 @endforeach
                                 
-                            </thead>
+                            </tbody>
                         </table>
                             {{$employees->links()}}
                         <div>
