@@ -332,7 +332,7 @@ class StoreController extends Controller
         ]);
          Excel::import(new StoreImport, $request->file('asset_import'));
 
-         return back();
+         return back()->with('asset_data', 'Data has been imported');
     }
 
 

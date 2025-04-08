@@ -5,9 +5,9 @@
 <div class="container">
     <div class="row ">
         <div class="col-lg-8 m-auto">
-            <!-- @if(Session::has('import_data'))
-            <p class="alert alert-success">{{ Session::get('import_data') }}</p>
-            @endif -->
+            @if(Session::has('asset_data'))
+            <p class="alert alert-success">{{ Session::get('asset_data') }}</p>
+            @endif
 
             <div class="card">
                 <div class="card-header">

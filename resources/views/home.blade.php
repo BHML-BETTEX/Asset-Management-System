@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-md-1 col-sm-4  tile_stats_count">
                     <span class="count_top"><i class="fa fa-user"></i> Total Printer</span>
-                    <div class="count">{{ DB::table('stores')->where('asset_type', 3)->count() }}</div>
+                    <div class="count">{{ DB::table('stores')->where('asset_type', 4)->count() }}</div>
                     <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Number Of Printer (pcs)</span>
                 </div>
 
