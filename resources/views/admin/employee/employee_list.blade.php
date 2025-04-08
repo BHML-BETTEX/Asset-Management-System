@@ -98,7 +98,7 @@
                             <label for="message-text">Company *</label>
                             <select class="form-control" id="sel1" name="company" required>
                                 @foreach ($company as $companys)
-                                    <option class="" value="{{ $companys->id }}">
+                                    <option class="" value="{{ $companys->company }}">
                                         {{ $companys->company }} </option>
                                 @endforeach
                             </select>
