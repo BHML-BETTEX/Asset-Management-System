@@ -17,7 +17,7 @@
             <td>
                 <img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(80)->generate("https://asset.bettex.com/public/store/qr_code_view/$qrCode->id")) !!}"><br>
                 <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong>{{$qrCode->products_id}}<br>
-            </td>
+            </td>s
         </tr>
     </table>
 </body>
