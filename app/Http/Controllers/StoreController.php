@@ -37,16 +37,21 @@ class StoreController extends Controller
         $role = auth()->user()->roles[0];
 
         $search = $request['search'] ?? "";
-        if ($search != "") {
-            $stores = Store::where('products_id', 'LIKE', "%$search")
-                ->orWhere('asset_type', 'LIKE', "%$search%")
-                ->orwhere('brand', 'LIKE', "%$search")
-                ->orwhere('vendor', 'LIKE', "%$search")
-                ->orwhere('company', 'LIKE', "%$search")
-                ->orwhere('checkstatus', 'LIKE', "%$search")
-                ->orwhere('asset_sl_no', 'LIKE', "%$search")
+         if ($search != "") {
+            $stores = Store::join('brands', 'brands.id', '=', 'stores.brand')
+                ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+                ->where(function ($query) use ($search) {
+                    $query->where('stores.products_id', 'LIKE', "%{$search}%")
+                        ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                        ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                })
+                ->select('stores.*') // Avoids ambiguous column error
                 ->paginate(13);
-        } else {
+        }  else {
             $stores = Store::where(function ($query) use ($role) {
                 // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));
                 $companies = [];
@@ -299,7 +304,7 @@ class StoreController extends Controller
 
     function store_export(Request $request)
     {
-       
+
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -316,23 +321,25 @@ class StoreController extends Controller
 
 
         $Filename = "assetlist-data.$extension";
-        return Excel::download(new StoreExport($request->input("search")) , $Filename, $exportFormat);
+        return Excel::download(new StoreExport($request->input("search")), $Filename, $exportFormat);
     }
     //store Import start...
-    function store_import(){
+    function store_import()
+    {
         return view('admin.store.store_import');
     }
 
-    function store_importexceldata(Request $request){
+    function store_importexceldata(Request $request)
+    {
         $request->validate([
-            'asset_import'=>[
+            'asset_import' => [
                 'required',
                 'file'
             ],
         ]);
-         Excel::import(new StoreImport, $request->file('asset_import'));
+        Excel::import(new StoreImport, $request->file('asset_import'));
 
-         return back()->with('asset_data', 'Data has been imported');
+        return back()->with('asset_data', 'Data has been imported');
     }
 
 
@@ -360,7 +367,18 @@ class StoreController extends Controller
             'qrCode' => $qrCode,
         ]);
     }
+
+    function qr_code_view($stores_id)
+    {
+        $stores_info = Store::find($stores_id);
+        return view('admin.store.qr_code_view', [
+            'stores_info' => $stores_info,
+        ]);
+    }
+
     //invoice end.
+
+
 
     //return start...
     function return()
@@ -411,15 +429,15 @@ class StoreController extends Controller
         }
 
         $Filename = "history-data.$extension";
-        return Excel::download(new HistoryExport ($request->input("search")), $Filename, $exportFormat);
+        return Excel::download(new HistoryExport($request->input("search")), $Filename, $exportFormat);
     }
 
-    function history_generatePDF(Request $request){
-
-
-
-        $issue_info = Issue::all(); // Fetch all issues
-        $employee_info = Issue::all();
+    function history_generatePDF(Request $request )
+    {
+        $search= $request->search;
+        $issue_info = Issue::where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%")->get();
+        // Fetch all issues
+        $employee_info = Issue::where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%")->get();
         // Fetch store information based on each issue
         $store_info = [];
         foreach ($issue_info as $issue) {
@@ -427,21 +445,21 @@ class StoreController extends Controller
                 ->select('products_id', 'asset_type', 'model', 'brand', 'description', 'asset_sl_no', 'qty', 'units', 'picture')
                 ->where('products_id', $issue->asset_tag) // Make sure 'asset_tag' exists in 'issues' table
                 ->first();
-            
+
             $store_info[] = $store; // Store each record
         }
-    
+
         $data = [
             'title' => 'BETTEX HK Ltd',
             'date' => date('Y-m-d'),
             'content' => 'Acknowledgement Form.',
             'issue_info' => $issue_info,
             'store_info' => $store_info,
-            'employee_info'=> $employee_info,
+            'employee_info' => $employee_info,
         ];
-    
+
         $pdf = Pdf::loadView('admin.store.pdf_history', $data)->setPaper('a4', 'portrait');
-        return $pdf->download('history.pdf' ); // Display PDF in browser
+        return $pdf->download('history.pdf'); // Display PDF in browser
     }
     //autofill end
 
@@ -472,9 +490,9 @@ class StoreController extends Controller
 
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $issue_info = issue::where(function($query) use($companies){
+            $issue_info = issue::where(function ($query) use ($companies) {
                 $query->whereIn('others', $companies);
-            })->where(function($query) use($search){
+            })->where(function ($query) use ($search) {
                 $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%");
             })->paginate(13);
         } else {
@@ -554,7 +572,7 @@ class StoreController extends Controller
 
 
         $Filename = "transer-data.$extension";
-        return Excel::download(new TransferExport ($request->input("search")), $Filename, $exportFormat);
+        return Excel::download(new TransferExport($request->input("search")), $Filename, $exportFormat);
     }
 
     function transfer_edit($id)
@@ -719,7 +737,7 @@ class StoreController extends Controller
         }
 
         $Filename = "maintenance-data.$extension";
-        return Excel::download(new MaintenanceExport($request->input("search")) , $Filename, $exportFormat);
+        return Excel::download(new MaintenanceExport($request->input("search")), $Filename, $exportFormat);
     }
 
     function maintenance_edit($id)
@@ -827,16 +845,15 @@ class StoreController extends Controller
 
 
     public function wastproduct_export(Request $request)
-    {
-        {
+    { {
             $request->validate([
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
             ]);
-    
+
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
-    
+
             return Excel::download(new WastProductExport($startDate, $endDate), 'filtered_data.xlsx');
         }
     }

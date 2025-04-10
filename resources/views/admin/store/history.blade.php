@@ -33,7 +33,7 @@
             </form>
         </div>
         <div class="col-md-1 ">
-            <a href="{{route('pdf.history')}}">
+            <a href="{{route('pdf.history', $_GET)}}">
                 <div class="input-group">
 
                 </div>

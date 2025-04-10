@@ -134,7 +134,7 @@
                                                         class="fa fa-trash "
                                                         style="font-size:20px;"></a></i></button> -->
                                             <button class="border-0 bg-white"><a class="text-success"
-                                                    href="{{ route('invoice', $store->id) }}"><i
+                                                    href="{{ route('qr_code_view', $store->id) }}"><i
                                                         class="fa fa-eye "
                                                         style="font-size:20px;"></a></i></button>
 

@@ -1,193 +1,241 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Handover Form</title>
     <style>
-        #customers {
+        body {
             font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
-            border-collapse: collapse;
-            width: 100%;
+            margin: 0;
+            padding: 0;
+            color: #333;
+
         }
 
-        #customers td,
-        #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
+        h1 {
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: #078dd2;
+            color: white;
+            font-size: 24px;
+        }
+
+        .content {
+            text-align: right;
+            padding-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
             font-size: 12px;
         }
 
-        #customers tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #customers tr:hover {
-            background-color: #ddd;
-        }
-
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #04AA6D;
-            color: white;
-        }
-
-
-
-        .fixed_footer {
-            width: 100%;
-            height: 350px;
-            background: white;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            z-index: -100;
-        }
-
-        .fixed_footer p {
-            color: #696969;
-            column-count: 2;
-            column-gap: 50px;
-            font-size: 1em;
-            font-weight: 300;
-            text-align-last: center;
-            border: 1px solid black;
-        }
-
-        #employee {
-            font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        #employee td,
-        #employee th {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
-            font-size: 12px;
+            text-align: left;
         }
 
-        
-        #employee tr:nth-child(even) {
-            background-color: #f2f2f2;
+        th {
+            background-color: #6bccfe;
+            color: white;
+            font-weight: bold;
         }
 
-        #employee tr:hover {
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        tr:hover {
             background-color: #ddd;
         }
 
-        #employee th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #bf8df5;
-            color: white;
+        .footer {
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .signature-block {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 250px;
+            height: 1px;
+            border-bottom: 1px solid #000;
+            margin: 20px auto;
+        }
+
+        .signature-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .printed-info {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .title,
+        .employee-info,
+        .asset-info {
+            margin: 10px 20px;
+        }
+
+        .employee-info b,
+        .asset-info b {
+            font-size: 14px;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+            }
+
+            .footer {
+                position: absolute;
+                bottom: 0;
+                page-break-before: always;
+            }
+
+            table {
+                page-break-before: always;
+            }
+
+            .signature-line {
+                page-break-after: always;
+                text-align: left;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="title" style="text-align:center;">
-        <h1>{{ $title }}</h1>
-        <p>{{ $content }}</p>
-    </div>
-    <div class="content">
-        <p>Date: {{ $date }}</p>
+    <!-- Title and Date Section -->
+    <div class="title" style="text-align: center;">
+    <img style="margin: auto; height: 100px; width: 600px;" src="uploads/bettex_logo.jpeg" alt="Bettex Logo">
+        <p >{{ $content }}</p>
     </div>
 
-    
-        <!-- Emoloyee info -->
-        <p>Employee Information</p>
-        <table id="employee">
-        <thead>
-            <tr>
-                <th>Employee Name</th>
-                <th>Employee ID</th>
-                <th>Designation</th>
-                <th>Department</th>
-                <th>Phone No</th>
-                <th>Mail</th>
-                <th>Organization</th>
-            </tr>
-        </thead>
 
-        <tbody>
-         @foreach($employee_info as $key => $employee_infos)
-            <tr>
-                <td>{{ $employee_infos->emp_name }}</td>
-                <td>{{ $employee_infos->emp_id }}</td>
-                <td>{{ $employee_infos->designation_id }}</td>
-                <td>{{ $employee_infos->department_id }}</td>
-                <td>{{ $employee_infos->phone_number }}</td>
-                <td>{{ $employee_infos->email }}</td>
-                <td>{{ $employee_infos->others }}</td>
-
-            </tr>
-            @endforeach
-        </tbody>
-
-       
-    </table>
-
-        <!-- product info -->
+    <!-- Employee Info Section -->
+    <div class="employee-info">
+        <p><b>Employee Information</b></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Employee ID</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th>Phone No</th>
+                    <th>Email</th>
+                    <th>Organization</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($employee_info as $key => $employee_infos)
+                <tr>
+                    <td>{{ $employee_infos->emp_name }}</td>
+                    <td>{{ $employee_infos->emp_id }}</td>
+                    <td>{{ $employee_infos->designation_id }}</td>
+                    <td>{{ $employee_infos->department_id }}</td>
+                    <td>{{ $employee_infos->phone_number }}</td>
+                    <td>{{ $employee_infos->email }}</td>
+                    <td>{{ $employee_infos->others }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    <br>
 
-    <p>Asset Information</p>
-    <table id="customers">
-        <thead>
-            <tr>
-                <th>Asset Tag</th>
-                <th>Asset Type</th>
-                <th>Model</th>
-                <th>Asset SL No</th>
-                <th>Description</th>
-                <th>Issue Date</th>
-                <th>Return Date</th>
-                <th>Qty</th>
-                <th>Units</th>
-            </tr>
-        </thead>
+    <!-- Asset Info Section -->
+    <div class="asset-info">
+        <p><b>Asset Information</b></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset Tag</th>
+                    <th>Asset Type</th>
+                    <th>Model</th>
+                    <th>Asset SL No</th>
+                    <th>Description</th>
+                    <th>Issue Date</th>
+                    <th>Return Date</th>
+                    <th>Qty</th>
+                    <th>Units</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($issue_info as $key => $issue_info)
+                <tr>
+                    <td>{{ $issue_info->asset_tag }}</td>
+                    <td>{{ $issue_info->asset_type }}</td>
+                    <td>{{ $issue_info->model }}</td>
+                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->asset_sl_no : 'N/A' }}</td>
+                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->description : 'N/A' }}</td>
+                    <td>{{ $issue_info->issue_date }}</td>
+                    <td>{{ $issue_info->return_date }}</td>
+                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->qty : 'N/A' }}</td>
+                    <td>pcs</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-        <tbody>
-            @foreach($issue_info as $key => $issue_info)
-            <tr>
-                <td>{{ $issue_info->asset_tag }}</td>
-                <td>{{ $issue_info->asset_type }}</td>
-                <td>{{ $issue_info->model }}</td>
-                <td>{{ isset($store_info[$key]) ? $store_info[$key]->asset_sl_no : 'N/A' }}</td>
-                <td>{{ isset($store_info[$key]) ? $store_info[$key]->description : 'N/A' }}</td>
-                <td>{{ $issue_info->issue_date }}</td>
-                <td>{{ $issue_info->return_date }}</td>
-                <td>{{ isset($store_info[$key]) ? $store_info[$key]->qty : 'N/A' }}</td>
-                <td>{{ 'pcs' }}</td>
-            </tr>
+    <!-- Footer Section -->
+    <div class="footer">
+        <h4><strong><b>Please read carefully before proceeding:</b></strong></h4>
+        <p>
+            By accepting this device, I understand that I am solely responsible for it until it is returned to Bettex (HK) Ltd, IT Department. I acknowledge that any physical or accidental damage during my possession is my responsibility, and I will be held accountable.
+            <br><br>
+            While using this laptop, I agree not to commit any acts of cybercrime or illegal activity, share company information with unauthorized users, view explicit content, install unauthorized software without IT consent, or lend the laptop to others. I understand that this device is strictly for work purposes only.
+            <br><br>
+            By signing this document, I accept and agree to all the terms of use for this device.
+        </p>
 
-            <!-- <p class="lead">Picture:</p>
-            <img src="{{ asset('/uploads/store/') }}/{{ isset($store_info[$key]) ? $store_info[$key]->picture : 'N/A'}}" id="blah"
-                alt="" width="200"> -->
-            @endforeach
-        </tbody>
-    </table>
+        <div class="signature-block">
+            <p class="signature-label">User Signature:</p>
+        </div><hr>
 
+        <p class="printed-info">
+            Printed by: {{ Auth::user()->name }} / Print Date: {{ $date }}/ BETTEX Asset Managment System
+        </p>
+    </div>
 
-    <footer class="fixed_footer">
-        <div class="content">
-            <p>Please read carefully before proceeding.</p>
-            <p class="" style="margin-top: 10px;">
-                In doing so ,I, do infact understand that I am solely resposible for this device
-                until it is returned to Bettex (HK)Ltd ,IT Department . While under my care ,I
-                acknowledge that any physical or accidental damage is my fault and I will be
-                accountable for it. While using this laptop device ,I willl not commit any acts of
-                cyber crime ,illegal activity,share any company information with unauthorised
-                users,search or watch any explicit contents ,install any software without IT consent
-                or lend laptop to friends or family members.I will strictly use this laptop for work
-                purpose. By signing this document ,I am accepting and agreeing to the terms and use
-                for this laptop.
-            </p>
-        </div>
-    </footer>
 </body>
 
 </html>
