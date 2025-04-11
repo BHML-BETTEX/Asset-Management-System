@@ -496,7 +496,8 @@ class StoreController extends Controller
                 $query->whereIn('others', $companies);
             })->where(function ($query) use ($search) {
                 $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%");
-            })->paginate(13);
+            })->paginate(13)
+            ->appends($request->only('search'));
         } else {
             $issue_info = issue::whereIn('others', $companies)->paginate(13);
         }

@@ -33,11 +33,11 @@
             </form>
         </div>
         <div class="col-md-1 ">
-            <a href="{{route('pdf.history', $_GET)}}">
-                <div class="input-group">
+            <div class="input-group">
+                <a href="{{route('pdf.history', $_GET)}}">
+                    <button class="btn btn-success"><i class="fa fa-download"></i> PDF</button>
 
-                </div>
-                <button>Download PDF</button>
+            </div>
             </a>
         </div>
     </div>
