@@ -107,9 +107,9 @@
                             </div>
                             <!-- /.col -->
                         </div>
-                        <h3>Vendor: {{ $stores_info->rel_to_Supplier->supplier_name }}</h3>
-                        <h3>Purchase Date: {{ $stores_info->purchase_date }}</h3>
-                        <h1>Product By: {{ $stores_info->rel_to_Company->company }}</h1>
+                        <h3>Vendor: <strong>{{ $stores_info->rel_to_Supplier->supplier_name }}</strong></h3>
+                        <h3>Purchase Date: <strong>{{ $stores_info->purchase_date }}</strong></h3>
+                        <h1 class="text-success">Product By: <strong>{{ $stores_info->rel_to_Company->company }}</strong></h1>
                     </div>
                 </div>
 
