@@ -49,8 +49,10 @@ class StoreController extends Controller
                         ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
                         ->orWhere('product_types.product', 'LIKE', "%{$search}%");
                 })
-                ->select('stores.*') // Avoids ambiguous column error
-                ->paginate(13);
+                ->select('stores.*') 
+                ->paginate(13)
+                ->appends($request->only('search'));// Avoids ambiguous column error
+                
         }  else {
             $stores = Store::where(function ($query) use ($role) {
                 // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));

@@ -3,12 +3,12 @@
 <div class="container">
     <div class="page-title">
         <div class="row ">
-            <div class="col-md-12">
-                <div class="col-md-2 p-2">
+            <div class="col-md-12 col-xl-12 col-lg-12">
+                <div class="col-md-2 col-lg-1 col-sm-2 p-2">
                     <h5 class="text-white">Product List</h5>
                 </div>
 
-                <div class="col-md-5 col-lg-5">
+                <div class="col-md-5 col-lg-7">
                 <button type="button" class="btn btn-info"> <a href="{{ route('add_product') }}"
                 class="text-white"><span class="fa fa-plus"> Add</span></a></button>
                     <button type="button" class="btn btn-info"> <a href="{{ route('issue') }}" class="text-white"><span
@@ -22,7 +22,7 @@
                     <button type="button" class="btn btn-info"> <a href="{{ route('wastproduct') }}"
                             class="text-white"><span class="fa fa-gears"> Wast Product</span></a></button>
                 </div>
-                <div class="col-md-3 top_search">
+                <div class="col-md-3 col-lg-2 top_search">
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" class="form-control" name="search" placeholder="Search for..."
@@ -91,7 +91,7 @@
                                 <tbody style="height: 5px !important; overflow: scroll; ">
                                     @foreach ($stores as $key => $store)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $stores->firstItem() + $key }}</td>
                                         <td>{{ $store->products_id }}</td>
                                         <td>{{ $store->rel_to_ProductType->product }}</td>
                                         <td>{{ $store->model }}</td>
