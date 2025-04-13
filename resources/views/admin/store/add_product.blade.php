@@ -191,7 +191,7 @@
                                                     style="font-size:10px;"></i></span>
                                         </label>
                                         <select id="vendor" name="vendor"
-                                            class="form-control select2">
+                                            class="form-control select2" required>
                                             <option value="" selected disabled>--Select
                                                 Your
                                                 Issue--</option>

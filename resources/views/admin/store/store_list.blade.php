@@ -110,7 +110,10 @@
                                         <td>{{ $store->rel_to_Status->status_name }}</td>
                                         <td>{{ $store->rel_to_Company->company }}</td>
                                         <td>{{ $store->others }}</td>
-                                        <td></td>
+                                        <td>
+                                        {{($store->cost / 100) * 36 ; }} BDT
+
+                                        </td> 
                                         <td style="background-color: #feefe6;">
                                             @if($store->checkstatus == "INSTOCK")
                                                 <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
@@ -129,10 +132,7 @@
                                                     href="{{ route('store.edit', $store->id) }}"><i
                                                         class="fa fa-edit "
                                                         style="font-size:20px;"></a></i></button>
-                                            <!-- <button class="border-0 bg-white"><a class="text-danger"
-                                                    href="{{ route('store.delete', $store->id) }}"><i
-                                                        class="fa fa-trash "
-                                                        style="font-size:20px;"></a></i></button> -->
+
                                             <button class="border-0 bg-white"><a class="text-success"
                                                     href="{{ route('qr_code_view', $store->id) }}"><i
                                                         class="fa fa-eye "

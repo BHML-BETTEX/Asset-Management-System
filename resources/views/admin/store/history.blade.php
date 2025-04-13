@@ -35,7 +35,7 @@
         <div class="col-md-1 ">
             <div class="input-group">
                 <a href="{{route('pdf.history', $_GET)}}">
-                    <button class="btn btn-success"><i class="fa fa-download"></i> PDF</button>
+                    <button class="btn btn-danger"><i class="fa fa-download"></i> PDF</button>
 
             </div>
             </a>

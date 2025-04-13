@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Joining Date</label>
-                            <input class="form-control" type="date" name="join_date"></input>
+                            <input class="form-control" type="date" name="join_date" required></input>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Phone Number</label>
