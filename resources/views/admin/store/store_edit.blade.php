@@ -250,6 +250,8 @@
                                 <div class="col-md-12 offset-md-3">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>
+
+                                    <a href="{{route('store')}}" class="btn btn-info">Back</a>
                                 </div>
                             </div>
                         </div>
