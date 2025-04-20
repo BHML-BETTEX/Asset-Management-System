@@ -84,29 +84,13 @@
                         <h3>Product Details</h3>
                     </div>
                     <div class="card-body" style="background-color:#DDEAFC ;">
-                        <div class="row">
-                            <div class="table">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Product Tag</th>
-                                            <th>Model</th>
-                                            <th>Serial #</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{ $stores_info->products_id }}</td>
-                                            <td>{{ $stores_info->model }}</td>
-                                            <td>{{ $stores_info->asset_sl_no }}</td>
-                                            <td>{{ $stores_info->description }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.col -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h4>Product Tag:{{ $stores_info->products_id }}</h4></div>
+                            <div class="panel-body"><h4>Model:{{ $stores_info->model }}</h4></div>
+                            <div class="panel-heading"><h4>Serial #:{{ $stores_info->asset_sl_no }}</h4></div>
+                            <div class="panel-body"><h4>Description: {{ $stores_info->description }}</h4></div>
                         </div>
+                        <!-- /.col -->
                         <h3>Vendor: <strong>{{ $stores_info->rel_to_Supplier->supplier_name }}</strong></h3>
                         <h3>Purchase Date: <strong>{{ $stores_info->purchase_date }}</strong></h3>
                         <h1 class="text-success">Product By: <strong>{{ $stores_info->rel_to_Company->company }}</strong></h1>
@@ -116,7 +100,7 @@
 
                 <!--Contact end-->
                 <footer>
-                    
+
                 </footer>
 
                 <!--QR Code Start-->
