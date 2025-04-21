@@ -111,7 +111,7 @@
                                         <td>{{ $store->rel_to_Company->company }}</td>
                                         <td>{{ $store->others }}</td>
                                         <td>
-                                        {{($store->cost / 100) * 36 ; }} BDT
+
 
                                         </td> 
                                         <td style="background-color: #feefe6;">
