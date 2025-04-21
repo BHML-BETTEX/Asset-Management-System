@@ -85,37 +85,66 @@
                     </div>
                     <div class="card-body" style="background-color:#DDEAFC ;">
                         <div class="panel panel-default">
-                            <div class="panel-heading"><h4>Product Tag:{{ $stores_info->products_id }}</h4></div>
-                            <div class="panel-body"><h4>Model:{{ $stores_info->model }}</h4></div>
-                            <div class="panel-heading"><h4>Serial #:{{ $stores_info->asset_sl_no }}</h4></div>
-                            <div class="panel-body"><h4>Description: {{ $stores_info->description }}</h4></div>
+                            <div class="panel-heading">
+                                <h4>Product Tag: {{ $stores_info->products_id }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <h4>Model: {{ $stores_info->model }}</h4>
+                            </div>
+                            <div class="panel-heading">
+                                <h4>Serial #: {{ $stores_info->asset_sl_no }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <h4>Description: {{ $stores_info->description }}</h4>
+                            </div>
                         </div>
                         <!-- /.col -->
                         <h3>Vendor: <strong>{{ $stores_info->rel_to_Supplier->supplier_name }}</strong></h3>
                         <h3>Purchase Date: <strong>{{ $stores_info->purchase_date }}</strong></h3>
+                        <h3>Warrenty Validation: <strong>{{ $stores_info->warrenty }} {{ $stores_info->durablity }}</strong></h3>
                         <h1 class="text-success">Product By: <strong>{{ $stores_info->rel_to_Company->company }}</strong></h1>
                     </div>
+
+                    <div>
+                        <div class="card-header text-white" style="background-color:#337ca6 ;">
+                            <h3>User Details</h3>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Employee Id: {{ $issue_info->emp_id }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <h4>User Name: {{ $issue_info->emp_name }}</h4>
+                            </div>
+                            <div class="panel-heading">
+                                <h4>Designation: {{ $issue_info->designation_id }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <h4>Issue Date: {{ $issue_info->issue_date }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Contact end-->
+                    <footer>
+                        <div class="card-header text-white" style="background-color:#337ca6 ;">
+                            <h6 class="text-center">Powered By: Asset Managment System</h6>
+                        </div>
+                    </footer>
+
+                    <!--QR Code Start-->
+                    <!--QR Code end-->
+
                 </div>
 
 
-                <!--Contact end-->
-                <footer>
-
-                </footer>
-
-                <!--QR Code Start-->
-                <!--QR Code end-->
-
             </div>
 
-
-        </div>
-
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
