@@ -25,6 +25,41 @@
         .print-button:hover {
             background-color: #0056b3;
         }
+
+        @media print {
+            @page {
+                size: 2in 3in;
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .print-button {
+                display: none;
+            }
+
+            #print-area {
+                width: 2in;
+                height: 3in;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            table {
+                width: 100%;
+                height: 100%;
+            }
+
+            img {
+                width: 80px;
+                height: 80px;
+            }
+        }
     </style>
 </head>
 
@@ -32,7 +67,7 @@
     <button class="print-button" onclick="printQRCode()">Print QR Code</button>
 
     <div id="print-area">
-        <table style="width: 350px;" cellpadding="0" cellspacing="0">
+        <table cellpadding="0" cellspacing="0">
             <tr>
                 <td>
                     <img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(80)->generate("https://asset.bettex.com/public/store/qr_code_view/$qrCode->id")) !!}"><br>
@@ -44,12 +79,7 @@
 
     <script>
         function printQRCode() {
-            let printContents = document.getElementById('print-area').innerHTML;
-            let originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
             window.print();
-            document.body.innerHTML = originalContents;
-            location.reload(); // Optional: refresh after print to restore event bindings
         }
     </script>
 </body>

@@ -143,14 +143,26 @@
 
 <body>
 
+<?php
+
+    $groupedAssets = $issue_info->groupBy('emp_id');
+
+
+    foreach($groupedAssets as $empId => $assets);
+
+    $emp = $employee_info->firstWhere('emp_id', $empId);
+
+    ?>
+
     <!-- Title and Date Section -->
     <div class="title" style="text-align: center;">
-    <img style="margin: auto; height: 100px; width: 600px;" src="uploads/bettex_logo.jpeg" alt="Bettex Logo">
-        <p >{{ $content }}</p>
+        <img style="margin: auto; height: 100px; width: 600px;" src="uploads/bettex_logo.jpeg" alt="Bettex Logo">
+        <p>{{ $content }}</p>
     </div>
 
 
     <!-- Employee Info Section -->
+    <!-- Employee Info Row -->
     <div class="employee-info">
         <p><b>Employee Information</b></p>
         <table>
@@ -166,17 +178,15 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($employee_info as $key => $employee_infos)
                 <tr>
-                    <td>{{ $employee_infos->emp_name }}</td>
-                    <td>{{ $employee_infos->emp_id }}</td>
-                    <td>{{ $employee_infos->designation_id }}</td>
-                    <td>{{ $employee_infos->department_id }}</td>
-                    <td>{{ $employee_infos->phone_number }}</td>
-                    <td>{{ $employee_infos->email }}</td>
-                    <td>{{ $employee_infos->others }}</td>
+                    <td>{{ $emp->emp_name }}</td>
+                    <td>{{ $emp->emp_id }}</td>
+                    <td>{{ $emp->designation_id }}</td>
+                    <td>{{ $emp->department_id }}</td>
+                    <td>{{ $emp->phone_number }}</td>
+                    <td>{{ $emp->email }}</td>
+                    <td>{{ $emp->others }}</td>
                 </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -229,7 +239,8 @@
 
         <div class="signature-block">
             <p class="signature-label">User Signature:</p>
-        </div><hr>
+        </div>
+        <hr>
 
         <p class="printed-info">
             Printed by: {{ Auth::user()->name }} / Print Date: {{ $date }}/ BETTEX Asset Managment System
