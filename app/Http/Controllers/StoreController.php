@@ -489,7 +489,7 @@ class StoreController extends Controller
         $companies = [];
         $role = auth()->user()->roles[0];
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
-        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
         $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
 
         $search = $request['search'] ?? "";
