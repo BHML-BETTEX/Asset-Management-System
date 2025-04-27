@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>QR Code</title>
+
     @push('css_or_js')
-        <link rel="stylesheet" href="{{ asset('public/assets/back-end') }}/css/qrcode.css"/>
+        <link rel="stylesheet" href="{{ asset('public/assets/back-end/css/qrcode.css') }}"/>
     @endpush
 
     <style>
@@ -28,7 +30,7 @@
 
         @media print {
             @page {
-                size: 2in 3in;
+                size: 1in 1.5in;
                 margin: 0;
             }
 
@@ -42,8 +44,8 @@
             }
 
             #print-area {
-                width: 2in;
-                height: 3in;
+                width: 1in;
+                height: 1.5in;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -53,25 +55,25 @@
             table {
                 width: 100%;
                 height: 100%;
+                border-collapse: collapse;
             }
 
             img {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
             }
         }
     </style>
 </head>
-
 <body>
     <button class="print-button" onclick="printQRCode()">Print QR Code</button>
 
     <div id="print-area">
-        <table cellpadding="0" cellspacing="0">
+        <table>
             <tr>
-                <td>
-                    <img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(80)->generate("https://asset.bettex.com/public/store/qr_code_view/$qrCode->id")) !!}"><br>
-                    <span style="color:#5D6D7E;"><strong>{{ $qrCode->products_id }}</strong></span>
+                <td align="center">
+                    <img src="data:image/png;base64,{{ base64_encode(QrCode::format('png')->size(80)->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)) }}" alt="QR Code"><br>
+                    <span style="color:#5D6D7E;"><p>{{ $qrCode->products_id }}</p></span>
                 </td>
             </tr>
         </table>

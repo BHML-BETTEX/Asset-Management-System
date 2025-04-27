@@ -18,7 +18,7 @@
                                                     class="fa fa-plus"
                                                     style="font-size:10px;"></i></span>
                                         </label>
-                                        
+
                                         <select id="asset_type" name="asset_type"
                                             class="form-control select2" required>
                                             <option value="" selected disabled>-- Select Asset Type --</option>
@@ -30,8 +30,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -54,6 +52,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Asset Type & brand start -->
                             <div class="row">
                                 <div class="col-md-6">
@@ -151,15 +150,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="form_label">Units <span
-                                        class="text-danger">*</span></label>
-                                            <span class="text-success" data-toggle="modal" data-target="#addUnitModal" ><i
-                                                    class="fa fa-plus"
-                                                    style="font-size:10px;"></i></span>
+                                                class="text-danger">*</span></label>
+                                        <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
+                                                class="fa fa-plus"
+                                                style="font-size:10px;"></i></span>
                                         </label>
 
                                         <select id="form_label" name="units"
                                             class="form-control" required="required">
-                                            <option value="" selected disabled >--Select
+                                            <option value="" selected disabled>--Select
                                                 Your
                                                 Issue--</option>
                                             @foreach ($all_SizeMaseurment as $all_SizeMaseurment)
@@ -305,7 +304,7 @@
                                         class="btn btn-primary">Submit</button>
                                     <button type="reset"
                                         class="btn btn-secondary">Reset</button>
-                                        <a href="{{route('store')}}" class="btn btn-info">Back</a>
+                                    <a href="{{route('store')}}" class="btn btn-info">Back</a>
                                 </div>
                             </div>
                         </div>

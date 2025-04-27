@@ -37,23 +37,31 @@ class StoreController extends Controller
         $role = auth()->user()->roles[0];
 
         $search = $request['search'] ?? "";
-         if ($search != "") {
+        $productSearch = $request->input('product_search'); // from select dropdown
+
+        if ($search != "" || $productSearch) {
             $stores = Store::join('brands', 'brands.id', '=', 'stores.brand')
                 ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-                ->where(function ($query) use ($search) {
-                    $query->where('stores.products_id', 'LIKE', "%{$search}%")
-                        ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.company', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
-                        ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                ->where(function ($query) use ($search, $productSearch) {
+                    if ($search) {
+                        $query->where('stores.products_id', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                    }
+
+                    if ($productSearch) {
+                        $query->where('product_types.id', '=', $productSearch);
+                    }
                 })
-                ->select('stores.*') 
+                ->select('stores.*')
                 ->paginate(13)
-                ->appends($request->only('search'));// Avoids ambiguous column error
-                
-        }  else {
+                ->appends($request->only('search', 'product_search')); // Avoids ambiguous column error
+
+        } else {
             $stores = Store::where(function ($query) use ($role) {
                 // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));
                 $companies = [];
@@ -61,9 +69,7 @@ class StoreController extends Controller
                 $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
                 $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
                 $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
-
                 $query->whereIn('company', $companies);
-
                 return $query;
             })->paginate(13);
         }
@@ -371,7 +377,7 @@ class StoreController extends Controller
     }
 
     function qr_code_view($stores_id)
-    {   
+    {
         $stores_info = Store::find($stores_id);
         $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->first();
         return view('admin.store.qr_code_view', [
@@ -436,9 +442,9 @@ class StoreController extends Controller
         return Excel::download(new HistoryExport($request->input("search")), $Filename, $exportFormat);
     }
 
-    function history_generatePDF(Request $request )
+    function history_generatePDF(Request $request)
     {
-        $search= $request->search;
+        $search = $request->search;
         $issue_info = Issue::where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%")->get();
         // Fetch all issues
         $employee_info = Issue::where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%")->get();
@@ -499,7 +505,7 @@ class StoreController extends Controller
             })->where(function ($query) use ($search) {
                 $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%");
             })->paginate(13)
-            ->appends($request->only('search'));
+                ->appends($request->only('search'));
         } else {
             $issue_info = issue::whereIn('others', $companies)->paginate(13);
         }

@@ -4,48 +4,61 @@
     <div class="page-title">
         <div class="row ">
             <div class="col-md-12 col-xl-12 col-lg-12">
-                <div class="col-md-2 col-lg-1 col-sm-2 p-2">
+                <div class="col-md-2 col-lg-2 col-sm-2 p-2">
                     <h5 class="text-white">Product List</h5>
                 </div>
 
-                <div class="col-md-5 col-lg-7">
-                <button type="button" class="btn btn-info"> <a href="{{ route('add_product') }}"
-                class="text-white"><span class="fa fa-plus"> Add</span></a></button>
-                    <button type="button" class="btn btn-info"> <a href="{{ route('issue') }}" class="text-white"><span
-                                class="fa fa-mail-forward"> Issue</span></a></button>
-                    <button type="button" class="btn btn-info"> <a href="{{ route('return') }}"
-                            class="text-white"><span class="fa fa-mail-reply"> Return</span></a></button>
-                    <button type="button" class="btn btn-info"> <a href="{{ route('transfer') }}"
-                            class="text-white"><span class="fa fa-send"> Transfer</span></a></button>
-                    <button type="button" class="btn btn-info"> <a href="{{ route('maintenance') }}"
-                            class="text-white"><span class="fa fa-gears"> Maintenance</span></a></button>
-                    <button type="button" class="btn btn-info"> <a href="{{ route('wastproduct') }}"
-                            class="text-white"><span class="fa fa-gears"> Wast Product</span></a></button>
+                <div class="col-md-4 col-lg-4 d-flex flex-wrap gap-1">
+                    <a href="{{ route('add_product') }}" class="btn btn-info text-white"><i class="fa fa-plus"></i></a>
+                    <a href="{{ route('issue') }}" class="btn btn-info text-white"><i class="fa fa-mail-forward"></i></a>
+                    <a href="{{ route('return') }}" class="btn btn-info text-white"><i class="fa fa-mail-reply"></i></a>
+                    <a href="{{ route('transfer') }}" class="btn btn-info text-white"><i class="fa fa-send"></i></a>
+                    <a href="{{ route('maintenance') }}" class="btn btn-info text-white"><i class="fa fa-gears"></i></a>
+                    <a href="{{ route('wastproduct') }}" class="btn btn-info text-white"><i class="fa fa-briefcase"></i></a>
                 </div>
                 <div class="col-md-3 col-lg-2 top_search">
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" class="form-control" name="search" placeholder="Search for..."
                                 value="{{ $search }}">
-                            <button class="btn btn-secondary" type="submit">Go!</button>
+                            <button class="btn btn-info" type="submit"><span class="fa fa-search"> </span></button>
                         </div>
                     </form>
                 </div>
-                <div class="col-md-2 ">
+
+                <div class="col-md-2 col-lg-2">
+                    <form action="" method="GET">
+                        <div class="input-group">
+                            <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
+                                <option value="">--Product Type--</option>
+                                @foreach ($all_product_types as $all_product)
+                                <option value="{{ $all_product->id }}">{{ $all_product->product }}</option>
+                                @endforeach
+                            </select>
+                            <button class="btn btn-info" type="submit">
+                                <span class="fa fa-search"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="col-md-1  col-lg-2">
                     <form action="{{ route('store_export') }}" method="GET">
                         <div class="input-group">
                             @foreach ($_GET as $key=> $item)
-                         
-                                   <input type="hidden" name="{{$key}}" value="{{$item}}">
+
+                            <input type="hidden" name="{{$key}}" value="{{$item}}">
                             @endforeach
-                            
+
                             <select name="type" class="form-control">
                                 <option value="">Select Type</option>
                                 <option value="xlsx">XLSX</option>
                                 <option value="csv">CSV</option>
                                 <option value="xls">XLS</option>
                             </select>
-                            <button type="submit" class="btn btn-success">Export</button>
+
+                            <button type="submit" class="btn btn-success"><span class="fa fa-file-excel-o"></button>
                         </div>
                     </form>
                 </div>
@@ -88,7 +101,7 @@
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
-                                <tbody style="height: 5px !important; overflow: scroll; ">
+                                <tbody style="height: 3px !important; overflow: scroll; ">
                                     @foreach ($stores as $key => $store)
                                     <tr>
                                         <td>{{ $stores->firstItem() + $key }}</td>
@@ -113,18 +126,18 @@
                                         <td>
 
 
-                                        </td> 
+                                        </td>
                                         <td style="background-color: #feefe6;">
                                             @if($store->checkstatus == "INSTOCK")
-                                                <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
+                                            <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
                                             @elseif($store->checkstatus == "MAINTENANCE")
-                                                <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
+                                            <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
                                             @else
                                             <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                             @endif
-                                            
+
                                         </td>
-                                        <td><img width="50" height="25"
+                                        <td><img width="40" height="15"
                                                 src="{{ asset('/uploads/store/' . $store->picture) }}"
                                                 alt="picture"></td>
                                         <td>
@@ -149,7 +162,7 @@
                             </table>
                             {{$stores->links()}}
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -158,3 +171,14 @@
 </div>
 <!-- Display Table End -->
 @endsection
+
+@push('script')
+<script>
+    $(document).ready(function() {
+        $('#product_search').select2({
+            placeholder: "--Product Type--",
+            allowClear: true
+        });
+    });
+</script>
+@endpush
