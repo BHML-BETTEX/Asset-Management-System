@@ -12,7 +12,7 @@
                 <div class="input-group">
                     <input type="search" class="form-control" name="search" placeholder="Search for..."
                         value="{{$search}}">
-                    <button class="btn btn-secondary" type="submit">Go!</button>
+                    <button class="btn btn-info" type="submit"><span class="fa fa-search"></span></button>
                 </div>
             </form>
         </div>
@@ -28,14 +28,14 @@
                         <option value="csv">CSV</option>
                         <option value="xls">XLS</option>
                     </select>
-                    <button type="submit" class="btn btn-success">Export</button>
+                    <button type="submit" class="btn btn-success"><span class="fa fa-file-excel-o"></button>
                 </div>
             </form>
         </div>
         <div class="col-md-1 ">
             <div class="input-group">
                 <a href="{{route('pdf.history', $_GET)}}">
-                    <button class="btn btn-danger"><i class="fa fa-download"></i> PDF</button>
+                    <button class="btn btn-info"><i class="fa fa-download"></i> PDF</button>
 
             </div>
             </a>

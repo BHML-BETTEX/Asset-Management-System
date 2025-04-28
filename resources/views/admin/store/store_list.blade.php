@@ -16,25 +16,20 @@
                     <a href="{{ route('maintenance') }}" class="btn btn-info text-white"><i class="fa fa-gears"></i></a>
                     <a href="{{ route('wastproduct') }}" class="btn btn-info text-white"><i class="fa fa-briefcase"></i></a>
                 </div>
-                <div class="col-md-3 col-lg-2 top_search">
+                <div class="col-md-5 col-lg-4 top_search">
                     <form action="" method="GET">
                         <div class="input-group">
-                            <input type="search" class="form-control" name="search" placeholder="Search for..."
-                                value="{{ $search }}">
-                            <button class="btn btn-info" type="submit"><span class="fa fa-search"> </span></button>
-                        </div>
-                    </form>
-                </div>
+                            <input type="search" class="form-control" name="search" placeholder="Search for text...." value="{{ request('search') }}">
 
-                <div class="col-md-2 col-lg-2">
-                    <form action="" method="GET">
-                        <div class="input-group">
                             <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
                                 <option value="">--Product Type--</option>
                                 @foreach ($all_product_types as $all_product)
-                                <option value="{{ $all_product->id }}">{{ $all_product->product }}</option>
+                                <option value="{{ $all_product->id }}" {{ request('product_search') == $all_product->id ? 'selected' : '' }}>
+                                    {{ $all_product->product }}
+                                </option>
                                 @endforeach
                             </select>
+
                             <button class="btn btn-info" type="submit">
                                 <span class="fa fa-search"></span>
                             </button>

@@ -39,41 +39,41 @@ class StoreController extends Controller
         $search = $request['search'] ?? "";
         $productSearch = $request->input('product_search'); // from select dropdown
 
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
+        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 3);
+
         if ($search != "" || $productSearch) {
             $stores = Store::join('brands', 'brands.id', '=', 'stores.brand')
                 ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+                ->whereIn('stores.company', $companies) // <-- Important! Filter by company!
                 ->where(function ($query) use ($search, $productSearch) {
-                    if ($search) {
-                        $query->where('stores.products_id', 'LIKE', "%{$search}%")
-                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.company', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
-                            ->orWhere('product_types.product', 'LIKE', "%{$search}%");
-                    }
 
                     if ($productSearch) {
                         $query->where('product_types.id', '=', $productSearch);
                     }
+
+                    if ($search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('stores.products_id', 'LIKE', "%{$search}%")
+                                ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                                ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                                ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                                ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                                ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                                ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                        });
+                    }
                 })
                 ->select('stores.*')
                 ->paginate(13)
-                ->appends($request->only('search', 'product_search')); // Avoids ambiguous column error
-
+                ->appends($request->only('search', 'product_search'));
         } else {
-            $stores = Store::where(function ($query) use ($role) {
-                // dd(auth()->user()->roles[0]->hasPermissionTo('view BETTEX'));
-                $companies = [];
-
-                $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
-                $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
-                $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
-                $query->whereIn('company', $companies);
-                return $query;
-            })->paginate(13);
+            $stores = Store::whereIn('company', $companies)
+                ->paginate(13);
         }
-
 
         $all_product_types = ProductType::all();
         $all_departments = Department::all();

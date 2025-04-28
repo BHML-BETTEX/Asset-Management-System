@@ -112,16 +112,16 @@
 
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4>Employee Id: {{ $issue_info->emp_id }}</h4>
+                                <h4>Employee Id: {{ $issue_info->emp_id ?? 'Not Assigned' }}</h4>
                             </div>
                             <div class="panel-body">
-                                <h4>User Name: {{ $issue_info->emp_name }}</h4>
+                                <h4>User Name: {{ $issue_info->emp_name ?? 'Not Assigned'}}</h4>
                             </div>
                             <div class="panel-heading">
-                                <h4>Designation: {{ $issue_info->designation_id }}</h4>
+                                <h4>Designation: {{ $issue_info->designation_id ?? 'Not Assigned'}}</h4>
                             </div>
                             <div class="panel-body">
-                                <h4>Issue Date: {{ $issue_info->issue_date }}</h4>
+                                <h4>Issue Date: {{ $issue_info->issue_date ?? 'Not Assigned'}}</h4>
                             </div>
                         </div>
                     </div>
