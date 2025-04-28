@@ -301,10 +301,10 @@
                             <div class="form-group">
                                 <div class="col-md-12 ">
                                     <button type="submit"
-                                        class="btn btn-primary">Submit</button>
+                                        class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
                                     <button type="reset"
-                                        class="btn btn-secondary">Reset</button>
-                                    <a href="{{route('store')}}" class="btn btn-info">Back</a>
+                                        class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                    <a href="{{route('store')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
                                 </div>
                             </div>
                         </div>

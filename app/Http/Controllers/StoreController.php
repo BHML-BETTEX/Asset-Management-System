@@ -556,7 +556,7 @@ class StoreController extends Controller
         if ($search != "") {
             $transer_data = Transfer::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(5);
         } else {
-            $transer_data = Transfer::paginate(5);
+            $transer_data = Transfer::paginate(13);
         }
 
         return view('admin.store.transfer.transfer_list', [

@@ -63,9 +63,9 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 mt-4">
-                            <button type="submit" class="btn btn-success btn-lg flex-fill">Submit</button>
-                            <button type="reset" class="btn btn-secondary btn-lg ">Reset</button>
-                            <a href="{{ route('store') }}" class="btn btn-info btn-lg text-white text-center">Back</a>
+                            <button type="submit" class="btn btn-success btn-lg flex-fill"><span class="fa fa-file-text"> Submit</button>
+                            <button type="reset" class="btn btn-secondary btn-lg "><span class="fa fa-undo"></span> Reset</button>
+                            <a href="{{ route('store') }}" class="btn btn-info btn-lg text-white text-center"><span class="fa fa-step-backward"></span> Back</a>
                         </div>
                     </form>
                 </div>
