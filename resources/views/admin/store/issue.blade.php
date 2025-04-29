@@ -145,4 +145,15 @@
         $('.select2').select2();
     });
 </script>
+
+@if(session('issue_success'))
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: '{{ session("issue_success") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
 @endpush

@@ -153,7 +153,7 @@ class StoreController extends Controller
             ]);
         }
 
-        return back();
+        return redirect()->back()->with('success', 'Product added...!');
     }
     //delete start
     function store_delete($stores_id)
@@ -289,7 +289,7 @@ class StoreController extends Controller
             'created_at' => Carbon::now(),
 
         ]);
-        return back();
+        return redirect()->back()->with('issue_success', 'Product issued...!');
     }
     //issue end
 
@@ -408,7 +408,7 @@ class StoreController extends Controller
             ->where(['asset_tag' => $request->asset_tag])
             ->update(['return_date' => $request->return_date]);
 
-        return back();
+            return redirect()->back()->with('return_success', 'Product return success...!');
     }
 
 

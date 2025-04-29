@@ -300,7 +300,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-12 ">
-                                    <button type="submit"
+                                    <button type="submit" onclick="showAlert"
                                         class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
                                     <button type="reset"
                                         class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
@@ -632,7 +632,6 @@
         </div>
     </div>
 
-
     <!-- /.8 -->
 </div>@endsection
 
@@ -640,6 +639,20 @@
 <script>
     $(document).ready(function() {
         $('.select2').select2(); // Initialize Select2 for dropdowns
+
     });
 </script>
+@endpush
+
+@push('script')
+@if(session('success'))
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: '{{ session("success") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
 @endpush

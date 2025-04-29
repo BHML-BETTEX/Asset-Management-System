@@ -57,9 +57,9 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label">Return Date</label>
-                            <input type="hidden" value="" name="return_date">
+                            <input type="hidden" value="" name="return_date" required>
                             <input type="date" class="form-control" name="return_date" value=""
-                                placeholder="Return Date">
+                                placeholder="Return Date" required>
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 mt-4">
@@ -106,4 +106,16 @@
         $('.select2').select2();
     });
 </script>
+
+
+@if(session('return_success'))
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: '{{ session("return_success") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
 @endpush

@@ -36,6 +36,7 @@
 
 
 
+
 </head>
 
 <body class="nav-md">
@@ -347,6 +348,8 @@
 
     <!-- Custom Theme Scripts -->
     <script src="{{ asset('backend/build/js/custom.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     @stack('script')
 
