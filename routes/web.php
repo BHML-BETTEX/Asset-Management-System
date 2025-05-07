@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BasicinfoController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConsumableController;
 use App\Http\Controllers\DesktopController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
@@ -242,6 +243,18 @@ Route::post('/employee/importexceldata', [EmployeeController::class, 'employee_i
 Route::get('/desktop', [DesktopController::class, 'desktop'])->name('desktop');
 Route::post('/desktop/store/', [DesktopController::class, 'desktop_store'])->name('desktop.store');
 Route::get('/desktop/view/{desktop_id}', [DesktopController::class, 'desktop_view'])->name('desktop.view');
+
+//consumableController
+Route::get('/productdetails', [ConsumableController::class, 'productdetails'])->name('productdetails');
+Route::post('/productdetails/store', [ConsumableController::class, 'productdetails_store'])->name('productdetails_store');
+Route::get('/productdetails/delete/{id}', [ConsumableController::class, 'productdetails_delete'])->name('productdetails_delete');
+Route::get('/Inventory', [ConsumableController::class, 'Inventory'])->name('Inventory');
+Route::get('/consumableIssue', [ConsumableController::class, 'consumableIssue'])->name('consumableIssue');
+
+
+
+
+
 
 
 
