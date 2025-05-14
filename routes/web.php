@@ -250,6 +250,15 @@ Route::post('/productdetails/store', [ConsumableController::class, 'productdetai
 Route::get('/productdetails/delete/{id}', [ConsumableController::class, 'productdetails_delete'])->name('productdetails_delete');
 Route::get('/Inventory', [ConsumableController::class, 'Inventory'])->name('Inventory');
 Route::get('/consumableIssue', [ConsumableController::class, 'consumableIssue'])->name('consumableIssue');
+Route::post('/consumableIssue/store', [ConsumableController::class, 'consumableIssue_store'])->name('consumableIssue_store');
+Route::get('/consumableIssue/delete/{id}', [ConsumableController::class, 'consumableIssue_delete'])->name('consumableIssue_delete');
+Route::get('/product', [ConsumableController::class, 'product'])->name('product');
+Route::post('/product/store', [ConsumableController::class, 'product_store'])->name('product_store');
+
+
+
+
+
 
 
 

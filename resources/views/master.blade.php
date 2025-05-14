@@ -102,6 +102,7 @@
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{route('productdetails')}}">Product Details</a></li>
+                                        <li><a href="{{route('consumableIssue')}}">Issue Details</a></li>
                                         <li><a href="{{route('Inventory')}}">Inventory</a></li>
                                     </ul>
                                 </li>

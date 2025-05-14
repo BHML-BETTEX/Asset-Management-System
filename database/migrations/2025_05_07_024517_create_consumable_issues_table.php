@@ -16,12 +16,14 @@ class CreateConsumableIssuesTable extends Migration
         Schema::create('consumable_issues', function (Blueprint $table) {
             $table->id();
             $table->date('issue_date');
-            $table->integer('product_type');
-            $table->integer('model_id')->nullable();
+            $table->string('product_type');
+            $table->string('model_id')->nullable();
             $table->integer('issue_qty');
             $table->integer('units_id')->nullable();
             $table->integer('emp_id')->nullable();
+            $table->string('emp_name')->nullable();
             $table->integer('department_id')->nullable();
+            $table->string('company');
             $table->string('others')->nullable();
             $table->string('others1')->nullable();
             $table->timestamps();

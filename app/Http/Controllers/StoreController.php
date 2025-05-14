@@ -82,6 +82,8 @@ class StoreController extends Controller
         $all_status = Status::all();
         $all_supplier = Supplier::all();
         $all_company = Company::all();
+        $employee = Employee::all();
+        $all_issue = issue::all();
         return view('admin.store.store_list', [
             'stores' => $stores,
             'all_product_types' => $all_product_types,
@@ -92,6 +94,8 @@ class StoreController extends Controller
             'all_supplier' => $all_supplier,
             'all_company' => $all_company,
             'search' => $search,
+            'employee'=>$employee,
+            'all_issue'=>$all_issue,
 
         ]);
     }
@@ -162,7 +166,6 @@ class StoreController extends Controller
         return back();
     }
     //delete end
-
 
     //Edit start
 

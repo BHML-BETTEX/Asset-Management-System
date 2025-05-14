@@ -35,4 +35,8 @@ class productdetails extends Model
     function rel_to_Department(){
         return $this->belongsTo(Department::class, 'id');
     }
+
+    function rel_to_product(){
+        return $this->belongsTo(product::class, 'model');
+    }
 }

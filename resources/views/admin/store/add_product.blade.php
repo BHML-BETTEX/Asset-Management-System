@@ -315,7 +315,6 @@
     </div>
 
     <!-- brand -->
-
     <div class="modal fade bd-example-modal-lg" id="addBrandModal" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -589,7 +588,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- status -->
     <div class="container">
         <div class="modal fade bd-example-modal-lg " id="addStatusModal" tabindex="-1" role="dialog"
@@ -625,7 +624,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

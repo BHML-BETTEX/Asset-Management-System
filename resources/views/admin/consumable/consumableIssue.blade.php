@@ -65,27 +65,43 @@
                                         <th>SL</th>
                                         <th>ASSET TYPE</th>
                                         <th>MODEL</th>
-                                        <th>BRAND</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>ASSET SL No</th>
-                                        <th>QTY</th>
-                                        <th>UNITS</th>
-                                        <th>WARRENTY</th>
-                                        <th>DURABLITY</th>
-                                        <th>COST</th>
-                                        <th>TOTAL</th>
-                                        <th>CURRENCY</th>
-                                        <th>VENDOR</th>
-                                        <th>PURCHASE DATE</th>
-                                        <th>CHALLAN NO</th>
-                                        <th>COMPANY</th>
-                                        <th>OTHERS</th>
+                                        <th>Issue Date</th>
+                                        <th>Issue Qty</th>
+                                        <th>Units</th>
+                                        <th>Employee Name</th>
+                                        <th>Department</th>
+                                        <th>Company</th>
+                                        <th>Note</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody style="height: 3px !important; overflow: scroll; ">
+                                @foreach($issue_details as $key => $issue_detail)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$issue_detail->rel_to_ProductType->product}}</td>
+                                        <td>{{$issue_detail->model_id}}</td>
+                                        <td>{{$issue_detail->issue_date}}</td>
+                                        <td>{{$issue_detail->issue_qty}}</td>
+                                        <td>{{$issue_detail->rel_to_SizeMaseurment->size}}</td>
+                                        <td>{{$issue_detail->emp_name}}</td>
+                                        <td>{{$issue_detail->rel_to_Department->department_name}}</td>
+                                        <td>{{$issue_detail->rel_to_Company->company}}</td>
+                                        <td>{{$issue_detail->others}}</td>
+                                        <td>
+                                        <button class="border-0 bg-white"><a class="text-primary"
+                                                    href=""><i
+                                                        class="fa fa-edit "
+                                                        style="font-size:20px;"></a></i></button>
 
-
+                                            <button class="border-0 bg-white"><a class="text-danger"
+                                                    href="{{route('consumableIssue_delete', $issue_detail->id)}}"><i
+                                                        class="fa fa-trash "
+                                                        style="font-size:20px;"></a></i>
+                                                    </button>
+                                        </td> 
+                                    </tr>
+                                @endforeach
 
                                 </tbody>
                             </table>
@@ -99,9 +115,9 @@
     </div>
 </div>
 
-<div class="modal fade bd-example-modal-xl" id="addissueModal" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg" id="addissueModal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -115,16 +131,16 @@
                             <h5 class="text-white">Consumable Issue</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{route('productdetails_store')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('consumableIssue_store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="controls">
                                     <!-- Asset Type & brand start -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Purchase date</label>
-                                                <input id="" type="date"
-                                                    name="purchase_date" class="form-control">
+                                                <label for="form_label">Issue date</label>
+                                                <input id="issue_date" type="date"
+                                                    name="issue_date" class="form-control">
                                             </div>
                                         </div>
 
@@ -134,12 +150,12 @@
                                                             class="fa fa-plus"
                                                             style="font-size:10px;"></button></i></span>
                                                 </label>
-                                                <select id="asset_type" name="asset_type"
+                                                <select id="product_type" name="product_type"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    @foreach ($all_product_types as $product_type)
-                                                    <option value="{{ $product_type->id }}">
-                                                        {{ $product_type->product }}
+                                                    @foreach ($productdetails as $productdetail)
+                                                    <option value="{{ $productdetail->asset_type }}">
+                                                        {{ $productdetail-> asset_type}}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -155,12 +171,12 @@
                                                             class="fa fa-plus"
                                                             style="font-size:10px;"></button></i></span>
                                                 </label>
-                                                <select id="asset_type" name="asset_type"
+                                                <select id="model_id" name="model_id"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    @foreach ($all_product_types as $product_type)
-                                                    <option value="{{ $product_type->id }}">
-                                                        {{ $product_type->product }}
+                                                    @foreach ($productdetails as $productdetail)
+                                                    <option value="{{ $productdetail->model }}">
+                                                        {{ $productdetail->model }}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -168,15 +184,24 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Quantity <span
+                                                <label for="form_label">Stock Qty <span
                                                         class="text-danger">*</span></label>
                                                 <input id="qty" type="number" name="qty"
-                                                    class="form-control" value="1">
+                                                    class="form-control" value="1" readonly>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
+                                    <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="form_label">Issue Qty <span
+                                                        class="text-danger">*</span></label>
+                                                <input id="issue_qty" type="number" name="issue_qty"
+                                                    class="form-control" value="1">
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Units <span
@@ -186,7 +211,7 @@
                                                         style="font-size:10px;"></i></span>
                                                 </label>
 
-                                                <select id="form_label" name="units"
+                                                <select id="form_label" name="units_id"
                                                     class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
@@ -199,8 +224,10 @@
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-6">
+                                    <div class="row">
+                                    <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Employee ID <span
                                                         class="text-danger">*</span></label>
@@ -209,18 +236,20 @@
                                                         style="font-size:10px;"></i></span>
                                                 </label>
 
-                                                <select id="form_label" name="units"
+                                                <select id="form_label" name="emp_name"
                                                     class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-
+                                                        @foreach ($employee as $employees)
+                                                    <option value="{{ $employees->emp_name}}">
+                                                        {{ $employees->emp_name }}
+                                                    </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Department <span
@@ -230,7 +259,7 @@
                                                         style="font-size:10px;"></i></span>
                                                 </label>
 
-                                                <select id="form_label" name="units"
+                                                <select id="form_label" name="department_id"
                                                     class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
@@ -243,36 +272,86 @@
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-6">
+                                    <div class="row">
+                                    <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Employee ID <span
+                                                <label for="form_label">Company<span
                                                         class="text-danger">*</span></label>
                                                 <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
                                                         class="fa fa-plus"
                                                         style="font-size:10px;"></i></span>
                                                 </label>
 
-                                                <select id="form_label" name="units"
+                                                <select id="form_label" name="company"
                                                     class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-
+                                                        @foreach ($all_company as $all_companys)
+                                                    <option value="{{ $all_companys->id }}">
+                                                        {{ $all_companys->company }}
+                                                    </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
-       
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="form_label">Note</label>
+                                                        <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12 ">
+                                                <button type="submit" onclick="showAlert"
+                                                    class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
+                                                <button type="reset"
+                                                    class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                                <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
-</div>
 @endsection
+
+@push('script')
+@if(session('issued_success'))
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: '{{ session("issued_success") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
+@if(session('product_delete'))
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: '{{ session("item_delete") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+@endpush
