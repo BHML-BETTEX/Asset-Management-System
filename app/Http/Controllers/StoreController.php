@@ -94,8 +94,8 @@ class StoreController extends Controller
             'all_supplier' => $all_supplier,
             'all_company' => $all_company,
             'search' => $search,
-            'employee'=>$employee,
-            'all_issue'=>$all_issue,
+            'employee' => $employee,
+            'all_issue' => $all_issue,
 
         ]);
     }
@@ -411,7 +411,7 @@ class StoreController extends Controller
             ->where(['asset_tag' => $request->asset_tag])
             ->update(['return_date' => $request->return_date]);
 
-            return redirect()->back()->with('return_success', 'Product return success...!');
+        return redirect()->back()->with('return_success', 'Product return success...!');
     }
 
 
@@ -557,7 +557,10 @@ class StoreController extends Controller
     {
         $search = $request['search'] ?? "";
         if ($search != "") {
-            $transer_data = Transfer::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(5);
+            $transer_data = Transfer::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")
+                ->select('transfers.*')
+                ->paginate(13)
+                ->appends($request->only('search'));
         } else {
             $transer_data = Transfer::paginate(13);
         }

@@ -131,8 +131,6 @@
                                             </button>
                                             @endif
                                         </td>
-
-
                                         <td>{{ $store->products_id }}</td>
                                         <td>{{ $store->rel_to_ProductType->product }}</td>
                                         <td>{{ $store->model }}</td>

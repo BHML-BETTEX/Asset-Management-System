@@ -73,7 +73,7 @@
                                 <tbody style="height: 5px !important; overflow: scroll; ">
                                     @foreach ($transer_data as $key => $transers_data)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $transer_data->firstItem() + $key }}</td>
                                         <td>{{ $transers_data->asset_tag }}</td>
                                         <td>{{ $transers_data->asset_type }}</td>
                                         <td>{{ $transers_data->model }}</td>
