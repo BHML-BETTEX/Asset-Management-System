@@ -79,7 +79,7 @@
                                 @foreach($issue_details as $key => $issue_detail)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$issue_detail->rel_to_ProductType->product}}</td>
+                                        <td>{{$issue_detail->product_type}}</td>
                                         <td>{{$issue_detail->model_id}}</td>
                                         <td>{{$issue_detail->issue_date}}</td>
                                         <td>{{$issue_detail->issue_qty}}</td>
