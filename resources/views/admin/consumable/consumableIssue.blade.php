@@ -155,7 +155,7 @@
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($productdetails as $productdetail)
                                                     <option value="{{ $productdetail->asset_type }}">
-                                                        {{ $productdetail-> asset_type}}
+                                                        {{$productdetail->rel_to_ProductType->product}}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -174,11 +174,7 @@
                                                 <select id="model_id" name="model_id"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    @foreach ($productdetails as $productdetail)
-                                                    <option value="{{ $productdetail->model }}">
-                                                        {{ $productdetail->model }}
-                                                    </option>
-                                                    @endforeach
+                                                    
                                                 </select>
                                             </div>
                                         </div>
@@ -187,7 +183,7 @@
                                                 <label for="form_label">Stock Qty <span
                                                         class="text-danger">*</span></label>
                                                 <input id="qty" type="number" name="qty"
-                                                    class="form-control" value="1" readonly>
+                                                    class="form-control" value="" readonly>
                                             </div>
                                         </div>
                                     </div>

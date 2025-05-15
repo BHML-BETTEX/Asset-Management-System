@@ -58,33 +58,32 @@
                     <div class="card-body">
                         <div class="table-responsive text-nowrap">
                             <table class="table table-striped table-bordered ">
-                            <table class="table table-striped table-bordered ">
-                                <thead class="bg-info text-white ">
-                                <tr>
-                                <th>Product Type</th>
-                                <th>Model</th>
-                                <th>In Quantity</th>
-                                <th>Out Quantity</th>
-                                <th>Total Balance</th>
-                                <th>Company</th>
+                                <table class="table table-striped table-bordered ">
+                                    <thead class="bg-info text-white ">
+                                        <tr>
+                                            <th>Product Type</th>
+                                            <th>Model</th>
+                                            <th>In Quantity</th>
+                                            <th>Out Quantity</th>
+                                            <th>Total Balance</th>
+                                            <th>Company</th>
 
 
-                            </tr>
-                                </thead>
-                                <tbody style="height: 3px !important; overflow: scroll; ">
-                                @foreach($product_tem as $item)
-                            <tr>
-                                <td>{{ $item->asset_type }}</td>
-                                <td>{{ $item->model }}</td>
-                                <td>{{ $item->In_qty }}</td>
-                                <td>{{ $item->out }}</td>
-                                <td>{{ $item->In_qty-$item->out}}</td>
-
-
-                            </tr>
-                            @endforeach
-                        </tbody>
-                            </table>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="height: 3px !important; overflow: scroll; ">
+                                        @foreach($stocks_qty as $item)
+                                        <tr>
+                                            <td>{{ $item->product_type_name }}</td>
+                                            <td>{{ $item->model }}</td>
+                                            <td>{{ $item->in_qty }}</td>s
+                                            <td>{{ $item->out_qty }}</td>
+                                            <td>{{ $item->balance}}</td>
+                                            <td>{{ $item->company_name }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                         </div>
                     </div>
                 </div>
@@ -220,7 +219,7 @@
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-                                                        @foreach ($SizeMaseurment as $SizeMaseurments)
+                                                    @foreach ($SizeMaseurment as $SizeMaseurments)
                                                     <option value="{{ $SizeMaseurments->id }}">
                                                         {{ $SizeMaseurments->size }}
                                                     </option>
@@ -412,12 +411,12 @@
                         <div class="alert alert-success">{{ session('brand_add') }}</div>
                         @endif
                         <div class="card-body">
-                        <form action="{{route('product_store')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
+                            <form action="{{route('product_store')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label for="form_label">Product Type
-                                            <span class="text-success" data-toggle="modal" data-target="#addCompanyModal" ><i
+                                            <span class="text-success" data-toggle="modal" data-target="#addCompanyModal"><i
                                                     class="fa fa-plus"
                                                     style="font-size:10px;"></i></span>
                                         </label>
@@ -482,16 +481,16 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Name * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
+                                                <label for="form_label">Product Names * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
                                                             class="fa fa-plus"
                                                             style="font-size:10px;"></button></i></span>
                                                 </label>
                                                 <select id="product_type" name="product_type"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    @foreach ($productdetails as $productdetail)
-                                                    <option value="{{ $productdetail->asset_type }}">
-                                                        {{ $productdetail-> asset_type}}
+                                                    @foreach ($all_product_types as $all_product_type)
+                                                    <option value="{{ $all_product_type->product }}">
+                                                        {{ $all_product_type->product}}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -499,6 +498,30 @@
                                         </div>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="form_label">Company<span
+                                                        class="text-danger">*</span></label>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
+                                                        class="fa fa-plus"
+                                                        style="font-size:10px;"></i></span>
+                                                </label>
+
+                                                <select id="company_id" name="company"
+                                                    class="form-control" required="required">
+                                                    <option value="" selected disabled>--Select
+                                                        Your
+                                                        Issue--</option>
+                                                    @foreach ($stocks_qty as $item)
+                                                    <option value="{{ $item->company }}">
+                                                        {{ $item->company }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- Asset Type & brand start -->
                                     <div class="row">
                                         <div class="col-md-6">
@@ -510,9 +533,9 @@
                                                 <select id="model_id" name="model_id"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    @foreach ($productdetails as $productdetail)
-                                                    <option value="{{ $productdetail->model }}">
-                                                        {{ $productdetail->model }}
+                                                    @foreach ($stocks_qty as $item)
+                                                    <option value="{{ $item->model }}">
+                                                        {{ $item->model }}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -523,13 +546,13 @@
                                                 <label for="form_label">Stock Qty <span
                                                         class="text-danger">*</span></label>
                                                 <input id="qty" type="number" name="qty"
-                                                    class="form-control" value="1" readonly>
+                                                    class="form-control" value="" readonly>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Issue Qty <span
                                                         class="text-danger">*</span></label>
@@ -552,19 +575,19 @@
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-                                                        @foreach ($SizeMaseurment as $SizeMaseurments)
+                                                    @foreach ($SizeMaseurment as $SizeMaseurments)
                                                     <option value="{{ $SizeMaseurments->id }}">
                                                         {{ $SizeMaseurments->size }}
                                                     </option>
                                                     @endforeach
-                                                    
+
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Employee ID <span
                                                         class="text-danger">*</span></label>
@@ -578,11 +601,11 @@
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-                                                       @foreach($employee as $employees)
-                                                        <option value="{{$employees->emp_name}}">
+                                                    @foreach($employee as $employees)
+                                                    <option value="{{$employees->emp_name}}">
                                                         {{$employees->emp_name}}
-                                                        </option>
-                                                       @endforeach
+                                                    </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -612,60 +635,35 @@
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Company<span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
-                                                </label>
-
-                                                <select id="form_label" name="company"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
-                                                        @foreach ($company as $companys)
-                                                    <option value="{{ $companys->id }}">
-                                                        {{ $companys->company }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label for="form_label">Note</label>
-                                                        <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
-                                                    </div>
+                                                    <label for="form_label">Note</label>
+                                                    <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <div class="col-md-12 ">
-                                                <button type="submit" onclick="showAlert"
-                                                    class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
-                                                <button type="reset"
-                                                    class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
-                                                <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12 ">
+                                            <button type="submit" onclick="showAlert"
+                                                class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
+                                            <button type="reset"
+                                                class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                            <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
                         </div>
+                        </form>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
+</div>
 </div>
 
 
@@ -710,4 +708,34 @@
     });
 </script>
 @endif
+
+<script>
+    $(document).ready(function () {
+        function fetchStockQty() {
+            var company = $('#company_id').val();
+            var model = $('#model_id').val();
+
+            if (company && model) {
+                $.ajax({
+                    url: '{{ route("get.stock.qty") }}', // You'll define this route
+                    type: 'GET',
+                    data: {
+                        company: company,
+                        model: model
+                    },
+                    success: function (response) {
+                        $('#qty').val(response.qty ?? 0);
+                    },
+                    error: function () {
+                        $('#qty').val(0);
+                    }
+                });
+            }
+        }
+
+        $('#company_id, #model_id').change(fetchStockQty);
+    });
+</script>
+
+
 @endpush

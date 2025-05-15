@@ -238,7 +238,6 @@ Route::get('/employee/export', [EmployeeController::class, 'export'])->name('exp
 Route::get('/employee/import', [EmployeeController::class, 'employee_import'])->name('employee_import');
 Route::post('/employee/importexceldata', [EmployeeController::class, 'employee_importexceldata'])->name('employee_importexceldata');
 
-
 //desktop
 Route::get('/desktop', [DesktopController::class, 'desktop'])->name('desktop');
 Route::post('/desktop/store/', [DesktopController::class, 'desktop_store'])->name('desktop.store');
@@ -249,6 +248,7 @@ Route::get('/productdetails', [ConsumableController::class, 'productdetails'])->
 Route::post('/productdetails/store', [ConsumableController::class, 'productdetails_store'])->name('productdetails_store');
 Route::get('/productdetails/delete/{id}', [ConsumableController::class, 'productdetails_delete'])->name('productdetails_delete');
 Route::get('/Inventory', [ConsumableController::class, 'Inventory'])->name('Inventory');
+Route::get('/inventory/getStockQty', [ConsumableController::class, 'getStockQty'])->name('get.stock.qty');
 Route::get('/consumableIssue', [ConsumableController::class, 'consumableIssue'])->name('consumableIssue');
 Route::post('/consumableIssue/store', [ConsumableController::class, 'consumableIssue_store'])->name('consumableIssue_store');
 Route::get('/consumableIssue/delete/{id}', [ConsumableController::class, 'consumableIssue_delete'])->name('consumableIssue_delete');

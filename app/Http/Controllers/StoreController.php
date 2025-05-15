@@ -490,7 +490,6 @@ class StoreController extends Controller
     //store search end.
 
 
-
     //History
     function history(Request $request)
     {

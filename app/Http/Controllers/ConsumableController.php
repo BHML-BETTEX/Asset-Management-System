@@ -88,39 +88,73 @@ class ConsumableController extends Controller
 
             $product_out = DB::select("select model_id, sum(issue_qty) As out_qty FROM consumable_issues where model_id = '$item->model'
     GROUP BY model_id;");
-    $item->out = count($product_out) > 0 ? $product_out[0]->out_qty : 0;
-                $product_tem[] = $item;
-            }        
+            $item->out = count($product_out) > 0 ? $product_out[0]->out_qty : 0;
+            $product_tem[] = $item;
+        }
 
-            $all_product_types = ProductType::all();
-            $all_departments = Department::all();
-            $all_brands = Brand::all();
-            $SizeMaseurment = SizeMaseurment::all();
-            $all_status = Status::all();
-            $all_supplier = Supplier::all();
-            $all_company = Company::all();
-            $productdetails = productdetails::all();
-            $products = Product::all();
-            $employee = employee::all();
-            $company = Company::all();
-            return view('admin.consumable.Inventory', [
-                'all_product_types' => $all_product_types,
-                'all_departments' => $all_departments,
-                'all_brands' => $all_brands,
-                'SizeMaseurment' => $SizeMaseurment,
-                'all_status' => $all_status,
-                'all_supplier' => $all_supplier,
-                'all_company' => $all_company,
-                'productdetails' => $productdetails,
-                'products' => $products,
-                'product_tem' => $product_tem,
-                'employee'=>$employee,
-                'company'=>$company,
+        // Get product types as an associative array: [id => product name]
+        $productTypes = DB::table('product_types')->pluck('product', 'id'); // 'product' is the field you want
+        $company = DB::table('companies')->pluck('company', 'id'); // 'product' is the field you want
+        $results = DB::select('CALL sp_consumable_summary()');
+
+        // Convert array to Laravel Collection to filter
+        // Map the product name to each item in the collection
+        $collection = collect($results)->map(function ($item) use ($productTypes, $company) {
+            $item->product_type_name = $productTypes[$item->asset_type] ?? 'N/A';
+            $item->company_name = $company[$item->company] ?? 'N/A';
+            return $item;
+        });
+        $all_product_types = ProductType::all();
+        $all_departments = Department::all();
+        $all_brands = Brand::all();
+        $SizeMaseurment = SizeMaseurment::all();
+        $all_status = Status::all();
+        $all_supplier = Supplier::all();
+        $all_company = Company::all();
+        $productdetails = productdetails::all();
+        $products = Product::all();
+        $employee = employee::all();
+        $company = Company::all();
+        return view('admin.consumable.Inventory', [
+            'all_product_types' => $all_product_types,
+            'all_departments' => $all_departments,
+            'all_brands' => $all_brands,
+            'SizeMaseurment' => $SizeMaseurment,
+            'all_status' => $all_status,
+            'all_supplier' => $all_supplier,
+            'all_company' => $all_company,
+            'productdetails' => $productdetails,
+            'products' => $products,
+            'product_tem' => $product_tem,
+            'employee' => $employee,
+            'company' => $company,
+            'stocks_qty' => $collection,
         ]);
     }
 
+    function getStockQty(Request $request)
+    {
+        $company = $request->company;
+        $model = $request->model;
+
+        // Call the stored procedure
+        $results = DB::select('CALL sp_consumable_summary()');
+
+        // Convert array to Laravel Collection to filter
+        $collection = collect($results);
+
+        // Filter by company and model
+        $stocks_qty  = $collection->where('company', $company)
+            ->where('model', $model)
+            ->first();
+
+        return response()->json(['qty' => $stocks_qty->balance ?? 0]);
+    }
+
+
     function consumableIssue()
     {
+
         $all_product_types = ProductType::all();
         $all_departments = Department::all();
         $all_brands = Brand::all();
@@ -144,6 +178,7 @@ class ConsumableController extends Controller
             'employee' => $employee,
             'issue_details' => $issue_details,
             'products' => $products,
+
         ]);
     }
 
