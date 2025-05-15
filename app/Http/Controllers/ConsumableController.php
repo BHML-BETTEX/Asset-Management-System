@@ -13,7 +13,7 @@ use App\Models\SizeMaseurment;
 use App\Models\Department;
 use App\Models\productdetails;
 use App\Models\consumable_issue;
-use App\Models\Product;
+use App\Models\product;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +31,7 @@ class ConsumableController extends Controller
         $all_supplier = Supplier::all();
         $all_company = Company::all();
         $productdetails = productdetails::all();
-        $products = Product::all();
+        $products = product::all();
         return view('admin.consumable.productdetails', [
             'all_product_types' => $all_product_types,
             'all_departments' => $all_departments,
@@ -112,7 +112,7 @@ class ConsumableController extends Controller
         $all_supplier = Supplier::all();
         $all_company = Company::all();
         $productdetails = productdetails::all();
-        $products = Product::all();
+        $products = product::all();
         $employee = employee::all();
         $company = Company::all();
         return view('admin.consumable.Inventory', [
@@ -165,7 +165,7 @@ class ConsumableController extends Controller
         $productdetails = productdetails::all();
         $employee = Employee::all();
         $issue_details = consumable_issue::all();
-        $products = Product::all();
+        $products = product::all();
         return view('admin.consumable.consumableIssue', [
             'all_product_types' => $all_product_types,
             'all_departments' => $all_departments,
