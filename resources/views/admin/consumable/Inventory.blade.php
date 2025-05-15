@@ -26,7 +26,6 @@
                     </form>
                 </div>
 
-
                 <div class="col-md-1  col-lg-2">
                     <form action="" method="GET">
                         <div class="input-group">
@@ -76,7 +75,7 @@
                                         <tr>
                                             <td>{{ $item->product_type_name }}</td>
                                             <td>{{ $item->model }}</td>
-                                            <td>{{ $item->in_qty }}</td>s
+                                            <td>{{ $item->in_qty }}</td>
                                             <td>{{ $item->out_qty }}</td>
                                             <td>{{ $item->balance}}</td>
                                             <td>{{ $item->company_name }}</td>
