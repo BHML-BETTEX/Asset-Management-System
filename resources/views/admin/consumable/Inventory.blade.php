@@ -67,7 +67,6 @@
                                             <th>Total Balance</th>
                                             <th>Company</th>
 
-
                                         </tr>
                                     </thead>
                                     <tbody style="height: 3px !important; overflow: scroll; ">

@@ -493,7 +493,6 @@ class StoreController extends Controller
     //History
     function history(Request $request)
     {
-
         $companies = [];
         $role = auth()->user()->roles[0];
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
@@ -517,10 +516,6 @@ class StoreController extends Controller
             'search' => $search,
         ]);
     }
-
-
-
-
 
     //Transfer Start
 

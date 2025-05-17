@@ -226,7 +226,7 @@
                     </div>
 
                     <div class="input-group input-group-outline mb-3">
-                        <input type="text" id="company" class="form-control" name="company" readonly>
+                        <input type="text" id="company" class="form-control" name="others" readonly>
                     </div>
 
                     <!-- example employee selector -->
@@ -370,9 +370,6 @@
                 document.getElementById('asset_type').value = ds.assetType;
                 document.getElementById('model').value = ds.model;
                 document.getElementById('company').value = ds.company;
-
-
-
                 // if you're using select2 or bootstrap-select:
                 $('.select2').trigger('change');
             });
