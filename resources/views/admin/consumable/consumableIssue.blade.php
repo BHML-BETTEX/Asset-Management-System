@@ -13,17 +13,12 @@
                     <a href="" class="btn btn-info text-white"><i class="fa fa-mail-forward"></i></a>
                     <a href="" class="btn btn-info text-white"><i class="fa fa-mail-reply"></i></a>
                 </div>
-                <div class="col-md-5 col-lg-4 top_search">
+                <div class="col-md-4 top_search">
                     <form action="" method="GET">
                         <div class="input-group">
-                            <input type="search" class="form-control" name="search" placeholder="Search for text...." value="{{ request('search') }}">
-                            <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
-
-                            </select>
-
-                            <button class="btn btn-info" type="submit">
-                                <span class="fa fa-search"></span>
-                            </button>
+                            <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                value="{{ $search }}">
+                            <button class="btn btn-secondary" type="submit">Go!</button>
                         </div>
                     </form>
                 </div>
@@ -33,7 +28,6 @@
                     <form action="" method="GET">
                         <div class="input-group">
                             @foreach ($_GET as $key=> $item)
-
                             <input type="hidden" name="" value="">
                             @endforeach
 
@@ -76,7 +70,7 @@
                                     </tr>
                                 </thead>
                                 <tbody style="height: 3px !important; overflow: scroll; ">
-                                @foreach($issue_details as $key => $issue_detail)
+                                    @foreach($issue_details as $key => $issue_detail)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$issue_detail->product_type}}</td>
@@ -89,7 +83,7 @@
                                         <td>{{$issue_detail->rel_to_Company->company}}</td>
                                         <td>{{$issue_detail->others}}</td>
                                         <td>
-                                        <button class="border-0 bg-white"><a class="text-primary"
+                                            <button class="border-0 bg-white"><a class="text-primary"
                                                     href=""><i
                                                         class="fa fa-edit "
                                                         style="font-size:20px;"></a></i></button>
@@ -98,10 +92,10 @@
                                                     href="{{route('consumableIssue_delete', $issue_detail->id)}}"><i
                                                         class="fa fa-trash "
                                                         style="font-size:20px;"></a></i>
-                                                    </button>
-                                        </td> 
+                                            </button>
+                                        </td>
                                     </tr>
-                                @endforeach
+                                    @endforeach
 
                                 </tbody>
                             </table>
@@ -174,7 +168,7 @@
                                                 <select id="model_id" name="model_id"
                                                     class="form-control " required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
-                                                    
+
                                                 </select>
                                             </div>
                                         </div>
@@ -189,7 +183,7 @@
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Issue Qty <span
                                                         class="text-danger">*</span></label>
@@ -223,7 +217,7 @@
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Employee ID <span
                                                         class="text-danger">*</span></label>
@@ -237,7 +231,7 @@
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-                                                        @foreach ($employee as $employees)
+                                                    @foreach ($employee as $employees)
                                                     <option value="{{ $employees->emp_name}}">
                                                         {{ $employees->emp_name }}
                                                     </option>
@@ -271,7 +265,7 @@
                                     </div>
 
                                     <div class="row">
-                                    <div class="col-md-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="form_label">Company<span
                                                         class="text-danger">*</span></label>
@@ -285,7 +279,7 @@
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
-                                                        @foreach ($all_company as $all_companys)
+                                                    @foreach ($all_company as $all_companys)
                                                     <option value="{{ $all_companys->id }}">
                                                         {{ $all_companys->company }}
                                                     </option>
@@ -295,36 +289,36 @@
                                         </div>
                                     </div>
 
-                                        <div class="row">
-                                            <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
                                                 <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label for="form_label">Note</label>
-                                                        <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
-                                                    </div>
+                                                    <label for="form_label">Note</label>
+                                                    <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <div class="col-md-12 ">
-                                                <button type="submit" onclick="showAlert"
-                                                    class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
-                                                <button type="reset"
-                                                    class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
-                                                <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12 ">
+                                            <button type="submit" onclick="showAlert"
+                                                class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
+                                            <button type="reset"
+                                                class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                            <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
                         </div>
+                        </form>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
+</div>
 </div>
 @endsection
 

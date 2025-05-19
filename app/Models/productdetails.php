@@ -11,6 +11,10 @@ class productdetails extends Model
     function rel_to_ProductType(){
         return $this->belongsTo(ProductType::class, 'asset_type');
     }
+    public function productType()
+{
+    return $this->belongsTo(ProductType::class, 'asset_type');
+}
 
     function rel_to_brand(){
         return $this->belongsTo(Brand::class, 'brand');

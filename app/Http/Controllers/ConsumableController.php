@@ -49,10 +49,8 @@ class ConsumableController extends Controller
             if ($search !== '') {
                 $query->where('model', 'LIKE', "%$search%");
             }
-
             $productdetails = $query->paginate(13)->appends($request->only('search'));
         }
-
         return view('admin.consumable.productdetails', [
             'all_product_types' => ProductType::all(),
             'all_departments' => Department::all(),
@@ -95,66 +93,97 @@ class ConsumableController extends Controller
         return redirect()->back()->with('add_message', 'Product added...!');
     }
 
-    function productdetails_delete($id)
-    {
-        productdetails::find($id)->delete();
-        return redirect()->back()->with('product_delete', 'Product deleted...!');
-    }
+public function Inventory(Request $request)
+{
+    $role = auth()->user()->roles->first(); // Get the first role of the user
 
-    function Inventory()
-    {
+    // Map role permissions to company IDs
+    $permissionCompanyMap = [
+        'view BHML INDUSTRIES LTD.' => 1,
+        'view BETTEX' => 2,
+        'view BETTEX PREMIUM' => 3,
+    ];
 
-
-        $product = DB::select("select asset_type,  model,sum(qty) As In_qty FROM productdetails
-     GROUP BY asset_type, model;");
-        $product_tem = [];
-        foreach ($product as $item) {
-
-            $product_out = DB::select("select model_id, sum(issue_qty) As out_qty FROM consumable_issues where model_id = '$item->model'
-    GROUP BY model_id;");
-            $item->out = count($product_out) > 0 ? $product_out[0]->out_qty : 0;
-            $product_tem[] = $item;
+    // Collect allowed company IDs for this role
+    $allowedCompanyIds = [];
+    foreach ($permissionCompanyMap as $permission => $companyId) {
+        if ($role->hasPermissionTo($permission)) {
+            $allowedCompanyIds[] = $companyId;
         }
-
-        // Get product types as an associative array: [id => product name]
-        $productTypes = DB::table('product_types')->pluck('product', 'id'); // 'product' is the field you want
-        $company = DB::table('companies')->pluck('company', 'id'); // 'product' is the field you want
-        $results = DB::select('CALL sp_consumable_summary()');
-
-        // Convert array to Laravel Collection to filter
-        // Map the product name to each item in the collection
-        $collection = collect($results)->map(function ($item) use ($productTypes, $company) {
-            $item->product_type_name = $productTypes[$item->asset_type] ?? 'N/A';
-            $item->company_name = $company[$item->company] ?? 'N/A';
-            return $item;
-        });
-        $all_product_types = ProductType::all();
-        $all_departments = Department::all();
-        $all_brands = Brand::all();
-        $SizeMaseurment = SizeMaseurment::all();
-        $all_status = Status::all();
-        $all_supplier = Supplier::all();
-        $all_company = Company::all();
-        $productdetails = productdetails::all();
-        $products = product::all();
-        $employee = employee::all();
-        $company = Company::all();
-        return view('admin.consumable.Inventory', [
-            'all_product_types' => $all_product_types,
-            'all_departments' => $all_departments,
-            'all_brands' => $all_brands,
-            'SizeMaseurment' => $SizeMaseurment,
-            'all_status' => $all_status,
-            'all_supplier' => $all_supplier,
-            'all_company' => $all_company,
-            'productdetails' => $productdetails,
-            'products' => $products,
-            'product_tem' => $product_tem,
-            'employee' => $employee,
-            'company' => $company,
-            'stocks_qty' => $collection,
-        ]);
     }
+
+    $search = $request->input('search');
+
+    // Get input stock by asset_type and model
+    $product = DB::select("
+        SELECT asset_type, model, SUM(qty) AS In_qty
+        FROM productdetails
+        GROUP BY asset_type, model
+    ");
+
+    // Get output stock and merge with product input
+    $product_tem = [];
+    foreach ($product as $item) {
+        $product_out = DB::select("
+            SELECT model_id, SUM(issue_qty) AS out_qty
+            FROM consumable_issues
+            WHERE model_id = ?
+            GROUP BY model_id
+        ", [$item->model]);
+
+        $item->out = count($product_out) > 0 ? $product_out[0]->out_qty : 0;
+        $product_tem[] = $item;
+    }
+
+    // Get mapping values
+    $productTypesMap = DB::table('product_types')->pluck('product', 'id');
+    $companiesMap = DB::table('companies')->pluck('company', 'id');
+
+    // Run stored procedure
+    $results = DB::select('CALL sp_consumable_summary()');
+
+    // Map company and product type names
+    $collection = collect($results)->map(function ($item) use ($productTypesMap, $companiesMap) {
+        $item->product_type_name = $productTypesMap[$item->asset_type] ?? 'N/A';
+        $item->company_name = $companiesMap[$item->company] ?? 'N/A';
+        return $item;
+    });
+
+    // Apply role-based company filtering
+    if (!empty($allowedCompanyIds)) {
+        $collection = $collection->filter(function ($item) use ($allowedCompanyIds) {
+            return in_array($item->company, $allowedCompanyIds);
+        });
+    }
+
+    // Apply search filtering
+    if ($search) {
+        $collection = $collection->filter(function ($item) use ($search) {
+            return stripos($item->product_type_name, $search) !== false ||
+                   stripos($item->model, $search) !== false ||
+                   stripos($item->company_name, $search) !== false;
+        });
+    }
+
+    // Load supporting data for view
+    return view('admin.consumable.Inventory', [
+        'all_product_types' => ProductType::all(),
+        'all_departments' => Department::all(),
+        'all_brands' => Brand::all(),
+        'SizeMaseurment' => SizeMaseurment::all(),
+        'all_status' => Status::all(),
+        'all_supplier' => Supplier::all(),
+        'all_company' => Company::all(),
+        'productdetails' => productdetails::all(),
+        'products' => product::all(),
+        'product_tem' => $product_tem,
+        'employee' => employee::all(),
+        'company' => Company::all(),
+        'stocks_qty' => $collection,
+        'search' => $search
+    ]);
+}
+
 
     function getStockQty(Request $request)
     {
@@ -176,17 +205,36 @@ class ConsumableController extends Controller
     }
 
 
-    function consumableIssue()
+    function consumableIssue(Request $request)
     {
-        $role = auth()->user()->roles[0];
+        $role = auth()->user()->roles->first();
 
-        // Get allowed companies based on role
+        $permissionCompanyMap = [
+            'view BHML INDUSTRIES LTD.' => 1,
+            'view BETTEX' => 2,
+            'view BETTEX PREMIUM' => 3,
+        ];
+
         $companies = [];
-        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
-        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
-        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 3);
 
+        foreach ($permissionCompanyMap as $permission => $companyName) {
+            if ($role->hasPermissionTo($permission)) {
+                $companies[] = $companyName;
+            }
+        }
 
+        $search = $request->input('search', '');
+
+        if (empty($companies)) {
+            $issue_details = collect()->paginate(13);
+        } else {
+            $query = consumable_issue::whereIn('company', $companies);
+
+            if ($search !== '') {
+                $query->where('emp_name', 'LIKE', "%$search%");
+            }
+            $issue_details = $query->paginate(13)->appends($request->only('search'));
+        }
 
         $all_product_types = ProductType::all();
         $all_departments = Department::all();
@@ -197,7 +245,7 @@ class ConsumableController extends Controller
         $all_company = Company::all();
         $productdetails = productdetails::all();
         $employee = Employee::all();
-        $issue_details = consumable_issue::all();
+
         $products = product::all();
         return view('admin.consumable.consumableIssue', [
             'all_product_types' => $all_product_types,
@@ -211,9 +259,10 @@ class ConsumableController extends Controller
             'employee' => $employee,
             'issue_details' => $issue_details,
             'products' => $products,
-
+            'search' => $search,
         ]);
     }
+
 
     function consumableIssue_store(Request $request)
     {
