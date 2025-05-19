@@ -9,9 +9,7 @@
                 </div>
 
                 <div class="col-md-3 col-lg-3 d-flex flex-wrap gap-1">
-                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addissueModal"><i class="fa fa-plus"></i></a>
-                    <a href="" class="btn btn-info text-white"><i class="fa fa-mail-forward"></i></a>
-                    <a href="" class="btn btn-info text-white"><i class="fa fa-mail-reply"></i></a>
+                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addissueModal"><i class="fa fa-plus"></i> Add</a>
                 </div>
                 <div class="col-md-4 top_search">
                     <form action="" method="GET">
@@ -140,9 +138,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Name * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label for="form_label">Product Name * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
                                                 <select id="product_type" name="product_type"
                                                     class="form-control " required>
@@ -269,9 +265,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Company<span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="form_label" name="company"

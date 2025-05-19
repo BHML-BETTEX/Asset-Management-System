@@ -9,8 +9,8 @@
                 </div>
 
                 <div class="col-md-3 col-lg-3 d-flex flex-wrap gap-1">
-                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addLocationModal"><i class="fa fa-plus"></i></a>
-                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addissueModal"><i class="fa fa-send"></i></a>
+                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addLocationModal"><i class="fa fa-plus"></i> Add</a>
+                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addissueModal"><i class="fa fa-send"></i> Issue</a>
                 </div>
                 <div class="col-md-5 col-lg-4 top_search">
                     <form action="" method="GET">
@@ -205,7 +205,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Units <span
+                                                <label for="form_label">Unit<span
                                                         class="text-danger">*</span></label>
                                                 <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
                                                         class="fa fa-plus"
@@ -479,9 +479,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Names * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label for="form_label">Product Names * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
                                                 <select id="product_type" name="product_type"
                                                     class="form-control " required>
@@ -501,9 +499,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Company<span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="company_id" name="company"
@@ -524,9 +520,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Model * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label for="form_label">Model * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
                                                 <select id="model_id" name="model_id"
                                                     class="form-control " required>
@@ -541,8 +535,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Stock Qty <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="form_label">Stock Qty </label>
                                                 <input id="qty" type="number" name="qty"
                                                     class="form-control" value="" readonly>
                                             </div>
@@ -555,7 +548,7 @@
                                                 <label for="form_label">Issue Qty <span
                                                         class="text-danger">*</span></label>
                                                 <input id="issue_qty" type="number" name="issue_qty"
-                                                    class="form-control" value="1">
+                                                    class="form-control" value="1" required>
                                             </div>
                                         </div>
 
@@ -563,9 +556,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Units <span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="form_label" name="units_id"
@@ -589,9 +580,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Employee ID <span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="form_label" name="emp_name"
@@ -610,15 +599,12 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Department <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <label for="form_label">Department </label>
+                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="form_label" name="department_id"
-                                                    class="form-control" required="required">
+                                                    class="form-control">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>

@@ -9,7 +9,7 @@
                 </div>
 
                 <div class="col-md-3 col-lg-3 d-flex flex-wrap gap-1">
-                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addLocationModal"><i class="fa fa-plus"></i></a>
+                    <a href="" class="btn btn-info text-white" data-toggle="modal" data-target="#addLocationModal"><i class="fa fa-plus"></i> Add</a>
                 </div>
                 <div class="col-md-5 col-lg-4 top_search">
                     <form action="" method="GET">
@@ -103,12 +103,6 @@
                                                     href=""><i
                                                         class="fa fa-edit "
                                                         style="font-size:20px;"></a></i></button>
-
-                                            <button class="border-0 bg-white"><a class="text-danger"
-                                                    href="{{route('productdetails_delete', $productdetail->id)}}"><i
-                                                        class="fa fa-trash "
-                                                        style="font-size:20px;"></a></i>
-                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -165,12 +159,10 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Brand * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label for="form_label">Brand <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
                                                 <select id="brand" name="brand"
-                                                    class="form-control select2" required="required"
+                                                    class="form-control select2"
                                                     data-error="Please specify your need.">
                                                     <option value="" selected disabled>--Select
                                                         Your
@@ -230,8 +222,8 @@
                                             <div class="form-group">
                                                 <label for="form_label">Quantity <span
                                                         class="text-danger">*</span></label>
-                                                <input id="qty" type="number" name="qty"
-                                                    class="form-control" value="1">
+                                                <input id="qty" type="number" name="qty" 
+                                                    class="form-control" value="1" required>
                                             </div>
                                         </div>
 
@@ -441,12 +433,12 @@
                         <div class="alert alert-success">{{ session('brand_add') }}</div>
                         @endif
                         <div class="card-body">
-                        <form action="{{route('product_store')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
+                            <form action="{{route('product_store')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label for="form_label">Product Type
-                                            <span class="text-success" data-toggle="modal" data-target="#addCompanyModal" ><i
+                                            <span class="text-success" data-toggle="modal" data-target="#addCompanyModal"><i
                                                     class="fa fa-plus"
                                                     style="font-size:10px;"></i></span>
                                         </label>
