@@ -120,7 +120,7 @@
                                                 </label>
 
                                                 <select id="asset_type" name="asset_type"
-                                                    class="form-control " required>
+                                                    class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($all_product_types as $product_type)
                                                     <option value="{{ $product_type->id }}">
@@ -652,6 +652,8 @@
 
 
 @endsection
+
+
 @push('script')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -720,6 +722,7 @@
         $('#company_id, #model_id').change(fetchStockQty);
     });
 </script>
+
 
 
 @endpush
