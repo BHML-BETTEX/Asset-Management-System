@@ -36,7 +36,6 @@
             <div class="input-group">
                 <a href="{{route('pdf.history', $_GET)}}">
                     <button class="btn btn-info"><i class="fa fa-download"></i> PDF</button>
-
             </div>
             </a>
         </div>

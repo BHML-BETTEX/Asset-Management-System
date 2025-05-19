@@ -15,9 +15,6 @@
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" class="form-control" name="search" placeholder="Search for text...." value="{{ request('search') }}">
-                            <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
-                            </select>
-
                             <button class="btn btn-info" type="submit">
                                 <span class="fa fa-search"></span>
                             </button>

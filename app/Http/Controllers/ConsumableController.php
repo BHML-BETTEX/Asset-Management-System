@@ -21,30 +21,52 @@ use Illuminate\Database\Eloquent\Model;
 
 class ConsumableController extends Controller
 {
-    function productdetails()
+    public function productdetails(Request $request)
     {
-        $all_product_types = ProductType::all();
-        $all_departments = Department::all();
-        $all_brands = Brand::all();
-        $all_SizeMaseurment = SizeMaseurment::all();
-        $all_status = Status::all();
-        $all_supplier = Supplier::all();
-        $all_company = Company::all();
-        $productdetails = productdetails::all();
-        $products = product::all();
-        return view('admin.consumable.productdetails', [
-            'all_product_types' => $all_product_types,
-            'all_departments' => $all_departments,
-            'all_brands' => $all_brands,
-            'all_SizeMaseurment' => $all_SizeMaseurment,
-            'all_status' => $all_status,
-            'all_supplier' => $all_supplier,
-            'all_company' => $all_company,
-            'productdetails' => $productdetails,
-            'products' => $products,
+        $role = auth()->user()->roles->first();
 
+        $permissionCompanyMap = [
+            'view BHML INDUSTRIES LTD.' => 1,
+            'view BETTEX' => 2,
+            'view BETTEX PREMIUM' => 3,
+        ];
+
+        $companies = [];
+
+        foreach ($permissionCompanyMap as $permission => $companyName) {
+            if ($role->hasPermissionTo($permission)) {
+                $companies[] = $companyName;
+            }
+        }
+
+        $search = $request->input('search', '');
+
+        if (empty($companies)) {
+            $productdetails = collect()->paginate(13);
+        } else {
+            $query = productdetails::whereIn('company', $companies);
+
+            if ($search !== '') {
+                $query->where('model', 'LIKE', "%$search%");
+            }
+
+            $productdetails = $query->paginate(13)->appends($request->only('search'));
+        }
+
+        return view('admin.consumable.productdetails', [
+            'all_product_types' => ProductType::all(),
+            'all_departments' => Department::all(),
+            'all_brands' => Brand::all(),
+            'all_SizeMaseurment' => SizeMaseurment::all(),
+            'all_status' => Status::all(),
+            'all_supplier' => Supplier::all(),
+            'all_company' => Company::all(),
+            'productdetails' => $productdetails,
+            'products' => product::all(),
+            'search' => $search,
         ]);
     }
+
     function productdetails_store(Request $request)
     {
         productdetails::insert([
@@ -81,6 +103,8 @@ class ConsumableController extends Controller
 
     function Inventory()
     {
+
+
         $product = DB::select("select asset_type,  model,sum(qty) As In_qty FROM productdetails
      GROUP BY asset_type, model;");
         $product_tem = [];
@@ -154,6 +178,15 @@ class ConsumableController extends Controller
 
     function consumableIssue()
     {
+        $role = auth()->user()->roles[0];
+
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
+        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 3);
+
+
 
         $all_product_types = ProductType::all();
         $all_departments = Department::all();

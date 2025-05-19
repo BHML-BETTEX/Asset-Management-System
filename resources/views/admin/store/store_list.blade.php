@@ -37,15 +37,12 @@
                     </form>
                 </div>
 
-
                 <div class="col-md-1  col-lg-2">
                     <form action="{{ route('store_export') }}" method="GET">
                         <div class="input-group">
                             @foreach ($_GET as $key=> $item)
-
                             <input type="hidden" name="{{$key}}" value="{{$item}}">
                             @endforeach
-
                             <select name="type" class="form-control">
                                 <option value="">Select Type</option>
                                 <option value="xlsx">XLSX</option>
@@ -327,7 +324,6 @@
                             readonly>
                     </div>
 
-
                     <div class="form-group mb-3">
                         <label class="form-label">Return Date</label>
                         <input type="hidden" value="" name="return_date" required>
@@ -348,7 +344,6 @@
 
 
 @endsection
-
 @push('script')
 <script>
     $(document).ready(function() {
@@ -359,12 +354,17 @@
     });
 </script>
 
+<!-- <script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script> -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.issue-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const ds = this.dataset;
-
                 document.getElementById('issue_id').value = ds.id;
                 document.getElementById('asset_tag').value = ds.assetTag;
                 document.getElementById('asset_type').value = ds.assetType;
