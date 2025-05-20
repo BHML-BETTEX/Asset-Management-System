@@ -23,11 +23,24 @@ class PasswordController extends Controller
     function computer_pass(Request $request)
     {
 
-        $search = $request['search'] ?? "";
+         $search = $request['search'] ?? "";
+
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+
         if ($search != "") {
-            $computer_password = computer_pass::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('asset_tag', 'LIKE', "%$search")->paginate(13);
+            $computer_password = computer_pass::where(function ($query) use ($companies) {
+                $query->whereIn('company', $companies);
+            })->where(function ($query) use ($search) {
+                $query->where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('company', 'LIKE', "%$search%");
+            })->paginate(13);
         } else {
-            $computer_password = computer_pass::paginate(13);
+            $computer_password = computer_pass::where(function ($query) use ($companies) {
+                $query->whereIn('company', $companies);
+            })->paginate(13);
         }
 
         $all_company = Company::paginate(13);

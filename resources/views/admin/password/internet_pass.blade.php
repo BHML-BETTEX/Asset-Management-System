@@ -67,7 +67,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="form_label">Company <span class="text-danger">*</span><a class="text-success" href=""></a></label>
-                                
+
                                 <select id="form_need" name="company" class="form-control" required>
                                     <option value="" selected disabled>--Select Your
                                         Issue--</option>
@@ -103,40 +103,42 @@
                     <div class="alert alert-success">{{ session('delete_employee') }}</div>
                     @endif
                     <div class="card-body">
-                        <table class="table table-striped table table-bordered ">
-                            <thead class="bg-info text-white">
-                                <tr>
-                                    <th scope="col">SL</th>
-                                    <th scope="col">Internet Name</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Password</th>
-                                    <th scope="col">Company</th>
-                                    <th scope="col">Note</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <thead>
-                                @foreach ($internet_pass_info as $key => $internet_pass)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $internet_pass->internet_name }}</td>
-                                    <td>{{ $internet_pass->position }}</td>
-                                    <td>{{ $internet_pass->password }}</td>
-                                    <td>{{ $internet_pass->company }}</td>
-                                    <td>{{ $internet_pass->note }}</td>
-                                    <td>
-                                        <button class="border-0 bg-white"><a class="text-primary"
-                                                href="{{ route('internet_edit', $internet_pass->id) }}"><i
-                                                    class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                        <button class="border-0  bg-white"><a class="text-danger"
-                                                href="{{ route('internet_pass_delete', $internet_pass->id) }}"><i
-                                                    class="fa fa-trash " style="font-size:20px;"></a></i></button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </thead>
-                        </table>
-                        {{$internet_pass_info->links()}}
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-striped table table-bordered ">
+                                <thead class="bg-info text-white table table-striped">
+                                    <tr>
+                                        <th scope="col">SL</th>
+                                        <th scope="col">Internet Name</th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">Password</th>
+                                        <th scope="col">Company</th>
+                                        <th scope="col">Note</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    @foreach ($internet_pass_info as $key => $internet_pass)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $internet_pass->internet_name }}</td>
+                                        <td>{{ $internet_pass->position }}</td>
+                                        <td>{{ $internet_pass->password }}</td>
+                                        <td>{{ $internet_pass->company }}</td>
+                                        <td>{{ $internet_pass->note }}</td>
+                                        <td>
+                                            <button class="border-0 bg-white"><a class="text-primary"
+                                                    href="{{ route('internet_edit', $internet_pass->id) }}"><i
+                                                        class="fa fa-edit " style="font-size:20px;"></a></i></button>
+                                            <button class="border-0  bg-white"><a class="text-danger"
+                                                    href="{{ route('internet_pass_delete', $internet_pass->id) }}"><i
+                                                        class="fa fa-trash " style="font-size:20px;"></a></i></button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </thead>
+                            </table>
+                            {{$internet_pass_info->links()}}
+                        </div>
                     </div>
                 </div>
             </div>

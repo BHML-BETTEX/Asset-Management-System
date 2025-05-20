@@ -45,7 +45,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Computer Password Info</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -54,7 +54,7 @@
                         <form action="{{ route('computer_pass_store') }}" Method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label for="message-text" class="col-form-label">Asset Tag</label>
+                                <label for="message-text" class="col-form-label">Asset Tag <span class="text-danger">*</span></label>
                                 <input class="form-control" name="asset_tag" required></input>
                             </div>
                             <div class="form-group">
@@ -66,13 +66,12 @@
                                 <input class="form-control" name="emp_name"></input>
                             </div>
                             <div class="form-group">
-                                <label for="message-text" class="col-form-label">Password</label>
+                                <label for="message-text" class="col-form-label">Password <span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" name="password" required></input>
                             </div>
 
                             <div class="form-group">
-                                <label for="form_label">Company </span><a class="text-success" href=""><i
-                                            class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                                <label for="form_label">Company <span class="text-danger">*</span><a class="text-success" href=""></a></label>
                                 <select id="form_need" name="company" class="form-control" required>
                                     <option value="" selected disabled>--Select Your
                                         Issue--</option>
