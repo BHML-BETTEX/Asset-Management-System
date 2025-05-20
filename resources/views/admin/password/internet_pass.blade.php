@@ -24,7 +24,7 @@
                 <div class="col-md-2 ">
                     <form action="{{route('internet_export')}}" method="GET">
                         @foreach ($_GET as $key=> $item)
-                            <input type="hidden" name="{{$key}}" value="{{$item}}">
+                        <input type="hidden" name="{{$key}}" value="{{$item}}">
                         @endforeach
                         <div class="input-group">
                             <select name="type" class="form-control">
@@ -45,7 +45,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Add Internet info</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -54,7 +54,7 @@
                         <form action="{{ route('internet_pass_store') }}" Method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label for="message-text" class="col-form-label">Internet Name</label>
+                                <label for="message-text" class="col-form-label">Internet Name <span class="text-danger">*</span></label>
                                 <input class="form-control" name="internet_name" required></input>
                             </div>
                             <div class="form-group">
@@ -62,12 +62,12 @@
                                 <input class="form-control" name="position"></input>
                             </div>
                             <div class="form-group">
-                                <label for="message-text" class="col-form-label">Password</label>
+                                <label for="message-text" class="col-form-label">Password <span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" name="password" required></input>
                             </div>
                             <div class="form-group">
-                                <label for="form_label">Company </span><a class="text-success" href=""><i
-                                            class="fa fa-plus" style="font-size:10px;"></a></i></label>
+                                <label for="form_label">Company <span class="text-danger">*</span><a class="text-success" href=""></a></label>
+                                
                                 <select id="form_need" name="company" class="form-control" required>
                                     <option value="" selected disabled>--Select Your
                                         Issue--</option>
@@ -80,7 +80,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Note</label>
-                                <input class="form-control" type="text" name="note" required></input>
+                                <input class="form-control" type="text" name="note"></input>
                             </div>
                             <button class="btn btn-primary">Submit</button>
                         </form>

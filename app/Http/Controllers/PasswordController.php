@@ -35,7 +35,7 @@ class PasswordController extends Controller
         return view('admin.password.computer_pass', [
             'computer_password' => $computer_password,
             'search' => $search,
-            'all_company'=>$all_company,
+            'all_company' => $all_company,
 
         ]);
     }
@@ -49,7 +49,7 @@ class PasswordController extends Controller
             'company' => $request->company,
             'password' => $request->password,
             'created_at' => Carbon::now(),
-            
+
         ]);
         return back();
     }
@@ -60,14 +60,16 @@ class PasswordController extends Controller
         return back();
     }
 
-    function computer_pass_edit($id){
-       $com_pass_info = computer_pass::find($id);
-        return view('admin.password.computer_pass_edit',[
+    function computer_pass_edit($id)
+    {
+        $com_pass_info = computer_pass::find($id);
+        return view('admin.password.computer_pass_edit', [
             'com_pass_info' => $com_pass_info,
         ]);
     }
 
-    function computer_update(Request $request){
+    function computer_update(Request $request)
+    {
         computer_pass::find($request->id)->update([
             'password' => $request->password,
         ]);
@@ -79,7 +81,7 @@ class PasswordController extends Controller
     function mail_pass(Request $request)
     {
         $search = $request['search'] ?? "";
-        
+
         $companies = [];
         $role = auth()->user()->roles[0];
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
@@ -87,13 +89,13 @@ class PasswordController extends Controller
         $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
 
         if ($search != "") {
-            $Mail_pass = Mail_pass::where(function($query) use($companies){
+            $Mail_pass = Mail_pass::where(function ($query) use ($companies) {
                 $query->whereIn('company', $companies);
-            })->where(function($query) use($search){
-                $query-> where('display_name', 'LIKE', "%$search")->orwhere('mail_address', 'LIKE', "%$search%")->orwhere('company', 'LIKE', "%$search%");
+            })->where(function ($query) use ($search) {
+                $query->where('display_name', 'LIKE', "%$search")->orwhere('mail_address', 'LIKE', "%$search%")->orwhere('company', 'LIKE', "%$search%");
             })->paginate(13);
         } else {
-            $Mail_pass = Mail_pass::where(function($query) use($companies){
+            $Mail_pass = Mail_pass::where(function ($query) use ($companies) {
                 $query->whereIn('company', $companies);
             })->paginate(13);
         }
@@ -137,9 +139,9 @@ class PasswordController extends Controller
 
     function mail_pass_update(Request $request)
     {
-        
+
         Mail_pass::find($request->mail_id)->update([
-            
+
             'display_name' => $request->display_name,
             'mail_address' => $request->mail_address,
             'password' => $request->password,
@@ -199,7 +201,7 @@ class PasswordController extends Controller
 
     function camera_update(Request $request)
     {
-       //dd($request->all());
+        //dd($request->all());
         Camera_pass::find($request->camera_id)->update([
             'camera_no' => $request->camera_no,
             'possition' => $request->possition,
@@ -215,10 +217,23 @@ class PasswordController extends Controller
     function internet_pass(Request $request)
     {
         $search = $request['search'] ?? "";
+
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX') : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+
         if ($search != "") {
-            $internet_pass_info = InternetPassword::where('internet_name', 'LIKE', "%$search")->orwhere('position', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")->paginate(13);
+            $internet_pass_info = InternetPassword::where(function ($query) use ($companies) {
+                $query->whereIn('company', $companies);
+            })->where(function ($query) use ($search) {
+                $query->where('display_name', 'LIKE', "%$search")->orwhere('internet_name', 'LIKE', "%$search%")->orwhere('company', 'LIKE', "%$search%");
+            })->paginate(13);
         } else {
-            $internet_pass_info = InternetPassword::paginate(13);
+            $internet_pass_info = InternetPassword::where(function ($query) use ($companies) {
+                $query->whereIn('company', $companies);
+            })->paginate(13);
         }
 
         $all_company = Company::all();
@@ -259,8 +274,8 @@ class PasswordController extends Controller
     }
 
     function internet_update(Request $request)
-    {   
-        
+    {
+
         InternetPassword::find($request->internet_id)->update([
             'internet_name' => $request->internet_name,
             'position' => $request->position,
@@ -269,7 +284,7 @@ class PasswordController extends Controller
             'others' => $request->others,
             'others1' => $request->others1,
         ]);
-    return redirect()->route('internet_pass');
+        return redirect()->route('internet_pass');
     }
 
 
@@ -366,7 +381,8 @@ class PasswordController extends Controller
     }
 
 
-    function computer_pass_export(Request $request){
+    function computer_pass_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -386,7 +402,8 @@ class PasswordController extends Controller
     }
 
 
-    function camera_export(Request $request){
+    function camera_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -407,7 +424,8 @@ class PasswordController extends Controller
     }
 
 
-    function internet_export(Request $request){
+    function internet_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
@@ -427,7 +445,8 @@ class PasswordController extends Controller
         return Excel::download(new InternetPassExport($request->input("search")), $Filename, $exportFormat);
     }
 
-    function ding_export(Request $request){
+    function ding_export(Request $request)
+    {
         if ($request->type == "xlsx") {
             $extension = "xlsx";
             $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
