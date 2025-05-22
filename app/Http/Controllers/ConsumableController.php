@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
+
 class ConsumableController extends Controller
 {
     public function productdetails(Request $request)
@@ -42,14 +43,14 @@ class ConsumableController extends Controller
         $search = $request->input('search', '');
 
         if (empty($companies)) {
-            $productdetails = collect()->paginate(13);
+            $productdetails = collect()->paginate(25);
         } else {
             $query = productdetails::whereIn('company', $companies);
 
             if ($search !== '') {
                 $query->where('model', 'LIKE', "%$search%");
             }
-            $productdetails = $query->paginate(13)->appends($request->only('search'));
+            $productdetails = $query->paginate(25)->appends($request->only('search'));
         }
         return view('admin.consumable.productdetails', [
             'all_product_types' => ProductType::all(),
@@ -226,14 +227,14 @@ public function Inventory(Request $request)
         $search = $request->input('search', '');
 
         if (empty($companies)) {
-            $issue_details = collect()->paginate(13);
+            $issue_details = collect()->paginate(25);
         } else {
             $query = consumable_issue::whereIn('company', $companies);
 
             if ($search !== '') {
                 $query->where('emp_name', 'LIKE', "%$search%");
             }
-            $issue_details = $query->paginate(13)->appends($request->only('search'));
+            $issue_details = $query->paginate(25)->appends($request->only('search'));
         }
 
         $all_product_types = ProductType::all();

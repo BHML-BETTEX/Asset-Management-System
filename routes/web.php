@@ -264,6 +264,3 @@ Route::post('/product/store', [ConsumableController::class, 'product_store'])->n
 
 
 
-
-
-

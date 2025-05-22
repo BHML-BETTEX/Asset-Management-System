@@ -696,7 +696,7 @@
 @endif
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         function fetchStockQty() {
             var company = $('#company_id').val();
             var model = $('#model_id').val();
@@ -709,10 +709,10 @@
                         company: company,
                         model: model
                     },
-                    success: function (response) {
+                    success: function(response) {
                         $('#qty').val(response.qty ?? 0);
                     },
-                    error: function () {
+                    error: function() {
                         $('#qty').val(0);
                     }
                 });
