@@ -66,7 +66,7 @@
                                 <th>NOTE</th>
                                 <th>ISSUE DATE</th>
                                 <th>RETURN DATE</th>
-                                <th>ACTION</th>
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
