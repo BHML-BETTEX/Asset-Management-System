@@ -65,8 +65,10 @@
             }
 
             img {
-                width: 70px;
-                height: 70px;
+                display: block;
+                width: 90px;
+                height: 90px;
+                margin: auto;
             }
         }
     </style>
@@ -78,13 +80,24 @@
     <div id="print-area">
         <table>
             <tr>
-                <td align="">
-                    <img src="data:image/png;base64,{{ base64_encode(QrCode::format('png')->size(80)->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)) }}" alt="QR Code">
+                <td align="center">
+                    <img
+                        src="data:image/png;base64,{{ base64_encode(
+            QrCode::format('png')
+                ->size(180)        // Higher resolution
+                ->margin(0)        // Remove extra padding
+                ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
+        ) }}"
+                        alt="QR Code"
+                        style="display: block; width: 90px; height: 90px; margin: auto;">
                     <samp>{{ $qrCode->products_id }}</samp>
                 </td>
+
             </tr>
         </table>
     </div>
+
+
 
     <script>
         function printQRCode() {
