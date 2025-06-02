@@ -89,7 +89,7 @@
                 ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
         ) }}"
                         alt="QR Code"
-                        style="display: block; width: 60px; height: 60px; margin: auto;">
+                        style="display: block; width: 75px; height: 75px; margin: auto;">
                     <samp>{{ $qrCode->products_id }}</samp>
                 </td>
 
