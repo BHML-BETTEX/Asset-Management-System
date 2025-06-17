@@ -43,14 +43,14 @@ class ConsumableController extends Controller
         $search = $request->input('search', '');
 
         if (empty($companies)) {
-            $productdetails = collect()->paginate(25);
+            $productdetails = collect()->paginate(100);
         } else {
             $query = productdetails::whereIn('company', $companies);
 
             if ($search !== '') {
                 $query->where('model', 'LIKE', "%$search%");
             }
-            $productdetails = $query->paginate(25)->appends($request->only('search'));
+            $productdetails = $query->paginate(100)->appends($request->only('search'));
         }
         return view('admin.consumable.productdetails', [
             'all_product_types' => ProductType::all(),
