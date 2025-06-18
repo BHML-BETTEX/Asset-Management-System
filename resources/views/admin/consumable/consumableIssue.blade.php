@@ -97,6 +97,7 @@
 
                                 </tbody>
                             </table>
+                            {{$issue_details->Links()}}
                         </div>
 
                     </div>
