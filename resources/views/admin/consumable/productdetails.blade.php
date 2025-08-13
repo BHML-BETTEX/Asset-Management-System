@@ -1,5 +1,7 @@
 @extends('master')
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -133,26 +135,18 @@
                             <h5 class="text-white">Add Consumable Product</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{route('productdetails_store')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('productdetails_store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="controls">
-                                    <!-- Asset Type & brand start -->
+                                    <!-- Asset Type & Brand -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label"> Asset Type *
-                                                    <span class="text-success" data-toggle="modal" data-target="#addAssetModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></i></span>
-                                                </label>
-
-                                                <select id="asset_type" name="asset_type"
-                                                    class="form-control " required>
-                                                    <option value="" selected disabled>-- Select Asset Type --</option>
+                                                <label>Asset Type *</label>
+                                                <select id="asset_type" name="asset_type" class="form-control select2" required>
+                                                    <option value="">-- Select Asset Types --</option>
                                                     @foreach ($all_product_types as $product_type)
-                                                    <option value="{{ $product_type->id }}">
-                                                        {{ $product_type->product }}
-                                                    </option>
+                                                    <option value="{{ $product_type->id }}">{{ $product_type->product }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -160,118 +154,92 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Brand <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
-                                                </label>
-                                                <select id="brand" name="brand"
-                                                    class="form-control select2"
-                                                    data-error="Please specify your need.">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
-                                                    @foreach ($all_brands as $all_brands)
-                                                    <option value="{{ $all_brands->id }}">
-                                                        {{ $all_brands->brand_name }}
-                                                    </option>
+                                                <label>Brand</label>
+                                                <select id="brand" name="brand" class="form-control select2">
+                                                    <option value="" selected disabled>-- Select Brand --</option>
+                                                    @foreach ($all_brands as $brand)
+                                                    <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Asset Type & brand start -->
+                                    <!-- Model & Serial -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Model * <span class="text-success" data-toggle="modal" data-target="#addModelModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label>Model *
+                                                    <span class="text-success" data-toggle="modal" data-target="#addModelModal">
+                                                        <i class="fa fa-plus" style="font-size:10px;"></i>
+                                                    </span>
                                                 </label>
-                                                <select id="brand" name="model"
-                                                    class="form-control select2" required="required"
-                                                    data-error="Please specify your need.">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <select id="model" name="model" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Model --</option>
                                                     @foreach ($products as $product)
-                                                    <option value="{{ $product->product_model }}">
-                                                        {{ $product->product_model }}
-                                                    </option>
+                                                    <option value="{{ $product->product_model }}">{{ $product->product_model }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Serial</label>
-                                                <input id="" type="text"
-                                                    name="asset_sl_no" class="form-control">
+                                                <label>Serial</label>
+                                                <input type="text" name="asset_sl_no" class="form-control">
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Description -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Description</label>
-                                                <textarea id="form_message" name="description" class="form-control" rows="6"></textarea>
+                                                <label>Description</label>
+                                                <textarea name="description" class="form-control" rows="6"></textarea>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Quantity & Units -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Quantity <span
-                                                        class="text-danger">*</span></label>
-                                                <input id="qty" type="number" name="qty" 
-                                                    class="form-control" value="1" required>
+                                                <label>Quantity <span class="text-danger">*</span></label>
+                                                <input id="qty" type="number" name="qty" class="form-control" value="1" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Units <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
+                                                <label>Units <span class="text-danger">*</span>
+                                                    <span class="text-success" data-toggle="modal" data-target="#addUnitModal">
+                                                        <i class="fa fa-plus" style="font-size:10px;"></i>
+                                                    </span>
                                                 </label>
-
-                                                <select id="form_label" name="units"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
-                                                    @foreach ($all_SizeMaseurment as $all_SizeMaseurment)
-                                                    <option value="{{ $all_SizeMaseurment->id }}">
-                                                        {{ $all_SizeMaseurment->size }}
-                                                    </option>
+                                                <select name="units" class="form-control" required>
+                                                    <option value="" selected disabled>-- Select Units --</option>
+                                                    @foreach ($all_SizeMaseurment as $size)
+                                                    <option value="{{ $size->id }}">{{ $size->size }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Cost & Currency -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Cost</label>
-                                                <input id="cost" type="number" name="cost"
-                                                    class="form-control">
+                                                <label>Cost</label>
+                                                <input id="cost" type="number" name="cost" class="form-control">
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Currency </span><a
-                                                        class="text-success" href=""><i
-                                                            style="font-size:10px;"></a></i></label>
-                                                <select id="form_need" name="currency"
-                                                    class="form-control"
-                                                    data-error="brand">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label>Currency</label>
+                                                <select name="currency" class="form-control">
+                                                    <option value="" selected disabled>-- Select Currency --</option>
                                                     <option>BDT</option>
                                                     <option>USD</option>
                                                     <option>RMB</option>
@@ -281,36 +249,29 @@
                                         </div>
                                     </div>
 
+                                    <!-- Total Amount -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Total Amount</label>
-                                                <input id="total" type="text" readonly
-                                                    name="total" class="form-control">
+                                                <label>Total Amount</label>
+                                                <input id="total" type="text" readonly name="total" class="form-control">
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Warranty & Durability -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Warrenty</label>
-                                                <input id="" type="number" name="warrenty"
-                                                    class="form-control">
+                                                <label>Warranty</label>
+                                                <input type="number" name="warrenty" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_need">Durablity </span><a
-                                                        class="text-success" href=""><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></a></i></label>
-                                                <select id="form_label" name="durablity"
-                                                    class="form-control"
-                                                    data-error="brand">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label>Durability</label>
+                                                <select name="durablity" class="form-control">
+                                                    <option value="" selected disabled>-- Select Durability --</option>
                                                     <option>Days</option>
                                                     <option>Week</option>
                                                     <option>Month</option>
@@ -320,87 +281,69 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Purchase Date -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Purchase date</label>
-                                                <input id="" type="date"
-                                                    name="purchase_date" class="form-control">
+                                                <label>Purchase date</label>
+                                                <input type="date" name="purchase_date" class="form-control">
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Vendor & Company -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label"> Vendor *
-                                                    <span class="text-success" data-toggle="modal" data-target="#addVendorModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></i></span>
-                                                </label>
-                                                <select id="vendor" name="vendor"
-                                                    class="form-control select2">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
-                                                    @foreach ($all_supplier as $all_supplier)
-                                                    <option value="{{ $all_supplier->id }}">
-                                                        {{ $all_supplier->supplier_name }}
-                                                    </option>
+                                                <label>Vendor *</label>
+                                                <select name="vendor" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Vendor --</option>
+                                                    @foreach ($all_supplier as $supplier)
+                                                    <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Company
-                                                    <span class="text-success" data-toggle="modal" data-target="#addCompanyModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></i></span>
-                                                </label>
-                                                <select id="company" name="company"
-                                                    class="form-control select2" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
-                                                    @foreach ($all_company as $all_company)
-                                                    <option value="{{ $all_company->id }}">
-                                                        {{ $all_company->company }}
-                                                    </option>
+                                                <label>Company</label>
+                                                <select name="company" class="form-control" required>
+                                                    <option value="" selected disabled>-- Select Company --</option>
+                                                    @foreach ($all_company as $company)
+                                                    <option value="{{ $company->id }}">{{ $company->company }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
-
+                                    <!-- Challan Number -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Challan Number</label>
-                                                <input id="" type="text"
-                                                    name="challan_no" class="form-control">
+                                                <label>Challan Number</label>
+                                                <input type="text" name="challan_no" class="form-control">
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Note -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Note</label>
-                                                <input id="" type="text" name="others"
-                                                    class="form-control">
+                                                <label>Note</label>
+                                                <input type="text" name="others" class="form-control">
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Buttons -->
                                     <div class="form-group">
-                                        <div class="col-md-12 ">
-                                            <button type="submit" onclick="showAlert"
-                                                class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
-                                            <button type="reset"
-                                                class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
-                                            <a href="{{route('productdetails')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary"><span class="fa fa-file-text"></span> Submit</button>
+                                            <button type="reset" class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                            <a href="{{ route('productdetails') }}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
                                         </div>
                                     </div>
                                 </div>
@@ -475,7 +418,21 @@
 
 
 @endsection
+
 @push('script')
+
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "-- Select Item --",
+            allowClear: true,
+            width: '100%',
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#addLocationModal')
+        });
+    });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const costInput = document.getElementById('cost');

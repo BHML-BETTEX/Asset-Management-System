@@ -1,5 +1,7 @@
 @extends('master')
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -15,8 +17,8 @@
                 <div class="col-md-5 col-lg-4 top_search">
                     <form action="" method="GET">
                         <div class="input-group">
-                            <input type="search" class="form-control" name="search" placeholder="Search for text...." value="{{ request('search') }}">
-                            <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
+                            <input type="search" class="form-control" name="search" placeholder="Search Product type" value="{{ request('search') }}">
+                            <select id="product_search" name="product_search" class="form-control" data-error="Please specify your need.">
                             </select>
 
                             <button class="btn btn-info" type="submit">
@@ -119,8 +121,7 @@
                                                             style="font-size:10px;"></i></span>
                                                 </label>
 
-                                                <select id="asset_type" name="asset_type"
-                                                    class="form-control select2" required>
+                                                <select id="asset_type" name="asset_type" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($all_product_types as $product_type)
                                                     <option value="{{ $product_type->id }}">
@@ -133,12 +134,8 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Brand * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
-                                                </label>
-                                                <select id="brand" name="brand"
-                                                    class="form-control select2" required="required"
+                                                <label for="form_label">Brand *</label>
+                                                <select id="brand" name="brand" class="form-control select2" required="required"
                                                     data-error="Please specify your need.">
                                                     <option value="" selected disabled>--Select
                                                         Your
@@ -207,10 +204,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Unit<span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
-                                                </label>
+                                                
 
                                                 <select id="form_label" name="units"
                                                     class="form-control" required="required">
@@ -276,10 +270,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_need">Durablity </span><a
-                                                        class="text-success" href=""><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></a></i></label>
+                                                <label for="form_need">Durablity</label>
                                                 <select id="form_label" name="durablity"
                                                     class="form-control"
                                                     data-error="brand">
@@ -328,13 +319,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Company
-                                                    <span class="text-success" data-toggle="modal" data-target="#addCompanyModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></i></span>
-                                                </label>
+                                                <label for="form_label">Company</label>
                                                 <select id="company" name="company"
-                                                    class="form-control select2" required="required">
+                                                    class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
@@ -499,7 +486,6 @@
                                             <div class="form-group">
                                                 <label for="form_label">Company<span
                                                         class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
                                                 <select id="company_id" name="company"
@@ -655,6 +641,19 @@
 
 
 @push('script')
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "-- Select Item --",
+            allowClear: true,
+            width: '100%',
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#addLocationModal')
+        });
+    });
+</script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const costInput = document.getElementById('cost');

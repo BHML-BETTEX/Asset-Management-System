@@ -1,7 +1,7 @@
 @extends('master')
 @section('content')
 <div class="row ">
-    <div class="col-lg-10 mx-auto">
+    <div class="col-lg-12 mx-auto">
         <div class="card mt-2 mx-auto p-4 bg-light">
             <div class="card-body bg-light ">
                 <div class="container">

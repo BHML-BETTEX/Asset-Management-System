@@ -117,8 +117,6 @@ class ConsumableController extends Controller
 
         $search = $request->input('search');
 
-        
-
         // Get input stock by asset_type and model
         $product = DB::select("
         SELECT asset_type, model, SUM(qty) AS In_qty
@@ -205,6 +203,7 @@ class ConsumableController extends Controller
         $stocks_qty  = $collection->where('company', $company)
             ->where('model', $model)
             ->first();
+            
 
         return response()->json(['qty' => $stocks_qty->balance ?? 0]);
     }
