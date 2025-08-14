@@ -257,6 +257,43 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <!-- BETTEX INDIA -->
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h5">BETTEX INDIA</h2>
+                    </div>
+                    <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-striped table-bordered">
+                            <thead class="bg-info text-white">
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>Total Asset</th>
+                                    <th>Units</th>
+                                    <th>Issue Qty</th>
+                                    <th>Stock Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($product_summary_bt_ind as $product_summarys)
+                                <tr>
+                                    <td>{{ $product_summarys->asset_type->product }}</td>
+                                    <td>{{ $product_summarys->TotalAssets }}</td>
+                                    <td>{{ $product_summary_bp->units->size }}</td>
+                                    <td>{{ $product_summarys->IssueQty }}</td>
+                                    <td>{{ $product_summarys->StockQty }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- BETTEX HK product summary end -->
 
     <!-- BHML product summary start -->

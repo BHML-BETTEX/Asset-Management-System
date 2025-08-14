@@ -32,6 +32,7 @@ class HomeController extends Controller
         $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
         $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
         $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
+        $product_summary_bt_ind = DB::select("CALL sp_product_summary_bt_ind()");
         // //dd($product_summary_bhml);
 
 
@@ -62,11 +63,23 @@ class HomeController extends Controller
 
         }
 
+        foreach ($product_summary_bt_ind as $product_summary) {
+            $product_type = ProductType::find($product_summary->asset_type);
+            $units = SizeMaseurment::find($product_summary->units);
+
+            $product_summary->asset_type = $product_type;
+            $product_summary->units = $units;
+
+        }
+
+        
+
         return view('home', [
             'stores' => $stores,
             'product_summary_bt' => $product_summary_bt,
             'product_summary_bhml' => $product_summary_bhml,
             'product_summary_bp' => $product_summary_bp,
+            'product_summary_bt_ind' => $product_summary_bt_ind,
 
         ]);
     }

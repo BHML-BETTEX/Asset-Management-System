@@ -1,5 +1,6 @@
 @extends('master')
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -119,201 +120,165 @@
             <div class="modal-body">
                 <div class="col-lg-12">
                     <div class="card p-1">
-                        <div class="card-header " style="background-color: #0cb0b7;">
-                            <h5 class="text-white">Consumable Issue</h5>
+                        <div class="card-header" style="background-color: #0cb0b7;">
+                            <h5 class="text-white">Consumable Issuesss</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{route('consumableIssue_store')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('consumableIssue_store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="controls">
-                                    <!-- Asset Type & brand start -->
+                                    <!-- Issue Date -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Issue date</label>
-                                                <input id="issue_date" type="date"
-                                                    name="issue_date" class="form-control">
+                                                <label for="issue_date">Issue date</label>
+                                                <input id="issue_date" type="date" name="issue_date" class="form-control">
                                             </div>
                                         </div>
 
+                                        <!-- Product Type -->
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Name * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
-                                                </label>
-                                                <select id="product_type" name="product_type"
-                                                    class="form-control " required>
+                                                <label for="product_type">Product Name *</label>
+                                                <select id="product_type" name="product_type" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($productdetails as $productdetail)
-                                                    <option value="{{ $productdetail->asset_type }}">
-                                                        {{$productdetail->rel_to_ProductType->product}}
-                                                    </option>
+                                                        <option value="{{ $productdetail->asset_type }}">
+                                                            {{ $productdetail->rel_to_ProductType->product }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Asset Type & brand start -->
+                                    <!-- Model & Stock Qty -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Model * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"><i
-                                                            class="fa fa-plus"
-                                                            style="font-size:10px;"></button></i></span>
+                                                <label for="model_id">
+                                                    Model * 
+                                                    <span class="text-success" data-toggle="modal" data-target="#addBrandModal">
+                                                        <i class="fa fa-plus" style="font-size:10px;"></i>
+                                                    </span>
                                                 </label>
-                                                <select id="model_id" name="model_id"
-                                                    class="form-control " required>
-                                                    <option value="" selected disabled>-- Select Asset Type --</option>
-
+                                                <select id="model_id" name="model_id" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Model --</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Stock Qty <span
-                                                        class="text-danger">*</span></label>
-                                                <input id="qty" type="number" name="qty"
-                                                    class="form-control" value="" readonly>
+                                                <label for="qty">Stock Qty <span class="text-danger">*</span></label>
+                                                <input id="qty" type="number" name="qty" class="form-control" value="" readonly>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Issue Qty & Units -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Issue Qty <span
-                                                        class="text-danger">*</span></label>
-                                                <input id="issue_qty" type="number" name="issue_qty"
-                                                    class="form-control" value="1">
+                                                <label for="issue_qty">Issue Qty <span class="text-danger">*</span></label>
+                                                <input id="issue_qty" type="number" name="issue_qty" class="form-control" value="1">
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Units <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
-                                                </label>
-
-                                                <select id="form_label" name="units_id"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label for="units_id">Units <span class="text-danger">*</span></label>
+                                                <select id="units_id" name="units_id" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Units --</option>
                                                     @foreach ($all_SizeMaseurment as $all_SizeMaseurment)
-                                                    <option value="{{ $all_SizeMaseurment->id }}">
-                                                        {{ $all_SizeMaseurment->size }}
-                                                    </option>
+                                                        <option value="{{ $all_SizeMaseurment->id }}">
+                                                            {{ $all_SizeMaseurment->size }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Employee & Department -->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Employee ID <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
-                                                </label>
-
-                                                <select id="form_label" name="emp_name"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label for="emp_name">Employee ID <span class="text-danger">*</span></label>
+                                                <select id="emp_name" name="emp_name" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Employee --</option>
                                                     @foreach ($employee as $employees)
-                                                    <option value="{{ $employees->emp_name}}">
-                                                        {{ $employees->emp_name }}
-                                                    </option>
+                                                        <option value="{{ $employees->emp_name }}">
+                                                            {{ $employees->emp_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Department <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"><i
-                                                        class="fa fa-plus"
-                                                        style="font-size:10px;"></i></span>
-                                                </label>
-
-                                                <select id="form_label" name="department_id"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label for="department_id">Department <span class="text-danger">*</span></label>
+                                                <select id="department_id" name="department_id" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Department --</option>
                                                     @foreach ($all_departments as $all_department)
-                                                    <option value="{{ $all_department->id }}">
-                                                        {{ $all_department->department_name }}
-                                                    </option>
+                                                        <option value="{{ $all_department->id }}">
+                                                            {{ $all_department->department_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Company -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Company<span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
-                                                </label>
-
-                                                <select id="form_label" name="company"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <label for="company">Company <span class="text-danger">*</span></label>
+                                                <select id="company" name="company" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Company --</option>
                                                     @foreach ($all_company as $all_companys)
-                                                    <option value="{{ $all_companys->id }}">
-                                                        {{ $all_companys->company }}
-                                                    </option>
+                                                        <option value="{{ $all_companys->id }}">
+                                                            {{ $all_companys->company }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Note -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <div class="form-group">
-                                                    <label for="form_label">Note</label>
-                                                    <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
-                                                </div>
+                                                <label for="form_message">Note</label>
+                                                <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Buttons -->
                                     <div class="form-group">
-                                        <div class="col-md-12 ">
-                                            <button type="submit" onclick="showAlert"
-                                                class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
-                                            <button type="reset"
-                                                class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
-                                            <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary">
+                                                <span class="fa fa-file-text"></span> Submit
+                                            </button>
+                                            <button type="reset" class="btn btn-secondary">
+                                                <span class="fa fa-undo"></span> Reset
+                                            </button>
+                                            <a href="{{ route('consumableIssue') }}" class="btn btn-info">
+                                                <span class="fa fa-step-backward"></span> Back
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-</div>
+
 @endsection
 
 @push('script')
@@ -338,4 +303,25 @@
     });
 </script>
 @endif
+@endpush
+
+@push('scripts')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 when modal is shown
+        $('#addissueModal').on('shown.bs.modal', function () {
+            $('.select2').select2({
+                placeholder: "-- Select Asset Type --",
+                allowClear: true,
+                width: '100%',
+                minimumResultsForSearch: 0,
+                dropdownParent: $('#addissueModal') // Attach dropdown to modal
+            });
+        });
+    });
+</script>
 @endpush

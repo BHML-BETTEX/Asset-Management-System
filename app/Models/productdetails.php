@@ -8,39 +8,47 @@ use Illuminate\Database\Eloquent\Model;
 class productdetails extends Model
 {
     use HasFactory;
-    function rel_to_ProductType(){
+    function rel_to_ProductType()
+    {
         return $this->belongsTo(ProductType::class, 'asset_type');
     }
     public function productType()
-{
-    return $this->belongsTo(ProductType::class, 'asset_type');
-}
+    {
+        return $this->belongsTo(ProductType::class, 'asset_type');
+    }
 
-    function rel_to_brand(){
+    function rel_to_brand()
+    {
         return $this->belongsTo(Brand::class, 'brand');
     }
 
-    function rel_to_SizeMaseurment(){
+    function rel_to_SizeMaseurment()
+    {
         return $this->belongsTo(SizeMaseurment::class, 'units');
     }
 
-    function rel_to_Supplier(){
+    function rel_to_Supplier()
+    {
         return $this->belongsTo(Supplier::class, 'vendor');
     }
 
-    function rel_to_Status(){
+    function rel_to_Status()
+    {
         return $this->belongsTo(Status::class, 'status');
     }
 
-    function rel_to_Company(){
+    function rel_to_Company()
+    {
         return $this->belongsTo(Company::class, 'company');
     }
 
-    function rel_to_Department(){
+    function rel_to_Department()
+    {
         return $this->belongsTo(Department::class, 'id');
     }
 
-    function rel_to_product(){
+    function rel_to_product()
+    {
         return $this->belongsTo(product::class, 'model');
     }
 }

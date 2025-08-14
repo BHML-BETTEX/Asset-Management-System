@@ -204,7 +204,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Unit<span
                                                         class="text-danger">*</span></label>
-                                                
+
 
                                                 <select id="form_label" name="units"
                                                     class="form-control" required="required">
@@ -466,10 +466,9 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Names * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
+                                                <label for="form_label">Product Names* <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
-                                                <select id="product_type" name="product_type"
-                                                    class="form-control " required>
+                                                <select id="product_type" name="product_type" class="form-control" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($all_product_types as $all_product_type)
                                                     <option value="{{ $all_product_type->product }}">
