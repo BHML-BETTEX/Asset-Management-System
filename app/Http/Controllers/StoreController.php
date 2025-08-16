@@ -44,6 +44,7 @@ class StoreController extends Controller
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
         if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
         if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 3);
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 4);
 
         if ($search != "" || $productSearch) {
             $stores = Store::join('brands', 'brands.id', '=', 'stores.brand')
@@ -498,6 +499,7 @@ class StoreController extends Controller
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
         $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
         $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
 
         $search = $request['search'] ?? "";
         if ($search != "") {

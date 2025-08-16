@@ -20,7 +20,6 @@
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" class="form-control" name="search" placeholder="Search for text...." value="{{ request('search') }}">
-
                             <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
                                 <option value="">--Product Type--</option>
                                 @foreach ($all_product_types as $all_product)

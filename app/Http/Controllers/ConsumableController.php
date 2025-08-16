@@ -31,6 +31,7 @@ class ConsumableController extends Controller
             'view BHML INDUSTRIES LTD.' => 1,
             'view BETTEX' => 2,
             'view BETTEX PREMIUM' => 3,
+            'view BETTEX BRIDGE' => 4,
         ];
 
         $companies = [];
@@ -105,6 +106,7 @@ class ConsumableController extends Controller
             'view BHML INDUSTRIES LTD.' => 1,
             'view BETTEX' => 2,
             'view BETTEX PREMIUM' => 3,
+            'view BETTEX BRIDGE' => 4,
         ];
 
         // Collect allowed company IDs for this role
@@ -217,6 +219,8 @@ class ConsumableController extends Controller
             'view BHML INDUSTRIES LTD.' => 1,
             'view BETTEX' => 2,
             'view BETTEX PREMIUM' => 3,
+            'view BETTEX BRIDGE' => 4,
+
         ];
 
         $companies = [];
