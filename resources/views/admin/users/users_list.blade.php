@@ -61,7 +61,7 @@
                                             <button class="btn btn-success btn-sm">{{$role}}</button>
                                         @endforeach
                                     </td>
-                                    <td><a href="{{ route('users.delete', $user->id) }}" class="btn btn-danger">Delete</a>
+                                    <td><a href="" class="btn btn-primary">Edit</a>
                                     </td>
                                 </tr>
                             @endforeach
