@@ -159,7 +159,7 @@
                                                             style="font-size:10px;"></button></i></span>
                                                 </label>
                                                 <select id="brand" name="model"
-                                                    class="form-control select2" required="required"
+                                                    class="form-control" required="required"
                                                     data-error="Please specify your need.">
                                                     <option value="" selected disabled>--Select
                                                         Your
@@ -305,7 +305,7 @@
                                                             style="font-size:10px;"></i></span>
                                                 </label>
                                                 <select id="vendor" name="vendor"
-                                                    class="form-control select2">
+                                                    class="form-control">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
@@ -320,8 +320,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Company</label>
-                                                <select id="company" name="company"
-                                                    class="form-control" required="required">
+                                                <select id="company" name="company" class="form-control" required="required">
                                                     <option value="" selected disabled>--Select
                                                         Your
                                                         Issue--</option>
@@ -458,17 +457,16 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Issue date</label>
-                                                <input id="issue_date" type="date"
-                                                    name="issue_date" class="form-control">
+                                                <label for="form_label">Issue date <span class="text-danger">*</span></label>
+                                                <input id="issue_date" type="date" name="issue_date" class="form-control" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Product Names* <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
+                                                <label for="form_label">Product Name* <span class="text-danger">*</span>
                                                 </label>
-                                                <select id="product_type" name="product_type" class="form-control" required>
+                                                <select id="product_type" name="product_type" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($all_product_types as $all_product_type)
                                                     <option value="{{ $all_product_type->product }}">
@@ -483,15 +481,12 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="form_label">Company<span
-                                                        class="text-danger">*</span></label>
+                                                <label for="form_label">Company<span class="text-danger">*</span></label>
                                                 </label>
 
                                                 <select id="company_id" name="company"
                                                     class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                    <option value="" selected disabled>--Select Your Issue--</option>
                                                     @foreach ($stocks_qty as $item)
                                                     <option value="{{ $item->company }}">
                                                         {{ $item->company }}
@@ -507,8 +502,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Model * <span class="text-success" data-toggle="modal" data-target="#addBrandModal"></span>
                                                 </label>
-                                                <select id="model_id" name="model_id"
-                                                    class="form-control " required>
+                                                <select id="model_id" name="model_id" class="form-control" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($stocks_qty as $item)
                                                     <option value="{{ $item->model }}">
@@ -530,31 +524,22 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Issue Qty <span
-                                                        class="text-danger">*</span></label>
-                                                <input id="issue_qty" type="number" name="issue_qty"
-                                                    class="form-control" value="1" required>
+                                                <label for="form_label">Issue Qty <span class="text-danger">*</span></label>
+                                                <input id="issue_qty" type="number" name="issue_qty" class="form-control" value="1" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Units <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="form_label">Units <span class="text-danger">*</span></label>
                                                 <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
                                                 </label>
 
-                                                <select id="form_label" name="units_id"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <select id="form_label" name="units_id" class="form-control" required="required">
+                                                    <option value="" selected disabled>--Select Your Issue--</option>
                                                     @foreach ($SizeMaseurment as $SizeMaseurments)
-                                                    <option value="{{ $SizeMaseurments->id }}">
-                                                        {{ $SizeMaseurments->size }}
-                                                    </option>
+                                                    <option value="{{ $SizeMaseurments->id }}">{{ $SizeMaseurments->size }}</option>
                                                     @endforeach
-
                                                 </select>
                                             </div>
                                         </div>
@@ -563,20 +548,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Employee ID <span
-                                                        class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
+                                                <label for="form_label">Employee ID <span class="text-danger">*</span></label>
+                                                <span class="text-success" data-toggle="modal"></span>
                                                 </label>
 
-                                                <select id="form_label" name="emp_name"
-                                                    class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <select id="employee_id" name="emp_name" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Employee --</option>
                                                     @foreach($employee as $employees)
-                                                    <option value="{{$employees->emp_name}}">
-                                                        {{$employees->emp_name}}
-                                                    </option>
+                                                    <option value="{{ $employees->emp_name }}">{{ $employees->emp_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -585,18 +564,13 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_label">Department </label>
-                                                <span class="text-success" data-toggle="modal" data-target="#addUnitModal"></span>
+                                                <span class="text-danger" data-toggle="modal" data-target="#addUnitModal">*</span>
                                                 </label>
 
-                                                <select id="form_label" name="department_id"
-                                                    class="form-control">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                <select id="form_label" name="department_id" class="form-control">
+                                                    <option value="" selected disabled>--Select Your Issue--</option>
                                                     @foreach ($all_departments as $all_department)
-                                                    <option value="{{ $all_department->id }}">
-                                                        {{ $all_department->department_name }}
-                                                    </option>
+                                                    <option value="{{ $all_department->id }}">{{ $all_department->department_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -640,18 +614,17 @@
 
 
 @push('script')
+
 <script>
     $(document).ready(function() {
-        $('.select2').select2({
-            placeholder: "-- Select Item --",
-            allowClear: true,
+        $('#addissueModal select').select2({
             width: '100%',
-            minimumResultsForSearch: 0,
-            dropdownParent: $('#addLocationModal')
+            placeholder: '-- Select Employee --',
+            allowClear: true,
+            dropdownParent: $('#addissueModal')
         });
     });
 </script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
