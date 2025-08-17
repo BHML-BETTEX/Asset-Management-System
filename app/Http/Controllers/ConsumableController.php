@@ -25,8 +25,10 @@ class ConsumableController extends Controller
     public function productdetails(Request $request)
     {
         $search = $request->input('search', '');
+        $productSearch = $request->input('product_search'); // from select dropdown
         $role = auth()->user()->roles->first();
 
+        // Map permissions to company IDs
         $permissionCompanyMap = [
             'view BHML INDUSTRIES LTD.' => 1,
             'view BETTEX' => 2,
@@ -35,25 +37,31 @@ class ConsumableController extends Controller
         ];
 
         $companies = [];
-
-        foreach ($permissionCompanyMap as $permission => $companyName) {
+        foreach ($permissionCompanyMap as $permission => $companyId) {
             if ($role->hasPermissionTo($permission)) {
-                $companies[] = $companyName;
+                $companies[] = $companyId;
             }
         }
 
-        if (empty($companies)) {
-            // Return empty paginated collection
-            $productdetails = collect()->paginate(13);
-        } else {
-            $query = productdetails::whereIn('company', $companies);
+        // Default query
+        $query = productdetails::whereIn('company', $companies);
 
-            if ($search !== '') {
-                $productdetails = productdetails::join('brands', 'brands.id', '=', 'productdetails.brand');
-                $query->where('model', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%");
-            }
-            $productdetails = $query->paginate(13)->appends($request->only('search'));
+        // Apply search filter
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('model', 'LIKE', "%$search%")
+                    ->orWhere('asset_type', 'LIKE', "%$search%");
+            });
         }
+
+        // Apply product type filter (dropdown)
+        if (!empty($productSearch)) {
+            $query->where('product_type', $productSearch);
+            // Make sure your `productdetails` table has `product_type` column (FK)
+        }
+
+        // Fetch paginated data
+        $productdetails = $query->paginate(13)->appends($request->only(['search', 'product_search']));
 
         return view('admin.consumable.productdetails', [
             'all_product_types' => ProductType::all(),
@@ -66,12 +74,14 @@ class ConsumableController extends Controller
             'productdetails' => $productdetails,
             'products' => product::all(),
             'search' => $search,
+            'product_search' => $productSearch
         ]);
     }
 
+
     function productdetails_store(Request $request)
     {
-            productdetails::insert([
+        productdetails::insert([
             'asset_type' => $request->asset_type,
             'model' => $request->model,
             'brand' => $request->brand,
@@ -100,6 +110,8 @@ class ConsumableController extends Controller
     public function Inventory(Request $request)
     {
         $role = auth()->user()->roles->first(); // Get the first role of the user
+        $productSearch = $request->input('product_search'); // from select dropdown
+
 
         // Map role permissions to company IDs
         $permissionCompanyMap = [
@@ -162,13 +174,24 @@ class ConsumableController extends Controller
         }
 
         // Apply search filtering
-        if ($search) {
-            $collection = $collection->filter(function ($item) use ($search) {
-                return stripos($item->product_type_name, $search) !== false ||
-                    stripos($item->model, $search) !== false ||
-                    stripos($item->company_name, $search) !== false;
-            });
+        if ($search != "" || $productSearch) {
+
+            if ($search) {
+                $collection = $collection->filter(function ($item) use ($search) {
+                    return stripos($item->product_type_name, $search) !== false ||
+                        stripos($item->model, $search) !== false ||
+                        stripos($item->company_name, $search) !== false;
+                });
+            }
+
+            if ($productSearch) {
+                $collection = $collection->filter(function ($item) use ($productSearch) {
+                    return $item->asset_type == $productSearch;
+                });
+            }
         }
+
+
 
         // Load supporting data for view
         return view('admin.consumable.Inventory', [
@@ -205,7 +228,7 @@ class ConsumableController extends Controller
         $stocks_qty  = $collection->where('company', $company)
             ->where('model', $model)
             ->first();
-            
+
 
         return response()->json(['qty' => $stocks_qty->balance ?? 0]);
     }

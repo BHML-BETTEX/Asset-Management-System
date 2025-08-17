@@ -18,7 +18,13 @@
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" class="form-control" name="search" placeholder="Search Product type" value="{{ request('search') }}">
-                            <select id="product_search" name="product_search" class="form-control" data-error="Please specify your need.">
+                            <select id="product_search" name="product_search" class="form-control select2" data-error="Please specify your need.">
+                                <option value="">--Product Type--</option>
+                                @foreach ($all_product_types as $all_product)
+                                <option value="{{ $all_product->id }}" {{ request('product_search') == $all_product->id ? 'selected' : '' }}>
+                                    {{ $all_product->product }}
+                                </option>
+                                @endforeach
                             </select>
 
                             <button class="btn btn-info" type="submit">
@@ -321,9 +327,7 @@
                                             <div class="form-group">
                                                 <label for="form_label">Company</label>
                                                 <select id="company" name="company" class="form-control" required="required">
-                                                    <option value="" selected disabled>--Select
-                                                        Your
-                                                        Issue--</option>
+                                                    <option value="" selected disabled>--Select Your Issue--</option>
                                                     @foreach ($all_company as $all_company)
                                                     <option value="{{ $all_company->id }}">
                                                         {{ $all_company->company }}
@@ -622,6 +626,15 @@
             placeholder: '-- Select Employee --',
             allowClear: true,
             dropdownParent: $('#addissueModal')
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#product_search').select2({
+            placeholder: "--Product Type--",
+            allowClear: true
         });
     });
 </script>
