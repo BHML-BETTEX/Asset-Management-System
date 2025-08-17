@@ -383,7 +383,7 @@ class StoreController extends Controller
     function qr_code_view($stores_id)
     {
         $stores_info = Store::find($stores_id);
-        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->first();
+        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->orderBy('issue_date', 'desc')->first();
         return view('admin.store.qr_code_view', [
             'stores_info' => $stores_info,
             'issue_info' => $issue_info,
