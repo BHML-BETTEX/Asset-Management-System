@@ -228,8 +228,9 @@
                     <!-- example employee selector -->
                     <div class="input-group input-group-outline mb-3">
                         <select id="empl_id" name="emp_id" class="form-control select2">
-                            @foreach ($employee as $employee)
-                            <option value="{{ $employee->emp_id }}" data-emp_id="{{ $employee->id }}">{{ $employee->emp_id }}</option>
+                            <option value="" selected disabled>-- Select Employee --</option>
+                            @foreach ($employee as $emp)
+                            <option value="{{ $emp->emp_id }}" data-emp_id="{{ $emp->id }}">{{ $emp->emp_id }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -349,6 +350,17 @@
         $('#product_search').select2({
             placeholder: "--Product Type--",
             allowClear: true
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#empl_id').select2({
+            placeholder: "Select an Employee",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#issueModal') // Important for Bootstrap modal
         });
     });
 </script>

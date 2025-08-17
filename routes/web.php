@@ -46,7 +46,6 @@ Route::post('/name/change', [UserController::class, 'name_change'])->name('name.
 Route::post('/password/change', [UserController::class, 'password_change'])->name('password.change');
 
 //Role
-
 Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index')->middleware('role_or_permission:admin|role-list');
 Route::get('/roles/create', [RoleController::class, 'roles_create'])->name('roles.create')->middleware('role_or_permission:admin|role-create');
 Route::post('/roles/store', [RoleController::class, 'roles_store'])->name('roles_store')->middleware('role_or_permission:admin|role-create');
