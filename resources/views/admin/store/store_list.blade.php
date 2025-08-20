@@ -69,6 +69,8 @@
                                     <tr>
                                         <th>SL</th>
                                         <th>STATUS</th>
+                                        <th>ACTION</th>
+                                        <th>CHECKSTATUS</th>
                                         <th>ASSET TAG</th>
                                         <th>ASSET TYPE</th>
                                         <th>MODEL</th>
@@ -88,9 +90,7 @@
                                         <th>COMPANY</th>
                                         <th>OTHERS</th>
                                         <th>Balance</th>
-                                        <th>CHECKSTATUS</th>
                                         <th>PICTURE</th>
-                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody style="height: 3px !important; overflow: scroll; ">
@@ -127,6 +127,32 @@
                                             </button>
                                             @endif
                                         </td>
+                                        <td>
+                                            <button class="border-0 bg-white"><a class="text-primary"
+                                                    href="{{ route('store.edit', $store->id) }}"><i
+                                                        class="fa fa-edit "
+                                                        style="font-size:20px;"></a></i></button>
+
+                                            <button class="border-0 bg-white"><a class="text-success"
+                                                    href="{{ route('qr_code_view', $store->id) }}"><i
+                                                        class="fa fa-eye "
+                                                        style="font-size:20px;"></a></i></button>
+
+                                            <button class="border-0 bg-white"><a class="text-success"
+                                                    href="{{route('qr_code', $store->id)}}"><i
+                                                        class="fa fa-qrcode "
+                                                        style="font-size:20px;"></a></i></button>
+                                        </td>
+                                        </td>
+                                        <td style="background-color: #feefe6;">
+                                            @if($store->checkstatus == "INSTOCK")
+                                            <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
+                                            @elseif($store->checkstatus == "MAINTENANCE")
+                                            <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
+                                            @else
+                                            <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $store->products_id }}</td>
                                         <td>{{ $store->rel_to_ProductType->product }}</td>
                                         <td>{{ $store->model }}</td>
@@ -145,38 +171,10 @@
                                         <td>{{ $store->rel_to_Status->status_name }}</td>
                                         <td>{{ $store->rel_to_Company->company }}</td>
                                         <td>{{ $store->others }}</td>
-                                        <td>
-
-
-                                        </td>
-                                        <td style="background-color: #feefe6;">
-                                            @if($store->checkstatus == "INSTOCK")
-                                            <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
-                                            @elseif($store->checkstatus == "MAINTENANCE")
-                                            <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
-                                            @else
-                                            <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
-                                            @endif
-
-                                        </td>
-                                        <td><img width="40" height="15"
+                                        <td></td>
+                                            <td><img width="40" height="15"
                                                 src="{{ asset('/uploads/store/' . $store->picture) }}"
-                                                alt="picture"></td>
-                                        <td>
-                                            <button class="border-0 bg-white"><a class="text-primary"
-                                                    href="{{ route('store.edit', $store->id) }}"><i
-                                                        class="fa fa-edit "
-                                                        style="font-size:20px;"></a></i></button>
-
-                                            <button class="border-0 bg-white"><a class="text-success"
-                                                    href="{{ route('qr_code_view', $store->id) }}"><i
-                                                        class="fa fa-eye "
-                                                        style="font-size:20px;"></a></i></button>
-
-                                            <button class="border-0 bg-white"><a class="text-success"
-                                                    href="{{route('qr_code', $store->id)}}"><i
-                                                        class="fa fa-qrcode "
-                                                        style="font-size:20px;"></a></i></button>
+                                                alt="picture">
                                         </td>
                                     </tr>
                                     @endforeach

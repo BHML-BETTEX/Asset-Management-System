@@ -33,6 +33,7 @@
                 </tr>
             @endforeach
         </table>
+        {{ $all_supplier->links() }}
             </div>
           </div>
         </div>
@@ -50,20 +51,20 @@
                 <form action="{{route('supplier.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                     <div class="mb-3">
-                        <label for="" class="form-label">Supplier Name</label>
-                            <input type="text" class="form-control" name="supplier_name" placeholder="supplier name"> 
+                        <label for="" class="form-label">Supplier Name *</label>
+                            <input type="text" class="form-control" name="supplier_name" placeholder="supplier name" required> 
                     </div>
                     <div class="mb-3">
-                        <label for="" class="form-label">Address</label>
-                            <input type="text" class="form-control" name="address" placeholder="Address">  
+                        <label for="" class="form-label">Address *</label>
+                            <input type="text" class="form-control" name="address" placeholder="Address" required>  
                     </div>
                     <div class="mb-3">
-                        <label for="" class="form-label">Phone</label>
-                            <input type="number" class="form-control" name="phone" placeholder="phone">  
+                        <label for="" class="form-label">Phone *</label>
+                            <input type="number" class="form-control" name="phone" placeholder="phone" required>  
                     </div>
                     <div class="mb-3">
-                        <label for="" class="form-label">Email</label>
-                            <input type="text" class="form-control" name="email" placeholder="email">  
+                        <label for="" class="form-label">Email *</label>
+                            <input type="text" class="form-control" name="email" placeholder="email" required>  
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Web</label>
