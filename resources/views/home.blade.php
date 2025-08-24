@@ -263,7 +263,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="h5">BETTEX INDIA</h2>
+                        <h2 class="h5">UNIONTEX INDIA</h2>
                     </div>
                     <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
                         <table class="table table-striped table-bordered">

@@ -172,7 +172,7 @@
                                         <td>{{ $store->rel_to_Company->company }}</td>
                                         <td>{{ $store->others }}</td>
                                         <td></td>
-                                            <td><img width="40" height="15"
+                                        <td><img width="40" height="15"
                                                 src="{{ asset('/uploads/store/' . $store->picture) }}"
                                                 alt="picture">
                                         </td>
