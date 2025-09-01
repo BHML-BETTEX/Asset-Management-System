@@ -19,12 +19,28 @@ class EmployeeController extends Controller
     //
     function employee(Request $request)
     {
+        $role = auth()->user()->roles[0];
+
         $search = $request['search'] ?? "";
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 'BHML INDUSTRIES LTD');
+        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 'BETTEX');
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 'BETTEX PREMIUM');
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 'BETTEX BRIDGE');
+
         if ($search != "") {
-            $employees = Employee::where('emp_id', 'LIKE', "%$search")->orwhere('emp_name', 'LIKE', "%$search")->orwhere('designation_id', 'LIKE', "%$search")->paginate(13);
+            $employees = Employee::where(function ($query) use ($companies) {
+                $query->whereIn('company', $companies);
+            })->where(function ($query) use ($search) {
+                $query->where('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('designation_id', 'LIKE', "%$search%");
+            })->paginate(13);
         } else {
-            $employees = Employee::paginate(13);
+            $employees = Employee::where(function ($query) use ($companies) {
+               $query->whereIn('company', $companies);
+            })->paginate(13);
         }
+
         $product_types = ProductType::all();
         $departments = Department::all();
         $designation = designation::all();
@@ -34,7 +50,7 @@ class EmployeeController extends Controller
             'departments' => $departments,
             'designation' => $designation,
             'employees' => $employees,
-            'company'=> $company,
+            'company' => $company,
             'search' => $search,
         ]);
     }
@@ -182,13 +198,15 @@ class EmployeeController extends Controller
         return Excel::download(new EmployeeDataExport, $Filename, $exportFormat);
     }
 
-    function employee_import(){
+    function employee_import()
+    {
         return view('admin.employee.employee_import');
     }
 
-    function employee_importexceldata(Request $request){
+    function employee_importexceldata(Request $request)
+    {
         $request->validate([
-            'import_file'=>[
+            'import_file' => [
                 'required',
                 'file'
             ],
