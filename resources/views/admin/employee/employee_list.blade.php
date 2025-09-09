@@ -6,7 +6,7 @@
         <div class="row ">
             <div class="col-md-12">
                 <div class="col-md-5 p-2">
-                    <h5 class="text-white">Employee Listss</h5>
+                    <h5 class="text-white">Employee List</h5>
                 </div>
                 <div class="col-md-1">
                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"

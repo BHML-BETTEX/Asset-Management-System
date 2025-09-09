@@ -41,11 +41,10 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view ">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"> <span>BETTEX HK LTD</span></a>
+                        <a href="#" class="site_title"> <span>BETTEX HK LTD</span></a>
                     </div>
 
                     <div class="clearfix"></div>
-
                     <!-- menu profile quick info -->
                     <div class="profile clearfix ">
                         <div class="profile_pic">
@@ -116,13 +115,23 @@
                                         <li><a href="{{ route('producttype_list') }}">Asset Type</a></li>
                                     </ul>
                                 </li>
-                               
-                                <li><a><i class="fa fa-clone"></i>Permision <span class="fa fa-chevron-down"></span></a>
+
+                                <li><a><i class="fa fa-clone"></i>Permision<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         @can('role-list')
                                         <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
                                         @endcan
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a><i class="fa fa-bar-chart-o"></i>People <span
+                                            class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{route('list_all')}}">List All</a></li>
+                                        <li><a href="">Supervisor</a></li>
+                                        <li><a href="">Admin user</a></li>
+                                        <li><a href="">Delete user</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -164,12 +173,6 @@
                                     aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="javascript:;">{{ Auth::user()->name }}
                                     </a>
-                                    <a class="dropdown-item" href="javascript:;"> Profile</a>
-                                    <a class="dropdown-item" href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:;">Help</a>
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();" class="dropdown-item ai-icon">
@@ -189,81 +192,6 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
-
-                            <li role="presentation" class="nav-item dropdown open">
-                                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1"
-                                    data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-envelope-o"></i>
-                                    <span class="badge bg-green">6</span>
-                                </a>
-                                <ul class="dropdown-menu list-unstyled msg_list" role="menu"
-                                    aria-labelledby="navbarDropdown1">
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg"
-                                                    alt="Profile Image" /></span>
-                                            <span>
-                                                <span></span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were
-                                                where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg"
-                                                    alt="Profile Image" /></span>
-                                            <span>
-                                                <span></span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were
-                                                where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg"
-                                                    alt="Profile Image" /></span>
-                                            <span>
-                                                <span></span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were
-                                                where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg"
-                                                    alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were
-                                                where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="text-center">
-                                            <a class="dropdown-item">
-                                                <strong>See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
                             </li>
                         </ul>
 

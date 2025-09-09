@@ -25,7 +25,7 @@ class EmployeeController extends Controller
         // Get allowed companies based on role
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 'BHML INDUSTRIES LTD');
-        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 'BETTEX');
+        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 'BETTEX HK LTD');
         if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 'BETTEX PREMIUM');
         if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 'BETTEX BRIDGE');
 

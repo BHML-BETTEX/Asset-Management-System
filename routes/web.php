@@ -7,6 +7,7 @@ use App\Http\Controllers\DesktopController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\UserController;
@@ -253,6 +254,16 @@ Route::post('/consumableIssue/store', [ConsumableController::class, 'consumableI
 Route::get('/consumableIssue/delete/{id}', [ConsumableController::class, 'consumableIssue_delete'])->name('consumableIssue_delete');
 Route::get('/product', [ConsumableController::class, 'product'])->name('product');
 Route::post('/product/store', [ConsumableController::class, 'product_store'])->name('product_store');
+
+
+
+
+
+//people
+Route::get('/pepole', [PeopleController::class, 'pepole'])->name('list_all');
+Route::get('/people_info/{id}', [PeopleController::class, 'people_info'])->name('people_info');
+
+
 
 
 
