@@ -61,6 +61,7 @@
                                         <th>Issue Date</th>
                                         <th>Issue Qty</th>
                                         <th>Units</th>
+                                        <th>Emp ID</th>
                                         <th>Employee Name</th>
                                         <th>Department</th>
                                         <th>Company</th>
@@ -77,6 +78,7 @@
                                         <td>{{$issue_detail->issue_date}}</td>
                                         <td>{{$issue_detail->issue_qty}}</td>
                                         <td>{{$issue_detail->rel_to_SizeMaseurment->size}}</td>
+                                        <td>{{$issue_detail->emp_id}}</td>
                                         <td>{{$issue_detail->emp_name}}</td>
                                         <td>{{$issue_detail->rel_to_Department->department_name}}</td>
                                         <td>{{$issue_detail->rel_to_Company->company}}</td>
@@ -143,9 +145,9 @@
                                                 <select id="product_type" name="product_type" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Asset Type --</option>
                                                     @foreach ($productdetails as $productdetail)
-                                                        <option value="{{ $productdetail->asset_type }}">
-                                                            {{ $productdetail->rel_to_ProductType->product }}
-                                                        </option>
+                                                    <option value="{{ $productdetail->asset_type }}">
+                                                        {{ $productdetail->rel_to_ProductType->product }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -157,7 +159,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="model_id">
-                                                    Model * 
+                                                    Model *
                                                     <span class="text-success" data-toggle="modal" data-target="#addBrandModal">
                                                         <i class="fa fa-plus" style="font-size:10px;"></i>
                                                     </span>
@@ -189,9 +191,9 @@
                                                 <select id="units_id" name="units_id" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Units --</option>
                                                     @foreach ($all_SizeMaseurment as $all_SizeMaseurment)
-                                                        <option value="{{ $all_SizeMaseurment->id }}">
-                                                            {{ $all_SizeMaseurment->size }}
-                                                        </option>
+                                                    <option value="{{ $all_SizeMaseurment->id }}">
+                                                        {{ $all_SizeMaseurment->size }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -202,43 +204,50 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="emp_name">Employee ID <span class="text-danger">*</span></label>
+                                                <label for="emp_name">Employee Name <span class="text-danger">*</span></label>
                                                 <select id="emp_name" name="emp_name" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Employee --</option>
                                                     @foreach ($employee as $employees)
-                                                        <option value="{{ $employees->emp_name }}">
-                                                            {{ $employees->emp_name }}
-                                                        </option>
+                                                    <option value="{{ $employees->emp_name }}" data-emp-id="{{ $employees->emp_id }}">
+                                                        {{ $employees->emp_name }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="department_id">Department <span class="text-danger">*</span></label>
-                                                <select id="department_id" name="department_id" class="form-control select2" required>
-                                                    <option value="" selected disabled>-- Select Department --</option>
-                                                    @foreach ($all_departments as $all_department)
-                                                        <option value="{{ $all_department->id }}">
-                                                            {{ $all_department->department_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="emp_id">Employee ID</label>
+                                                <input id="emp_id" type="text" name="emp_id" class="form-control" value="" readonly>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Company -->
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="department_id">Department <span class="text-danger">*</span></label>
+                                                <select id="department_id" name="department_id" class="form-control select2" required>
+                                                    <option value="" selected disabled>-- Select Department --</option>
+                                                    @foreach ($all_departments as $all_department)
+                                                    <option value="{{ $all_department->id }}">
+                                                        {{ $all_department->department_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="company">Company <span class="text-danger">*</span></label>
                                                 <select id="company" name="company" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Company --</option>
                                                     @foreach ($all_company as $all_companys)
-                                                        <option value="{{ $all_companys->id }}">
-                                                            {{ $all_companys->company }}
-                                                        </option>
+                                                    <option value="{{ $all_companys->id }}">
+                                                        {{ $all_companys->company }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -281,7 +290,16 @@
 
 @endsection
 
+
+
 @push('script')
+
+<!-- 
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ -->
 @if(session('issued_success'))
 <script>
     Swal.fire({
@@ -303,17 +321,22 @@
     });
 </script>
 @endif
-@endpush
 
-@push('scripts')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#emp_name').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
+            var empId = selectedOption.data('emp-id');
+            console.log("Selected Emp ID:", empId);
+            $('#emp_id').val(empId || '');
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
         // Initialize Select2 when modal is shown
-        $('#addissueModal').on('shown.bs.modal', function () {
+        $('#addissueModal').on('shown.bs.modal', function() {
             $('.select2').select2({
                 placeholder: "-- Select Asset Type --",
                 allowClear: true,

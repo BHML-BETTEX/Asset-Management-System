@@ -65,6 +65,8 @@ Route::post('/department/store', [CategoryController::class, 'department_store']
 Route::get('/department/delete/{department_id}', [CategoryController::class, 'department_delete'])->name('department.delete');
 Route::post('/department/update', [CategoryController::class, 'department_update'])->name('department.update');
 Route::get('/department/edit/{department_id}', [CategoryController::class, 'department_edit'])->name('department_edit');
+Route::get('/departments/asset/{department_id}', [CategoryController::class, 'departments_asset'])->name('departments_asset');
+
 
 //designation
 Route::get('/designation', [CategoryController::class, 'designation'])->name('designation');
@@ -237,6 +239,16 @@ Route::get('/search', [EmployeeController::class, 'search'])->name('search');
 Route::get('/employee/export', [EmployeeController::class, 'export'])->name('export');
 Route::get('/employee/import', [EmployeeController::class, 'employee_import'])->name('employee_import');
 Route::post('/employee/importexceldata', [EmployeeController::class, 'employee_importexceldata'])->name('employee_importexceldata');
+Route::get('/employee/info/{id}', [EmployeeController::class, 'employee_info'])->name('employee_info');
+Route::get('/employee/users/asset/{emp_id}', [EmployeeController::class, 'employee_assets'])->name('employee_assets');
+Route::get('/employee/users/consumable/{emp_id}', [EmployeeController::class, 'employee_consumable'])->name('employee_consumable');
+Route::get('/employee/users/file/{emp_id}', [EmployeeController::class, 'employee_file'])->name('employee_file');
+Route::post('/employee/storeOtherFile/{id}', [EmployeeController::class, 'storeOtherFile'])->name('employee.storeOtherFile');
+Route::get('/employee/storeOtherFile/delete/{id}', [EmployeeController::class, 'employee_file_delete'])->name('employee_file_delete');
+
+
+
+
 
 //desktop
 Route::get('/desktop', [DesktopController::class, 'desktop'])->name('desktop');
@@ -256,12 +268,8 @@ Route::get('/product', [ConsumableController::class, 'product'])->name('product'
 Route::post('/product/store', [ConsumableController::class, 'product_store'])->name('product_store');
 
 
+//
 
-
-
-//people
-Route::get('/pepole', [PeopleController::class, 'pepole'])->name('list_all');
-Route::get('/people_info/{id}', [PeopleController::class, 'people_info'])->name('people_info');
 
 
 

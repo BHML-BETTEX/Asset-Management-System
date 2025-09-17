@@ -1,6 +1,6 @@
 @extends('master')
-
 @section('content')
+
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -38,124 +38,128 @@
             </div>
         </div>
 
-    <!--Modal Start-->
+        <!--Modal Start-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered"> <!--  modal-lg makes it medium/large -->
+                <div class="modal-content">
+                    <div class="modal-header" style="    background: linear-gradient(to bottom, #33cccc 0%, #ffffff 52%);">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+                        <button type="button" class="close btn border-0 bg-transparent" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('employee.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
 
+                            <!--  Row with 2 input fields side by side -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Employee ID <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="emp_id" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Employee Name</label>
+                                    <input type="text" class="form-control" name="emp_name">
+                                </div>
+                            </div>
 
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Department <span class="text-danger">*</span></label>
+                                    <select class="form-control select2" name="department_id" required>
+                                        <option value="">-- Select Department --</option>
+                                        @foreach ($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Designation</label>
+                                    <select class="form-control" name="designation_id">
+                                        @foreach ($designation as $desig)
+                                        <option value="{{ $desig->id }}">{{ $desig->designation_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('employee.store') }}" Method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label" >Employee id *</label>
-                            <input class="form-control" name="emp_id" required></input>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Employee Name</label>
-                            <input class="form-control" name="emp_name"></input>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text">Department</label>
-                            <select class="form-control" id="sel1" name="department_id">
-                                @foreach ($departments as $departments)
-                                    <option class="" value="{{ $departments->id }}">
-                                        {{ $departments->department_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text">Designation</label>
-                            <select class="form-control" id="sel1" name="designation_id">
-                                @foreach ($designation as $designation)
-                                    <option class="" value="{{ $designation->id }}">
-                                        {{ $designation->designation_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Joining Date</label>
-                            <input class="form-control" type="date" name="join_date" required></input>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Phone Number</label>
-                            <input class="form-control" type="number" name="phone_number"></input>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Email</label>
-                            <input class="form-control" type="email" name="email"></input>
-                        </div>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Joining Date</label>
+                                    <input type="date" class="form-control" name="join_date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="number" class="form-control" name="phone_number">
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="message-text">Company *</label>
-                            <select class="form-control" id="sel1" name="company" required>
-                                @foreach ($company as $companys)
-                                    <option class="" value="{{ $companys->company }}">
-                                        {{ $companys->company }} </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Company <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="company" required>
+                                        @foreach ($company as $companys)
+                                        <option value="{{ $companys->id }}">{{ $companys->company }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Oters info</label>
-                            <input class="form-control" type="text" name="text"></input>
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Picture</label>
-                            <input class="form-control" type="file" name="picture"></input>
-                        </div>
-                        <button class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="mt-2">
+                                <label class="form-label">Other Info</label>
+                                <input type="text" class="form-control" name="text">
+                            </div>
+
+                            <div class="mt-2">
+                                <label class="form-label">Picture</label>
+                                <input type="file" class="form-control" name="picture">
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between" style="">
+                                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn" style="background-color: #2B7093; color:white">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-
-    <!--Modal end-->
-
-    <!--display form start-->
-
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-
-                @if (session('delete_employee'))
+        <!--Modal end-->
+        <!--display form start-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    @if (session('delete_employee'))
                     <div class="alert alert-success">{{ session('delete_employee') }}</div>
-                @endif
-                <div class="card-body">
-                    <div class="table-responsive text-nowrap">
-                        <table class="table table-striped table-bordered ">
-                            <thead class="bg-info text-white">
-                                <tr>
-                                    <th scope="col">SL</th>
-                                    <th scope="col">EMPLOYEE ID</th>
-                                    <th scope="col">EMPLOYEE NAME</th>
-                                    <th scope="col">DEPARTMENT</th>
-                                    <th scope="col">DESIGNATION</th>
-                                    <th scope="col">JOINING DATE</th>
-                                    <th scope="col">PHONE NUMBER</th>
-                                    <th scope="col">EMAIL</th>
-                                    <th scope="col">Company</th>
-                                    <th scope="col">PICTURE</th>
-                                    <th scope="col">ACTION</th>
-                                </tr>
-                            </thead>
-
-                            <tbody style="height: 5px !important; overflow: scroll; ">
-                                @foreach ($employees as $key => $employee)
+                    @endif
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-striped table-bordered ">
+                                <thead class="bg-info text-white">
                                     <tr>
+                                        <th scope="col">SL</th>
+                                        <th scope="col">EMPLOYEE ID</th>
+                                        <th scope="col">EMPLOYEE NAME</th>
+                                        <th scope="col">DEPARTMENT</th>
+                                        <th scope="col">DESIGNATION</th>
+                                        <th scope="col">JOINING DATE</th>
+                                        <th scope="col">PHONE NUMBER</th>
+                                        <th scope="col">EMAIL</th>
+                                        <th scope="col">Company</th>
+                                        <th scope="col">PICTURE</th>
+                                        <th scope="col">ACTION</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody style="height: 5px !important; overflow: scroll; ">
+                                    @foreach ($employees as $key => $employee)
+                                    <tr onclick="window.location='{{ route('employee_info', $employee->id) }}'"
+                                        style="cursor: pointer;">
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $employee->emp_id }}</td>
                                         <td>{{ $employee->emp_name }}</td>
@@ -164,7 +168,7 @@
                                         <td>{{ $employee->join_date }}</td>
                                         <td>{{ $employee->phone_number }}</td>
                                         <td>{{ $employee->email }}</td>
-                                        <td>{{ $employee->company}}</td>
+                                        <td>{{ $employee->rel_to_companies->company}}</td>
                                         <td><img width="40" height="30"
                                                 src="{{ asset('uploads/employees') }}/{{ $employee->picture }}"
                                                 alt=""></td>
@@ -177,13 +181,14 @@
                                                         class="fa fa-trash " style="font-size:20px;"></a></i></button> -->
                                         </td>
                                     </tr>
-                                @endforeach
-                                
-                            </tbody>
-                        </table>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
                             {{$employees->links()}}
-                        <div>
-                        
+                            <div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,15 +196,34 @@
         </div>
     </div>
 </div>
-</div>
 
-    <!-- Ajax code -->
+<!-- Ajax code -->
 
-
-
-
-
-
-
-    <!--display form end-->
+<!--display form end-->
 @endsection
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 only when modal is shown
+        $('#exampleModal').on('shown.bs.modal', function() {
+            $('.select2').select2({
+                dropdownParent: $('#exampleModal'), // Fixes dropdown z-index inside modal
+                placeholder: "Please select an option",
+                allowClear: true
+            });
+        });
+
+        // Optional: Destroy Select2 when modal hides to avoid duplicates
+        $('#exampleModal').on('hidden.bs.modal', function() {
+            $('.select2').select2('destroy');
+        });
+    });
+</script>
+@endpush

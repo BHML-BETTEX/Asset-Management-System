@@ -124,16 +124,6 @@
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
                                     </ul>
                                 </li>
-
-                                <li><a><i class="fa fa-bar-chart-o"></i>People <span
-                                            class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="{{route('list_all')}}">List All</a></li>
-                                        <li><a href="">Supervisor</a></li>
-                                        <li><a href="">Admin user</a></li>
-                                        <li><a href="">Delete user</a></li>
-                                    </ul>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -163,7 +153,7 @@
                         <a id="menu_toggle"><i class="fa fa-bars"></i></a>
                     </div>
                     <nav class="nav navbar-nav ">
-                        <ul class=" navbar-right">
+                        <ul class="navbar-right">
                             <li class="nav-item dropdown open" style="padding-left: 15px;">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
                                     id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">

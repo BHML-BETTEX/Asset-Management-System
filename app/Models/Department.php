@@ -10,9 +10,10 @@ class Department extends Model
     use HasFactory;
     protected $fillable  = ['department_name'];
 
-    function rel_to_user(){
+    function rel_to_user()
+    {
         return $this->belongsTo(User::class, 'added_by');
     }
-    
 
+   
 }

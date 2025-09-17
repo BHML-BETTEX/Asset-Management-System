@@ -304,6 +304,7 @@ class ConsumableController extends Controller
             'issue_qty' => $request->issue_qty,
             'units_id' => $request->units_id,
             'emp_name' => $request->emp_name,
+            'emp_id' => $request->emp_id,
             'department_id' => $request->department_id,
             'company' => $request->company,
             'others' => $request->others,

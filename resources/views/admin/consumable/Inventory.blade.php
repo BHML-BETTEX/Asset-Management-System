@@ -552,64 +552,72 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Employee ID <span class="text-danger">*</span></label>
-                                                <span class="text-success" data-toggle="modal"></span>
-                                                </label>
-
-                                                <select id="employee_id" name="emp_name" class="form-control select2" required>
+                                                <label for="emp_name">Employee Name <span class="text-danger">*</span></label>
+                                                <select id="emp_name" name="emp_name" class="form-control select2" required>
                                                     <option value="" selected disabled>-- Select Employee --</option>
-                                                    @foreach($employee as $employees)
-                                                    <option value="{{ $employees->emp_name }}">{{ $employees->emp_name }}</option>
+                                                    @foreach ($employee as $employees)
+                                                    <option value="{{ $employees->emp_name }}" data-emp-id="{{ $employees->emp_id }}">
+                                                        {{ $employees->emp_name }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="form_label">Department </label>
-                                                <span class="text-danger" data-toggle="modal" data-target="#addUnitModal">*</span>
-                                                </label>
-
-                                                <select id="form_label" name="department_id" class="form-control">
-                                                    <option value="" selected disabled>--Select Your Issue--</option>
-                                                    @foreach ($all_departments as $all_department)
-                                                    <option value="{{ $all_department->id }}">{{ $all_department->department_name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="emp_id">Employee ID</label>
+                                                <input id="emp_id" type="text" name="emp_id" class="form-control" value="" readonly>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="form-group">
-                                                    <label for="form_label">Note</label>
-                                                    <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-12 ">
-                                            <button type="submit" onclick="showAlert"
-                                                class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
-                                            <button type="reset"
-                                                class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
-                                            <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="form_label">Department </label>
+                                            <span class="text-danger" data-toggle="modal" data-target="#addUnitModal">*</span>
+                                            </label>
+
+                                            <select id="form_label" name="department_id" class="form-control">
+                                                <option value="" selected disabled>--Select Your Issue--</option>
+                                                @foreach ($all_departments as $all_department)
+                                                <option value="{{ $all_department->id }}">{{ $all_department->department_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="form_label">Note</label>
+                                                <textarea id="form_message" name="others" class="form-control" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-12 ">
+                                        <button type="submit" onclick="showAlert"
+                                            class="btn btn-primary"><span class="fa fa-file-text"> Submit</button>
+                                        <button type="reset"
+                                            class="btn btn-secondary"><span class="fa fa-undo"></span> Reset</button>
+                                        <a href="{{route('consumableIssue')}}" class="btn btn-info"><span class="fa fa-step-backward"></span> Back</a>
+                                    </div>
+                                </div>
                         </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
             </div>
-
         </div>
+
     </div>
+</div>
 </div>
 </div>
 
@@ -707,6 +715,16 @@
     });
 </script>
 
+<script>
+    $(document).ready(function() {
+        $('#emp_name').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
+            var empId = selectedOption.data('emp-id');
+            console.log("Selected Emp ID:", empId);
+            $('#emp_id').val(empId || '');
+        });
+    });
+</script>
 
 
 @endpush

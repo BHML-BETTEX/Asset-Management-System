@@ -7,10 +7,15 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
 use App\Models\ProductType;
+use App\Models\ConsumableController;
 use Carbon\Carbon;
 use App\Exports\EmployeeDataExport;
 use App\Imports\EmployeeImport;
 use App\Models\Company;
+use App\Models\consumable_issue;
+use App\Models\EmployeeOtherFile;
+use App\Models\issue;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -24,10 +29,10 @@ class EmployeeController extends Controller
         $search = $request['search'] ?? "";
         // Get allowed companies based on role
         $companies = [];
-        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 'BHML INDUSTRIES LTD');
-        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 'BETTEX HK LTD');
-        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 'BETTEX PREMIUM');
-        if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 'BETTEX BRIDGE');
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
+        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies,  3);
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 4);
 
         if ($search != "") {
             $employees = Employee::where(function ($query) use ($companies) {
@@ -37,10 +42,9 @@ class EmployeeController extends Controller
             })->paginate(13);
         } else {
             $employees = Employee::where(function ($query) use ($companies) {
-               $query->whereIn('company', $companies);
+                $query->whereIn('company', $companies);
             })->paginate(13);
         }
-
         $product_types = ProductType::all();
         $departments = Department::all();
         $designation = designation::all();
@@ -64,6 +68,7 @@ class EmployeeController extends Controller
             'join_date' => $request->join_date,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
+            'others' => $request->others,
             'company' => $request->company,
             'created_at' => Carbon::now(),
         ]);
@@ -79,6 +84,7 @@ class EmployeeController extends Controller
         return back();
     }
 
+    //employee delete
     function employee_delete($employee_id)
     {
         Employee::find($employee_id)->delete();
@@ -97,6 +103,7 @@ class EmployeeController extends Controller
         ]);
     }
 
+    //employee update
     function employee_update(Request $request)
     {
         if ($request->picture == '') {
@@ -214,5 +221,77 @@ class EmployeeController extends Controller
         Excel::import(new EmployeeImport, $request->file('import_file'));
 
         return back()->with('import_data', 'Data Import Successfully');
+    }
+
+    //Employee Info
+    function employee_info($id)
+    {
+        $employee = Employee::with(['rel_to_departmet', 'rel_to_designation'])->findOrFail($id);
+        return view('admin.employee.employee_info', compact('employee'));
+    }
+
+
+    //Employee Asset Details
+    function employee_assets($emp_id)
+    {
+        // Find employee by emp_id column instead of primary key id
+        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+
+        $issues = Issue::where('emp_id', $employee->emp_id)->get();
+        $stores = Store::all();
+        return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores'));
+    }
+
+    //Employee Consumable Details
+    function employee_consumable($emp_id)
+    {
+        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+
+        $consumable_issue = consumable_issue::where('emp_id', $employee->emp_id)->get();
+        //$stores = Store::all();
+        return view('admin.employee.employee_consumable', compact('consumable_issue', 'employee'));
+    }
+
+    //Employee File
+    function employee_file($emp_id)
+    {
+        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+        $employee_file = EmployeeOtherFile::where('employee_id', $employee->id)->get();
+        return view('admin.employee.employee_file', compact('employee', 'employee_file'));
+    }
+
+    //Employee File Uploads
+    public function storeOtherFile(Request $request, $id)
+    {
+        $request->validate([
+            'file' => 'required|file|max:8192|mimes:avif,doc,docx,gif,ico,jpeg,jpg,json,key,lic,mov,mp3,mp4,odp,ods,odt,ogg,pdf,png,rar,rtf,svg,txt,wav,webm,webp,xls,xlsx,xml,zip',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $employee = Employee::findOrFail($id);
+
+        if ($request->hasFile('file')) {
+            $uploadedFile = $request->file('file');
+            $fileName = 'emp_' . $id . '_' . time() . '.' . $uploadedFile->getClientOriginalExtension();
+            $uploadedFile->move(public_path('uploads/employees/others'), $fileName);
+
+            EmployeeOtherFile::create([
+                'employee_id' => $id,
+                'file' => $fileName,
+                'note' => $request->note,
+                'created_by' => auth()->id(), // or null if no auth
+            ]);
+
+            return back()->with('successs', 'File uploaded successfully.');
+        }
+
+        return back()->withErrors(['file' => 'File upload failed.']);
+    }
+
+    //employee file delete
+    public function employee_file_delete($id)
+    {
+        EmployeeOtherFile::findOrFail($id)->delete();
+        return back()->with('delete_employee', 'File deleted successfully.');
     }
 }
