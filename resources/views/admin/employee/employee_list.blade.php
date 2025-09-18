@@ -153,6 +153,7 @@
                                         <th scope="col">Company</th>
                                         <th scope="col">PICTURE</th>
                                         <th scope="col">ACTION</th>
+                                        
                                     </tr>
                                 </thead>
 
