@@ -21,54 +21,52 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
-    //
-public function employee(Request $request)
-{
-    $role = auth()->user()->roles[0];
-    $search = $request->input('search', '');
-    $showAll = $request->input('show_all', false); // Add show_all check
+    //Employee
+    public function employee(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10); // default 13
+        $showAll = $request->input('show_all', false);
 
-    // Get allowed companies based on role
-    $companies = [];
-    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
-    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
-    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
-    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-    // Build base query
-    $query = Employee::whereIn('company', $companies);
+        // Base query
+        $query = Employee::whereIn('company', $companies);
 
-    // Apply search if present
-    if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $q->where('emp_id', 'LIKE', "%{$search}%")
-              ->orWhere('emp_name', 'LIKE', "%{$search}%")
-              ->orWhere('designation_id', 'LIKE', "%{$search}%");
-        });
+        // Apply search
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_id', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_name', 'LIKE', "%{$search}%")
+                    ->orWhere('designation_id', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Fetch records
+        if ($showAll || $perPage === 'all') {
+            $employees = $query->get();
+        } else {
+            $employees = $query->paginate((int) $perPage)->appends($request->all());
+        }
+
+        return view('admin.employee.employee_list', [
+            'product_types' => ProductType::all(),
+            'departments' => Department::all(),
+            'designation' => Designation::all(),
+            'employees' => $employees,
+            'company' => Company::all(),
+            'search' => $search,
+            'perPage' => $perPage,
+            'showAll' => $showAll,
+        ]);
     }
 
-    // Show all or paginate
-    if ($showAll) {
-        $employees = $query->get(); // All results
-    } else {
-        $employees = $query->paginate(13); // Paginated
-    }
-
-    $product_types = ProductType::all();
-    $departments = Department::all();
-    $designation = Designation::all();
-    $company = Company::all();
-
-    return view('admin.employee.employee_list', [
-        'product_types' => $product_types,
-        'departments' => $departments,
-        'designation' => $designation,
-        'employees' => $employees,
-        'company' => $company,
-        'search' => $search,
-        'showAll' => $showAll,
-    ]);
-}
 
     function employee_store(Request $request)
     {
@@ -244,44 +242,47 @@ public function employee(Request $request)
 
 
     //Employee Asset Details
-function employee_assets(Request $request, $emp_id)
-{
-    // Get the logged-in user's role
-    $role = auth()->user()->roles[0];
-
-    // Get search input
-    $search = $request->input('search', '');
-
-    // Find employee by emp_id column
-    $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
-
-    // Base query for issues assigned to this employee
-    $query = Issue::where('emp_id', $employee->emp_id);
-
-    // Apply search if any
-    if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $q
-              ->orWhere('asset_tag', 'LIKE', "%{$search}%")
-              ->orWhere('asset_type', 'LIKE', "%{$search}%");
-        });
-    }
-
-    // Paginate or show all (optional)
-    $issues = $query->paginate(10); // Or use ->get() for all
-
-    // Send data to view
-    $stores = Store::all();
-    return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores', 'search'));
-}
-    //Employee Consumable Details
-    function employee_consumable($emp_id)
+    function employee_assets(Request $request, $emp_id)
     {
+        $role = auth()->user()->roles[0];
+        $search = $request->input('search', '');
         $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+        $query = Issue::where('emp_id', $employee->emp_id);
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q
+                    ->orWhere('asset_tag', 'LIKE', "%{$search}%")
+                    ->orWhere('asset_type', 'LIKE', "%{$search}%");
+            });
+        }
 
-        $consumable_issue = consumable_issue::where('emp_id', $employee->emp_id)->get();
-        //$stores = Store::all();
-        return view('admin.employee.employee_consumable', compact('consumable_issue', 'employee'));
+        // Paginate or show all (optional)
+        $issues = $query->paginate(10); // Or use ->get() for all
+
+        // Send data to view
+        $stores = Store::all();
+        return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores', 'search'));
+    }
+    //Employee Consumable Details
+    function employee_consumable(Request $request, $emp_id)
+    {
+        $search = $request->input('search', '');
+        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+        $query = consumable_issue::where('emp_id', $employee->emp_id);
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('product_type', 'LIKE', "%{$search}%")
+                    ->orWhere('model_id', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_id', 'LIKE', "%{$search}%")
+                    ->orWhere('company', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_name', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Paginate results
+        $consumable_issue = $query->paginate(13)->appends(['search' => $search]);
+
+        return view('admin.employee.employee_consumable', compact('consumable_issue', 'employee', 'search'));
     }
 
     //Employee File

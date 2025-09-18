@@ -1,6 +1,18 @@
 @extends('master')
 @section('content')
 
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
+
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -198,30 +210,47 @@
                                     </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div>
-                                    @if (!$showAll && method_exists($employees, 'links'))
-                                    {{ $employees->links() }}
-                                    @endif
-                                </div>
-
-                                <div>
-                                    @if (!$showAll)
-                                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 1]) }}" class="btn btn-sm btn-link text-danger">
-                                        Show all
-                                    </a>
-                                    @else
-                                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 0]) }}" class="btn btn-sm btn-link text-secondary">
-                                        Paginate
-                                    </a>
-                                    @endif
-                                </div>
-                            </div>
-
                             <div>
+                                <!--Pagination Start-->
+                                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                                    {{-- Left: Showing X to Y of Z --}}
+                                    <div class="d-flex align-items-center mb-2">
+                                        @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                        <span class="me-2">
+                                            Showing {{ $employees->firstItem() }} to {{ $employees->lastItem() }} of {{ $employees->total() }} rows
+                                        </span>
+                                        @else
+                                        <span class="me-2">Showing all {{ $employees->count() }} rows</span>
+                                        @endif
 
+                                        {{-- Dropdown --}}
+                                        <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                            <select name="per_page" class="form-select form-select-sm w-auto me-1" onchange="this.form.submit()">
+                                                @php $options = [10, 25, 50, 100, 'all']; @endphp
+                                                @foreach ($options as $option)
+                                                <option value="{{ $option }}" {{ request('per_page', 13) == $option ? 'selected' : '' }}>
+                                                    {{ is_numeric($option) ? $option : 'All' }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            <span>rows per page</span>
+
+                                            {{-- Keep filters --}}
+                                            <input type="hidden" name="search" value="{{ request('search') }}">
+                                        </form>
+                                    </div>
+
+                                    {{-- Right: Pagination links --}}
+                                    <div class="mb-2">
+                                        @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                        <div class="pagination-wrapper">
+                                            {{ $employees->appends(request()->query())->links() }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <!--Pagination end-->
                             </div>
                         </div>
                     </div>

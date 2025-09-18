@@ -1,5 +1,16 @@
 @extends('master')
 @section('content')
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
 <div class="container">
     <div class="page-title">
         <div class="row ">
@@ -180,9 +191,51 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{$stores->links()}}
                         </div>
+                        <!--Pagination Start-->
+                        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
 
+                            {{-- Left + Center: Text + Dropdown in one line --}}
+                            <div class="d-flex align-items-center mb-2">
+
+                                {{-- Showing text --}}
+                                @if ($stores instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                <span class="me-2">
+                                    Showing {{ $stores->firstItem() }} to {{ $stores->lastItem() }} of {{ $stores->total() }} rows
+                                </span>
+                                @else
+                                <span class="me-2">Showing all {{ $stores->count() }} rows</span>
+                                @endif
+
+                                {{-- Rows per page selector --}}
+                                <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                    <select name="per_page" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                                        @php $options = [10, 25, 50, 100, 'all']; @endphp
+                                        @foreach ($options as $option)
+                                        <option value="{{ $option }}" {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                            {{ is_numeric($option) ? $option : 'All' }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <span class="ms-1">rows per page</span>
+
+                                    {{-- Preserve filters --}}
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <input type="hidden" name="product_search" value="{{ request('product_search') }}">
+                                </form>
+                            </div>
+
+                            {{-- Right: Pagination --}}
+                            <div class="mb-2">
+                                @if ($stores instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                <div class="pagination-wrapper">
+                                    {{ $stores->appends(request()->query())->links() }}
+                                </div>
+                                @endif
+                            </div>
+
+                        </div>
+                        <!--Pagination End-->
                     </div>
                 </div>
             </div>

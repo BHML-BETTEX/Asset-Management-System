@@ -32,74 +32,68 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
-    function store(Request $request)
-    {
-        $role = auth()->user()->roles[0];
+function store(Request $request)
+{
+    $role = auth()->user()->roles[0];
 
-        $search = $request['search'] ?? "";
-        $productSearch = $request->input('product_search'); // from select dropdown
+    $search = $request->input('search', '');
+    $productSearch = $request->input('product_search');
+    $perPage = $request->input('per_page', 10); // Default to 10 per page
 
-        // Get allowed companies based on role
-        $companies = [];
-        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) array_push($companies, 1);
-        if ($role->hasPermissionTo('view BETTEX')) array_push($companies, 2);
-        if ($role->hasPermissionTo('view BETTEX PREMIUM')) array_push($companies, 3);
-        if ($role->hasPermissionTo('view BETTEX BRIDGE')) array_push($companies, 4);
+    $companies = [];
+    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-        if ($search != "" || $productSearch) {
-            $stores = Store::join('brands', 'brands.id', '=', 'stores.brand')
-                ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-                ->whereIn('stores.company', $companies) // <-- Important! Filter by company!
-                ->where(function ($query) use ($search, $productSearch) {
+    $query = Store::join('brands', 'brands.id', '=', 'stores.brand')
+        ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+        ->whereIn('stores.company', $companies);
 
-                    if ($productSearch) {
-                        $query->where('product_types.id', '=', $productSearch);
-                    }
+    if ($search || $productSearch) {
+        $query->where(function ($q) use ($search, $productSearch) {
+            if ($productSearch) {
+                $q->where('product_types.id', '=', $productSearch);
+            }
 
-                    if ($search) {
-                        $query->where(function ($q) use ($search) {
-                            $q->where('stores.products_id', 'LIKE', "%{$search}%")
-                                ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                                ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                                ->orWhere('stores.company', 'LIKE', "%{$search}%")
-                                ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                                ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
-                                ->orWhere('product_types.product', 'LIKE', "%{$search}%");
-                        });
-                    }
-                })
-                ->select('stores.*')
-                ->paginate(13)
-                ->appends($request->only('search', 'product_search'));
-        } else {
-            $stores = Store::whereIn('company', $companies)
-                ->paginate(13);
-        }
-
-        $all_product_types = ProductType::all();
-        $all_departments = Department::all();
-        $all_brands = Brand::all();
-        $all_SizeMaseurment = SizeMaseurment::all();
-        $all_status = Status::all();
-        $all_supplier = Supplier::all();
-        $all_company = Company::all();
-        $employee = Employee::all();
-        $all_issue = issue::all();
-        return view('admin.store.store_list', [
-            'stores' => $stores,
-            'all_product_types' => $all_product_types,
-            'all_departments' => $all_departments,
-            'all_brands' => $all_brands,
-            'all_SizeMaseurment' => $all_SizeMaseurment,
-            'all_status' => $all_status,
-            'all_supplier' => $all_supplier,
-            'all_company' => $all_company,
-            'search' => $search,
-            'employee' => $employee,
-            'all_issue' => $all_issue,
-
-        ]);
+            if ($search) {
+                $q->where(function ($sq) use ($search) {
+                    $sq->where('stores.products_id', 'LIKE', "%{$search}%")
+                        ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                        ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                        ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                });
+            }
+        });
     }
+
+    if ($perPage === 'all') {
+        $stores = $query->select('stores.*')->get();
+    } else {
+        $stores = $query->select('stores.*')
+            ->paginate((int)$perPage)
+            ->appends($request->except('page'));
+    }
+
+    return view('admin.store.store_list', [
+        'stores' => $stores,
+        'search' => $search,
+        'perPage' => $perPage,
+        'productSearch' => $productSearch,
+        'all_product_types' => ProductType::all(),
+        'all_departments' => Department::all(),
+        'all_brands' => Brand::all(),
+        'all_SizeMaseurment' => SizeMaseurment::all(),
+        'all_status' => Status::all(),
+        'all_supplier' => Supplier::all(),
+        'all_company' => Company::all(),
+        'employee' => Employee::all(),
+        'all_issue' => Issue::all(),
+    ]);
+}
 
     function add_product()
     {
@@ -490,32 +484,42 @@ class StoreController extends Controller
 
 
     //History
-    function history(Request $request)
-    {
-        $companies = [];
-        $role = auth()->user()->roles[0];
-        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
-        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
-        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
-        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
+  function history(Request $request)
+{
+    $companies = [];
+    $role = auth()->user()->roles[0];
+    $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+    $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
+    $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+    $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
 
-        $search = $request['search'] ?? "";
-        if ($search != "") {
-            $issue_info = issue::where(function ($query) use ($companies) {
-                $query->whereIn('others', $companies);
-            })->where(function ($query) use ($search) {
-                $query->where('asset_tag', 'LIKE', "%$search%")->orwhere('asset_type', 'LIKE', "%$search%")->orwhere('emp_id', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('emp_name', 'LIKE', "%$search%")->orwhere('others', 'LIKE', "%$search%");
-            })->paginate(13)
-                ->appends($request->only('search'));
-        } else {
-            $issue_info = issue::whereIn('others', $companies)->paginate(13);
-        }
+    $search = $request->input('search', '');
+    $perPage = $request->input('per_page', 10); // default is 10
 
-        return view('admin.store.history', [
-            'issue_info' => $issue_info,
-            'search' => $search,
-        ]);
+    $query = Issue::whereIn('others', $companies);
+
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('asset_tag', 'LIKE', "%$search%")
+              ->orWhere('asset_type', 'LIKE', "%$search%")
+              ->orWhere('emp_id', 'LIKE', "%$search%")
+              ->orWhere('emp_name', 'LIKE', "%$search%")
+              ->orWhere('others', 'LIKE', "%$search%");
+        });
     }
+
+    if ($perPage === 'all') {
+        $issue_info = $query->get(); // all results
+    } else {
+        $issue_info = $query->paginate((int)$perPage)->appends($request->all());
+    }
+
+    return view('admin.store.history', [
+        'issue_info' => $issue_info,
+        'search' => $search,
+        'perPage' => $perPage,
+    ]);
+}
 
     //Transfer Start
 

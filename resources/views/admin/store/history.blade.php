@@ -1,6 +1,19 @@
 @extends('master')
 
 @section('content')
+
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
+
 <div class="row ">
     <div class="col-md-12">
         <div class="col-md-7 p-2">
@@ -92,8 +105,47 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{$issue_info->links()}}
                 </div>
+                                    <!-- pagination start-->
+                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                        {{-- Showing rows info + dropdown in one line --}}
+                        <div class="d-flex align-items-center mb-2">
+                            {{-- Showing count --}}
+                            @if ($issue_info instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            <span class="me-2">
+                                Showing {{ $issue_info->firstItem() }} to {{ $issue_info->lastItem() }} of {{ $issue_info->total() }} rows
+                            </span>
+                            @else
+                            <span class="me-2">Showing all {{ $issue_info->count() }} rows</span>
+                            @endif
+
+                            {{-- Per page dropdown --}}
+                            <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                <select name="per_page" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                                    @php $options = [10, 25, 50, 100, 'all']; @endphp
+                                    @foreach ($options as $option)
+                                    <option value="{{ $option }}" {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                        {{ is_numeric($option) ? $option : 'All' }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <span class="ms-1">rows per page</span>
+
+                                {{-- Retain other filters --}}
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                            </form>
+                        </div>
+
+                        {{-- Pagination links --}}
+                        <div class="mb-2">
+                            @if ($issue_info instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            <div class="pagination-wrapper">
+                                {{ $issue_info->appends(request()->query())->links() }}
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- pagination End-->
             </div>
         </div>
     </div>
