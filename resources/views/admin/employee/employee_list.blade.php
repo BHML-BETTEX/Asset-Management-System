@@ -156,34 +156,48 @@
                                     </tr>
                                 </thead>
 
-                                <tbody style="height: 5px !important; overflow: scroll; ">
+                                <tbody style="height: 5px !important; overflow: scroll;">
                                     @foreach ($employees as $key => $employee)
-                                    <tr onclick="window.location='{{ route('employee_info', $employee->id) }}'"
-                                        style="cursor: pointer;">
+                                    <tr style="cursor: default;">
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $employee->emp_id }}</td>
-                                        <td>{{ $employee->emp_name }}</td>
-                                        <td>{{ $employee->rel_to_departmet->department_name}}</td> <!-- Assuming the column is 'name' -->
-                                        <td>{{ $employee->rel_to_designation->designation_name}}</td>
+                                        <td>
+                                            <a href="{{ route('employee_info', $employee->id) }}">
+                                                {{ $employee->emp_id }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('employee_info', $employee->id) }}">
+                                                {{ $employee->emp_name }}
+                                            </a>
+                                        </td>
+                                        <td>{{ $employee->rel_to_departmet->department_name }}</td>
+                                        <td>{{ $employee->rel_to_designation->designation_name }}</td>
                                         <td>{{ $employee->join_date }}</td>
                                         <td>{{ $employee->phone_number }}</td>
                                         <td>{{ $employee->email }}</td>
-                                        <td>{{ $employee->rel_to_companies->company}}</td>
-                                        <td><img width="40" height="30"
-                                                src="{{ asset('uploads/employees') }}/{{ $employee->picture }}"
-                                                alt=""></td>
+                                        <td>{{ $employee->rel_to_companies->company }}</td>
                                         <td>
-                                            <button class="border-0 bg-white"><a class="text-primary"
-                                                    href="{{ route('employee_edit', $employee->id) }}"><i
-                                                        class="fa fa-edit " style="font-size:20px;"></a></i></button>
-                                            <!-- <button class="border-0  bg-white"><a class="text-danger"
-                                                    href="{{ route('employee.delete', $employee->id) }}"><i
-                                                        class="fa fa-trash " style="font-size:20px;"></a></i></button> -->
+                                            <img width="40" height="30"
+                                                src="{{ asset('uploads/employees/' . $employee->picture) }}"
+                                                alt="">
+                                        </td>
+                                        <td>
+                                            <button class="border-0 bg-white">
+                                                <a class="text-primary" href="{{ route('employee_edit', $employee->id) }}">
+                                                    <i class="fa fa-edit" style="font-size:20px;"></i>
+                                                </a>
+                                            </button>
+                                            {{-- Uncomment this if delete is needed --}}
+                                            {{-- <button class="border-0 bg-white">
+                <a class="text-danger" href="{{ route('employee.delete', $employee->id) }}">
+                                            <i class="fa fa-trash" style="font-size:20px;"></i>
+                                            </a>
+                                            </button> --}}
                                         </td>
                                     </tr>
                                     @endforeach
-
                                 </tbody>
+
                             </table>
                             {{$employees->links()}}
                             <div>

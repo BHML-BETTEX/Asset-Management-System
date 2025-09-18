@@ -150,24 +150,26 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($employee_file as $key=>$file)
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$file->file}}</td>
-                                    <td>{{$file->note}}</td>
-                                    <td>
-                                        <a href="{{ asset('uploads/employees/others/' . $file->file) }}" class="btn" download>
-                                            <i class="fa fa-download"></i>
-                                        </a>
-
-                                    </td>
-                                    <td>{{$file->creator->name ?? 'N/A' }}</td>
-                                    <td>{{$file->created_at}}</td>
-                                    <td>
-                                        <button class="border-0 bg-white">
-                                            <a class="text-danger" href="{{ route('employee_file_delete', $file->id) }}" onclick="return confirm('Are you sure you want to delete this file?')">
-                                                <i class="fa fa-trash"></i>
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$file->file}}</td>
+                                        <td>{{$file->note}}</td>
+                                        <td>
+                                            <a href="{{ asset('uploads/employees/others/' . $file->file) }}" class="btn" download>
+                                                <i class="fa fa-download"></i>
                                             </a>
-                                        </button>
-                                    </td>
+
+                                        </td>
+                                        <td>{{$file->creator->name ?? 'N/A' }}</td>
+                                        <td>{{$file->created_at}}</td>
+                                        <td>
+                                            <button class="border-0 bg-white">
+                                                <a class="text-danger" href="{{ route('employee_file_delete', $file->id) }}" onclick="return confirm('Are you sure you want to delete this file?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
