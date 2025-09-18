@@ -16,9 +16,10 @@
 
                 {{-- ✅ Search --}}
                 <div class="col-md-4 top_search">
-                    <form action="" method="GET">
+                    <form method="GET" action="{{ route('employee_assets', ['emp_id' => $employee->emp_id]) }}">
                         <div class="input-group">
-                            <input type="search" class="form-control" name="search" placeholder="Search for..." value="">
+                            <input type="search" class="form-control" name="search" placeholder="Search for..."
+                                value="{{ request('search') }}">
                             <button class="btn btn-secondary" type="submit">Go!</button>
                         </div>
                     </form>
@@ -199,6 +200,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -292,12 +292,44 @@ class CategoryController extends Controller
 
 
     //Department Asset
-    public function departments_asset($department_id)
+    public function departments_asset(Request $request, $department_id)
     {
-        $employees = DB::table('employee_asset_summary')
+        $role = auth()->user()->roles[0];
+        $search = $request->input('search', '');
+        $showAll = $request->input('show_all', false); // boolean or string
+        $companies = [];
+
+        // Build allowed company list from permissions
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        // Query from view: employee_asset_summary
+        $query = DB::table('employee_asset_summary')
             ->where('department_id', $department_id)
-            ->get();
-        
-        return view('admin.department_asset', ['employees' => $employees]);
+            ->whereIn('company', $companies);
+
+        // Apply search if provided
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_id', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_name', 'LIKE', "%{$search}%")
+                    ->orWhere('designation_name', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Show all or paginate
+        if ($showAll) {
+            $employees = $query->get(); // all results
+        } else {
+            $employees = $query->paginate(13); // paginated
+        }
+
+        return view('admin.department_asset', [
+            'employees' => $employees,
+            'showAll' => $showAll,
+            'search' => $search
+        ]);
     }
 }

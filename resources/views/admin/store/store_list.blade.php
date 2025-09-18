@@ -96,7 +96,7 @@
                                 <tbody style="height: 3px !important; overflow: scroll; ">
                                     @foreach ($stores as $key => $store)
                                     <tr>
-                                        <td>{{ $stores->firstItem() + $key }}</td>
+                                        <td>{{ $key +1 }}</td>
                                         <td id="action-btn-{{ $store->id }}">
                                             @if($store->checkstatus === 'INSTOCK')
                                             <button class="btn btn-outline-success btn-sm">

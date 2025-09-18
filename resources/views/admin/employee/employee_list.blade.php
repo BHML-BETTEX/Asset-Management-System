@@ -153,7 +153,7 @@
                                         <th scope="col">Company</th>
                                         <th scope="col">PICTURE</th>
                                         <th scope="col">ACTION</th>
-                                        
+
                                     </tr>
                                 </thead>
 
@@ -200,7 +200,26 @@
                                 </tbody>
 
                             </table>
-                            {{$employees->links()}}
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    @if (!$showAll && method_exists($employees, 'links'))
+                                    {{ $employees->links() }}
+                                    @endif
+                                </div>
+
+                                <div>
+                                    @if (!$showAll)
+                                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 1]) }}" class="btn btn-sm btn-link text-danger">
+                                        Show all
+                                    </a>
+                                    @else
+                                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 0]) }}" class="btn btn-sm btn-link text-secondary">
+                                        Paginate
+                                    </a>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div>
 
                             </div>
