@@ -4,44 +4,141 @@
 </div>
 <div class="right_col" role="main">
     <!-- top tiles -->
-    <div class="row" style="display: inline;">
-        <h4>Centralize Details</h4>
-        <div class="tile_count">
-            <div class="col-md-2 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
-                <div class="count">{{ DB::table('users')->count() }}</div>
-                <span class="count_bottom"><i class="green"></i> Total Active Users</span>
-            </div>
-            <div class="col-md-2 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-clock-o"></i> Total Employee</span>
-                <div class="count">{{ DB::table('employees')->count() }}</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Asset User</span>
-            </div>
-            <div class="col-md-2 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Assets</span>
-                <div class="count green">{{ DB::table('stores')->count() }}</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Total IT Assets</span>
-            </div>
-            <div class="col-md-2 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Laptop</span>
-                <div class="count">{{ DB::table('stores')->where('asset_type', 1)->count() }}</div>
-                <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i></i> Number Of Laptop (pcs)</span>
-            </div>
-            <div class="col-md-2 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Desktop</span>
-                <div class="count">{{ DB::table('stores')->where('asset_type', 2)->count() }}</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Number Of Desktop (pcs)</span>
-            </div>
-            <div class="col-md-1 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total Printer</span>
-                <div class="count">{{ DB::table('stores')->where('asset_type', 4)->count() }}</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Number Of Printer (pcs)</span>
+    <div class="container my-3">
+        <div class="row g-3">
+
+            <!-- Users -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#17c9c3; min-height:140px;">
+                    <!-- Top content -->
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('users')->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Users</p>
+                        </div>
+                        <i class="fa fa-users text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <!-- Footer -->
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a href="{{route('users')}}" class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-1 col-sm-4  tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Others Asset</span>
-                <div class="count">{{ DB::table('stores')->whereNotIn('asset_type', [1, 2, 4])->count(); }}</div>
-                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> Number Of Asset (pcs)</span>
+            <!-- Employees -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#e91e63; min-height:140px;">
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('employees')->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Employees</p>
+                        </div>
+                        <i class="fa fa-id-card text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a href="{{route('employee')}}" class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assets -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#ff9800; min-height:140px;">
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('stores')->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Assets</p>
+                        </div>
+                        <i class="fa fa-barcode text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a href="{{route('store')}}" class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laptops -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#3f51b5; min-height:140px;">
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('stores')->where('asset_type', 1)->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Laptops</p>
+                        </div>
+                        <i class="fa fa-laptop text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a  class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktops -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#ff5722; min-height:140px;">
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('stores')->where('asset_type', 2)->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Desktops</p>
+                        </div>
+                        <i class="fa fa-desktop text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a href="#" class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Printers -->
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="rounded-3 text-white shadow d-flex flex-column"
+                    style="background-color:#009688; min-height:140px;">
+                    <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold m-0" style="font-size:2.2rem;">
+                                {{ DB::table('stores')->where('asset_type', 4)->count() }}
+                            </h2>
+                            <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Printers</p>
+                        </div>
+                        <i class="fa fa-print text-white"
+                            style="font-size:48px; opacity:0.2;"></i>
+                    </div>
+                    <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
+                        <a href="#" class="text-white fw-bold text-decoration-none">
+                            view all <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
 
         </div>

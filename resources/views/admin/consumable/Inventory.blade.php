@@ -1,5 +1,17 @@
 @extends('master')
 @section('content')
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <div class="container">
@@ -91,6 +103,40 @@
                                     </tbody>
                                 </table>
                         </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                            <div class="mb-2">
+                                @if ($stocks_qty instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                <span>
+                                    Showing {{ $stocks_qty->firstItem() }} to {{ $stocks_qty->lastItem() }} of {{ $stocks_qty->total() }} rows
+                                </span>
+                                @else
+                                <span>Showing all {{ $stocks_qty->count() }} rows</span>
+                                @endif
+                            </div>
+
+                            <div class="mb-2">
+                                <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                    <select name="per_page" class="form-select form-select-sm w-auto me-2" onchange="this.form.submit()">
+                                        @php $options = [10, 25, 50, 100]; @endphp
+                                        @foreach ($options as $option)
+                                        <option value="{{ $option }}" {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                            {{ $option }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <span class="ms-1">rows per page</span>
+
+                                    {{-- Preserve filters --}}
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <input type="hidden" name="product_search" value="{{ request('product_search') }}">
+                                </form>
+                            </div>
+
+                            <div class="mb-2">
+                                {{ $stocks_qty->appends(request()->query())->links() }}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
