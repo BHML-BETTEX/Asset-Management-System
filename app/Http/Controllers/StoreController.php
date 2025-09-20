@@ -872,4 +872,13 @@ function store(Request $request)
             return Excel::download(new WastProductExport($startDate, $endDate), 'filtered_data.xlsx');
         }
     }
+
+
+
+    //store Info
+    function store_info ($stores_id){
+        $stores = Store::with(['rel_to_ProductType', 'rel_to_brand', 'rel_to_SizeMaseurment', 'rel_to_Supplier', 'rel_to_Status', 'rel_to_Company', 'rel_to_Department', 'rel_to_Designation'])->findOrFail($stores_id);
+        
+        return view ('admin.store.store_info', compact('stores'));
+    }
 }

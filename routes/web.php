@@ -141,6 +141,8 @@ Route::get('/store/QrCode/{stores_id}', [StoreController::class, 'qr_code'])->na
 Route::get('/store/qr_code_view/{stores_id}', [StoreController::class, 'qr_code_view'])->name('qr_code_view');
 Route::get('/store/import', [StoreController::class, 'store_import'])->name('store_import');
 Route::post('/store/importexceldata', [StoreController::class, 'store_importexceldata'])->name('store_importexceldata');
+Route::get('/store/info/{stores_id}', [StoreController::class, 'store_info'])->name('store_info');
+
 
 
 

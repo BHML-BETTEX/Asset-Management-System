@@ -164,7 +164,7 @@
                                             <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                             @endif
                                         </td>
-                                        <td>{{ $store->products_id }}</td>
+                                        <td><a href="{{ route('store_info', $store->id) }}">{{ $store->products_id }}</a></td>
                                         <td>{{ $store->rel_to_ProductType->product }}</td>
                                         <td>{{ $store->model }}</td>
                                         <td>{{ $store->rel_to_brand->brand_name }}</td>

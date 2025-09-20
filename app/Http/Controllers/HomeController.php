@@ -29,6 +29,9 @@ class HomeController extends Controller
     public function index()
     {
         $stores = Store::all();
+        $desktops = DB::select("SELECT * FROM stores WHERE asset_type = 2");
+        $laptops = DB::select("SELECT * FROM stores WHERE asset_type = 1");
+        $printers = DB::select("SELECT * FROM stores WHERE asset_type = 3");
         $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
         $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
         $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
@@ -60,7 +63,6 @@ class HomeController extends Controller
 
             $product_summary->asset_type = $product_type;
             $product_summary->units = $units;
-
         }
 
         foreach ($product_summary_bt_ind as $product_summary) {
@@ -69,13 +71,15 @@ class HomeController extends Controller
 
             $product_summary->asset_type = $product_type;
             $product_summary->units = $units;
-
         }
 
-        
+
 
         return view('home', [
             'stores' => $stores,
+            'desktops' => $desktops,
+            'laptops' => $laptops,
+            'printers' => $printers,
             'product_summary_bt' => $product_summary_bt,
             'product_summary_bhml' => $product_summary_bhml,
             'product_summary_bp' => $product_summary_bp,

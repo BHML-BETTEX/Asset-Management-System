@@ -202,7 +202,7 @@
                                             </button>
                                             {{-- Uncomment this if delete is needed --}}
                                             {{-- <button class="border-0 bg-white">
-                <a class="text-danger" href="{{ route('employee.delete', $employee->id) }}">
+                                            <a class="text-danger" href="{{ route('employee.delete', $employee->id) }}">
                                             <i class="fa fa-trash" style="font-size:20px;"></i>
                                             </a>
                                             </button> --}}
