@@ -12,7 +12,7 @@
                 <a class="nav-link active" id="info-tab" data-bs-toggle="tab" href="" role="tab">Info</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">History</a>
+                <a class="nav-link" href="{{ route('history', $stores->products_id) }}">History</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="consumables-tab" data-bs-toggle="tab" href="" role="tab">Maintenance</a>

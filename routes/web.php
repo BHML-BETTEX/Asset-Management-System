@@ -132,7 +132,7 @@ Route::get('/store/status/{stores_id}', [StoreController::class, 'store_status']
 Route::get('/store/invoice/{stores_id}', [StoreController::class, 'invoice'])->name('invoice');
 Route::get('/store/search', [StoreController::class, 'store_search'])->name('store_search');
 
-Route::get('/history', [StoreController::class, 'history'])->name('history');
+Route::get('/history/{asset_tag?}', [StoreController::class, 'history'])->name('history');
 Route::get('/history/export', [StoreController::class, 'history_export'])->name('history_export');
 Route::get('/history/generatePDF', [StoreController::class, 'history_generatePDF'])->name('pdf.history');
 
@@ -142,8 +142,6 @@ Route::get('/store/qr_code_view/{stores_id}', [StoreController::class, 'qr_code_
 Route::get('/store/import', [StoreController::class, 'store_import'])->name('store_import');
 Route::post('/store/importexceldata', [StoreController::class, 'store_importexceldata'])->name('store_importexceldata');
 Route::get('/store/info/{stores_id}', [StoreController::class, 'store_info'])->name('store_info');
-
-
 
 
 

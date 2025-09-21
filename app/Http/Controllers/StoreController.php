@@ -32,68 +32,68 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
-function store(Request $request)
-{
-    $role = auth()->user()->roles[0];
+    function store(Request $request)
+    {
+        $role = auth()->user()->roles[0];
 
-    $search = $request->input('search', '');
-    $productSearch = $request->input('product_search');
-    $perPage = $request->input('per_page', 10); // Default to 10 per page
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $perPage = $request->input('per_page', 10); // Default to 10 per page
 
-    $companies = [];
-    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
-    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
-    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
-    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-    $query = Store::join('brands', 'brands.id', '=', 'stores.brand')
-        ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-        ->whereIn('stores.company', $companies);
+        $query = Store::join('brands', 'brands.id', '=', 'stores.brand')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company', $companies);
 
-    if ($search || $productSearch) {
-        $query->where(function ($q) use ($search, $productSearch) {
-            if ($productSearch) {
-                $q->where('product_types.id', '=', $productSearch);
-            }
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
 
-            if ($search) {
-                $q->where(function ($sq) use ($search) {
-                    $sq->where('stores.products_id', 'LIKE', "%{$search}%")
-                        ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.company', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
-                        ->orWhere('product_types.product', 'LIKE', "%{$search}%");
-                });
-            }
-        });
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.products_id', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('product_types.product', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        if ($perPage === 'all') {
+            $stores = $query->select('stores.*')->get();
+        } else {
+            $stores = $query->select('stores.*')
+                ->paginate((int)$perPage)
+                ->appends($request->except('page'));
+        }
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'all_product_types' => ProductType::all(),
+            'all_departments' => Department::all(),
+            'all_brands' => Brand::all(),
+            'all_SizeMaseurment' => SizeMaseurment::all(),
+            'all_status' => Status::all(),
+            'all_supplier' => Supplier::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
     }
-
-    if ($perPage === 'all') {
-        $stores = $query->select('stores.*')->get();
-    } else {
-        $stores = $query->select('stores.*')
-            ->paginate((int)$perPage)
-            ->appends($request->except('page'));
-    }
-
-    return view('admin.store.store_list', [
-        'stores' => $stores,
-        'search' => $search,
-        'perPage' => $perPage,
-        'productSearch' => $productSearch,
-        'all_product_types' => ProductType::all(),
-        'all_departments' => Department::all(),
-        'all_brands' => Brand::all(),
-        'all_SizeMaseurment' => SizeMaseurment::all(),
-        'all_status' => Status::all(),
-        'all_supplier' => Supplier::all(),
-        'all_company' => Company::all(),
-        'employee' => Employee::all(),
-        'all_issue' => Issue::all(),
-    ]);
-}
 
     function add_product()
     {
@@ -484,42 +484,47 @@ function store(Request $request)
 
 
     //History
-  function history(Request $request)
-{
-    $companies = [];
-    $role = auth()->user()->roles[0];
-    $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
-    $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
-    $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
-    $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
+    public function history(Request $request, $asset_tag = null)
+    {
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
 
-    $search = $request->input('search', '');
-    $perPage = $request->input('per_page', 10); // default is 10
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10); // default is 10
 
-    $query = Issue::whereIn('others', $companies);
+        $query = Issue::whereIn('others', $companies);
 
-    if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $q->where('asset_tag', 'LIKE', "%$search%")
-              ->orWhere('asset_type', 'LIKE', "%$search%")
-              ->orWhere('emp_id', 'LIKE', "%$search%")
-              ->orWhere('emp_name', 'LIKE', "%$search%")
-              ->orWhere('others', 'LIKE', "%$search%");
-        });
+        // ✅ Filter by asset_tag if passed from store_info page
+        if ($asset_tag) {
+            $query->where('asset_tag', $asset_tag);
+        }
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('asset_tag', 'LIKE', "%$search%")
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('emp_id', 'LIKE', "%$search%")
+                    ->orWhere('emp_name', 'LIKE', "%$search%")
+                    ->orWhere('others', 'LIKE', "%$search%");
+            });
+        }
+
+        $issue_info = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->all());
+
+        return view('admin.store.history', [
+            'issue_info' => $issue_info,
+            'search' => $search,
+            'perPage' => $perPage,
+            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge
+        ]);
     }
 
-    if ($perPage === 'all') {
-        $issue_info = $query->get(); // all results
-    } else {
-        $issue_info = $query->paginate((int)$perPage)->appends($request->all());
-    }
-
-    return view('admin.store.history', [
-        'issue_info' => $issue_info,
-        'search' => $search,
-        'perPage' => $perPage,
-    ]);
-}
 
     //Transfer Start
 
@@ -876,9 +881,12 @@ function store(Request $request)
 
 
     //store Info
-    function store_info ($stores_id){
+    function store_info($stores_id)
+    {
         $stores = Store::with(['rel_to_ProductType', 'rel_to_brand', 'rel_to_SizeMaseurment', 'rel_to_Supplier', 'rel_to_Status', 'rel_to_Company', 'rel_to_Department', 'rel_to_Designation'])->findOrFail($stores_id);
-        
-        return view ('admin.store.store_info', compact('stores'));
+
+        $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
+
+        return view('admin.store.store_info', compact('stores', 'issues'));
     }
 }
