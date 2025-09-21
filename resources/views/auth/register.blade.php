@@ -41,16 +41,16 @@
         }
 
         .card {
-            background-color: rgba(3, 3, 40, 0.95);
+            background-color: White;
             border-radius: 12px;
             color: white;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 20px #9cf7e7f2;
         }
 
         .card-header h5 {
             text-align: center;
             font-weight: 700;
-            color: #fff;
+            color: rgba(3, 3, 40, 0.95);
         }
 
         .form-control {
@@ -61,7 +61,7 @@
             width: 100%;
             border-radius: 8px;
             font-weight: 600;
-            background-color: #00bfff;
+            background-color: rgba(3, 3, 40, 0.95);
             border: none;
             color: white;
         }
@@ -134,7 +134,7 @@
                         <button type="submit" class="btn btn-register">Register</button>
 
                         <div class="text-center mt-3">
-                            <span>Already have an account? </span>
+                            <span class="text-success">Already have an account? </span>
                             <a href="{{ route('login') }}">Login here</a>
                         </div>
                     </form>

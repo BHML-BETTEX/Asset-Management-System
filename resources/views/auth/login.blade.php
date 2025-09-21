@@ -28,7 +28,7 @@
         }
 
         .hero-image {
-            background: linear-gradient(#b6e7e2b5, rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
+            background: linear-gradient(hsla(174, 51%, 81%, 0.71), rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
             height: 100%;
             display: flex;
             justify-content: center;
@@ -41,7 +41,7 @@
         }
 
         .card {
-            background-color: rgba(3, 3, 40, 0.95);
+            background-color: white;
             border-radius: 12px;
             color: white;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
@@ -50,7 +50,7 @@
         .card-header h5 {
             text-align: center;
             font-weight: 700;
-            color: #fff;
+            color: rgba(3, 3, 40, 0.95);
         }
 
         .form-control {
@@ -61,7 +61,7 @@
             width: 100%;
             border-radius: 8px;
             font-weight: 600;
-            background-color: #00bfff;
+            background-color: rgba(3, 3, 40, 0.95);
             border: none;
             color: white;
         }
@@ -115,9 +115,9 @@
                         </div>
 
                         <div class="form-group form-check">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                            <input class="form-check-input " type="checkbox" name="remember" id="remember"
                                 {{ old('remember') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="remember">Remember Me</label>
+                            <label class="form-check-label text-dark" for="remember">Remember Me</label>
                         </div>
 
                         <button type="submit" class="btn btn-login">Login</button>
