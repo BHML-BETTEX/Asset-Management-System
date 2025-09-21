@@ -28,7 +28,7 @@
         }
 
         .hero-image {
-            background: linear-gradient(hsla(0, 0%, 100%, 1.00), rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
+            background: linear-gradient(#b6e7e2b5, rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
             height: 100%;
             display: flex;
             justify-content: center;

@@ -28,7 +28,7 @@
         }
 
         .hero-image {
-            background: linear-gradient(hsla(0, 0%, 100%, 0.60), hsla(0, 0%, 100%, 0.60)), url("") center center / cover no-repeat;
+            background: linear-gradient(#b6e7e2b5, rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
             height: 100%;
             display: flex;
             justify-content: center;
@@ -98,9 +98,9 @@
                                 class="form-control @error('name') is-invalid @enderror"
                                 name="name" value="{{ old('name') }}" placeholder="Name" required autofocus>
                             @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
@@ -109,9 +109,9 @@
                                 class="form-control @error('email') is-invalid @enderror"
                                 name="email" value="{{ old('email') }}" placeholder="Email" required>
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
@@ -120,9 +120,9 @@
                                 class="form-control @error('password') is-invalid @enderror"
                                 name="password" placeholder="Password" required>
                             @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
