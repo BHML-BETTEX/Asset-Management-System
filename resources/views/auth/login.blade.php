@@ -2,153 +2,146 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <title>Asset Management - Login</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous">
+
     <style>
         body,
         html {
             height: 100%;
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Nunito', sans-serif;
         }
 
         .hero-image {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("uploads/picture/11.jpg");
+            background: linear-gradient(hsla(0, 0%, 100%, 1.00), rgba(251, 251, 251, 1)), url("") center center / cover no-repeat;
             height: 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .hero-text {
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: whitesmoke;
+            width: 100%;
+            max-width: 400px;
         }
 
-        .hero-text button {
+        .card {
+            background-color: rgba(3, 3, 40, 0.95);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-header h5 {
+            text-align: center;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .btn-login {
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 600;
+            background-color: #00bfff;
             border: none;
-            outline: 0;
-            display: inline-block;
-            padding: 10px 25px;
-            color: black;
-            background-color: #ddd;
-            text-align: center;
-            cursor: pointer;
+            color: white;
         }
 
-        .hero-text button:hover {
-            background-color: #555;
-            color: black;
+        .btn-login:hover {
+            background-color: #009acd;
+        }
+
+        .text-center a {
+            color: #00bfff;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                margin: 0 15px;
+            }
         }
     </style>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <title>Asset Managment</title>
 </head>
 
 <body>
-
-    <div class="hero-image border-danger">
+    <div class="hero-image">
         <div class="hero-text">
-            <div class="card " style="background-color: #030328; border: 1px solid white;">
+            <div class="card">
                 <div class="card-header">
-                    <h5>Wellcome Back</h5>
+                    <h5>Welcome Back</h5>
                 </div>
-                <div class="card-body ">
+                <div class="card-body">
                     <form class="user" method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="form-group">
                             <input id="email" type="email"
-                                class="form-control @error('email') is-invalid @enderror" name="email"
-                                value="{{ old('email') }}" placeholder="mail" required autocomplete="email" autofocus>
-
+                                class="form-control @error('email') is-invalid @enderror"
+                                name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
+
                         <div class="form-group">
                             <input id="password" type="password"
-                                class="form-control @error('password') is-invalid @enderror" name="password" required
-                                autocomplete="current-password" placeholder="password">
-
+                                class="form-control @error('password') is-invalid @enderror"
+                                name="password" placeholder="Password" required>
                             @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox small">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember"
-                                    {{ old('remember') ? 'checked' : '' }}>
 
-                                <label class="form-check-label" for="remember">
-                                    {{ __('Remember Me') }}
-                            </div>
+                        <div class="form-group form-check">
+                            <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                                {{ old('remember') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="remember">Remember Me</label>
                         </div>
-                        <button type="submit">{{ __('Login') }}</button>
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Forgot Your Password?') }}
-                        </a>
-                </div>
 
+                        <button type="submit" class="btn btn-login">Login</button>
+
+                        <div class="text-center mt-3">
+                            <a class="btn btn-link p-0" href="{{ route('password.request') }}">
+                                Forgot Your Password?
+                            </a>
+
+                            <span>or</span>
+
+                            <a class="btn btn-link p-0" href="{{ route('register') }}">
+                                Register
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            </form>
         </div>
     </div>
 
-
-    </div>
-
-    </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

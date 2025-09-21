@@ -18,9 +18,6 @@
                 <a class="nav-link" id="consumables-tab" data-bs-toggle="tab" href="" role="tab">Maintenance</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="file-tab" data-bs-toggle="tab" href="" role="tab">File Uploads</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab">Files</a>
             </li>
 
