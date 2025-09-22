@@ -45,6 +45,7 @@ Route::get('/users/export', [UserController::class, 'export'])->name('export');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 Route::post('/name/change', [UserController::class, 'name_change'])->name('name.change');
 Route::post('/password/change', [UserController::class, 'password_change'])->name('password.change');
+Route::post('/profile/photo/change', [UserController::class, 'profile_photo_change'])->name('profile.photo.change');
 
 //Role
 Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index')->middleware('role_or_permission:admin|role-list');

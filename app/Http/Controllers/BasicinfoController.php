@@ -9,4 +9,6 @@ class BasicinfoController extends Controller
     function basic_info(){
         return view('admin/basicinfo/basicinfo');
     }
+
+
 }

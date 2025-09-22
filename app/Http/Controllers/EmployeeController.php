@@ -26,8 +26,17 @@ class EmployeeController extends Controller
     {
         $role = auth()->user()->roles[0];
         $search = $request->input('search', '');
-        $perPage = $request->input('per_page', 10); // default 13
+        $perPage = $request->input('per_page', 10);
         $showAll = $request->input('show_all', false);
+
+        // Get filter parameters
+        $departmentFilter = $request->input('department_filter', '');
+        $designationFilter = $request->input('designation_filter', '');
+        $companyFilter = $request->input('company_filter', '');
+        $joinDateFrom = $request->input('join_date_from', '');
+        $joinDateTo = $request->input('join_date_to', '');
+        $hasPicture = $request->input('has_picture', '');
+        $sortBy = $request->input('sort_by', 'emp_id');
 
         // Get allowed companies based on role
         $companies = [];
@@ -44,8 +53,57 @@ class EmployeeController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('emp_id', 'LIKE', "%{$search}%")
                     ->orWhere('emp_name', 'LIKE', "%{$search}%")
-                    ->orWhere('designation_id', 'LIKE', "%{$search}%");
+                    ->orWhere('phone_number', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
             });
+        }
+
+        // Apply department filter
+        if (!empty($departmentFilter)) {
+            $query->where('department_id', $departmentFilter);
+        }
+
+        // Apply designation filter
+        if (!empty($designationFilter)) {
+            $query->where('designation_id', $designationFilter);
+        }
+
+        // Apply company filter
+        if (!empty($companyFilter)) {
+            $query->where('company', $companyFilter);
+        }
+
+        // Apply joining date range filter
+        if (!empty($joinDateFrom)) {
+            $query->whereDate('join_date', '>=', $joinDateFrom);
+        }
+        if (!empty($joinDateTo)) {
+            $query->whereDate('join_date', '<=', $joinDateTo);
+        }
+
+        // Apply picture filter
+        if ($hasPicture === 'yes') {
+            $query->whereNotNull('picture')->where('picture', '!=', '')->where('picture', '!=', 'default.png');
+        } elseif ($hasPicture === 'no') {
+            $query->where(function ($q) {
+                $q->whereNull('picture')->orWhere('picture', '')->orWhere('picture', 'default.png');
+            });
+        }
+
+        // Apply sorting
+        switch ($sortBy) {
+            case 'emp_name':
+                $query->orderBy('emp_name', 'asc');
+                break;
+            case 'join_date':
+                $query->orderBy('join_date', 'desc');
+                break;
+            case 'created_at':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('emp_id', 'asc');
+                break;
         }
 
         // Fetch records

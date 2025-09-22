@@ -80,10 +80,14 @@ class UserController extends Controller
 
     function name_change(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255|min:2',
+        ]);
+
         User::find(Auth::id())->update([
             'name' => $request->name,
         ]);
-        return back()->with('name', 'User Name Udate Successfull');
+        return back()->with('name', 'User Name Updated Successfully');
     }
 
     function password_change(Request $request)
@@ -91,19 +95,53 @@ class UserController extends Controller
         $request->validate([
             'old_password' => 'required',
             'new_password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
-            'confirm_password' => 'required',
+            'confirm_password' => 'required|same:new_password',
         ]);
-        if (Hash::check($request->old_password, Auth::user()->password)) {
-            User::find(Auth::id())->Update([
-                'password' => bcrypt($request->password),
-            ]);
 
-            return back()->with('success', 'Password has been Update!');
-        } else {
-            return back()->with('wrong', 'Password Not Correct!');
+        if (!Hash::check($request->old_password, Auth::user()->password)) {
+            return back()->with('wrong', 'Current password is incorrect!');
         }
+
+        User::find(Auth::id())->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        return back()->with('success', 'Password has been updated successfully!');
     }
 
+    function profile_photo_change(Request $request)
+    {
+        $request->validate([
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = User::find(Auth::id());
+
+        // Delete old profile photo if exists
+        if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
+            unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
+        }
+
+        // Upload new profile photo
+        if ($request->hasFile('profile_photo')) {
+            $file = $request->file('profile_photo');
+            $filename = 'profile_' . Auth::id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Create directory if not exists
+            $uploadPath = public_path('uploads/profile_photos');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
+            $file->move($uploadPath, $filename);
+
+            $user->update([
+                'profile_photo' => $filename,
+            ]);
+        }
+
+        return back()->with('photo_success', 'Profile photo updated successfully!');
+    }
 
     public function export(Request $request) 
     {
