@@ -229,8 +229,11 @@ Route::get('/ding_pass/export', [PasswordController::class, 'ding_export'])->nam
 
 Route::get('/others_pass', [PasswordController::class, 'others_pass'])->name('others_pass');
 
+
+
 //employee Managment
 Route::get('/employee', [EmployeeController::class, 'employee'])->name('employee');
+Route::post('/employee/clone/{id}', [EmployeeController::class, 'cloneEmployee'])->name('employee.clone');
 Route::post('/employee/store', [EmployeeController::class, 'employee_store'])->name('employee.store');
 Route::get('/employee/delete/{employee_id}', [EmployeeController::class, 'employee_delete'])->name('employee.delete');
 Route::get('/employee/edit/{employee_id}', [EmployeeController::class, 'employee_edit'])->name('employee_edit');

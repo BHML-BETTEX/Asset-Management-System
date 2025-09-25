@@ -12,6 +12,105 @@
         height: auto;
     }
 
+    /* Select2 Custom Styling */
+    .select2-container--bootstrap4 {
+        width: 100% !important;
+    }
+
+    .select2-container--bootstrap4 .select2-selection {
+        height: 38px !important;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single {
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+    }
+
+    .select2-container--bootstrap4 .select2-selection__rendered {
+        color: #495057;
+    }
+
+    .select2-container--bootstrap4 .select2-dropdown {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
+        background-color: #2B7093 !important;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        border-bottom: none;
+        padding: 1.5rem;
+    }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .form-floating>.form-control,
+    .form-floating>.form-select {
+        height: calc(3.5rem + 2px);
+        padding: 1rem 0.75rem;
+    }
+
+    .form-floating>label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem 0.75rem;
+        pointer-events: none;
+        border: 1px solid transparent;
+        transform-origin: 0 0;
+        transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+    }
+
+    .custom-file-upload {
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .custom-file-upload:hover {
+        border-color: #2B7093;
+        background-color: rgba(43, 112, 147, 0.05);
+    }
+
+    /* Select2 Filter Styling */
+    .select2-container--bootstrap4.select2-container--focus .select2-selection {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single {
+        height: calc(1.5em + 0.5rem + 2px) !important;
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+        line-height: calc(1.5em + 0.5rem);
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single .select2-selection__placeholder {
+        color: #6c757d;
+    }
+
+    .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
+        background-color: #007bff !important;
+    }
+
     /* Smart Table Styling */
     .smart-table {
         border-radius: 12px;
@@ -119,6 +218,30 @@
         border: 1px solid #e1e5e9;
         font-size: 0.875rem;
         transition: all 0.3s ease;
+        height: 31px;
+    }
+
+    /* Filter Row Styling */
+    .select2-container--bootstrap4.select2-container--focus .select2-selection {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single {
+        height: 31px !important;
+    }
+
+    .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+        line-height: 31px;
+        padding-left: 8px;
+    }
+
+    .btn-primary.btn-sm {
+        height: 31px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
     .form-control-sm:focus {
@@ -212,6 +335,7 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+
         .smart-table .table thead th,
         .smart-table .table tbody td {
             padding: 0.5rem 0.25rem;
@@ -232,124 +356,140 @@
             margin-bottom: 5px;
         }
     }
+
+    /* Filter Panel Button Styling */
+    .btn-group .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        height: 31px;
+    }
+
+    .btn-group .btn i {
+        font-size: 0.875rem;
+    }
+
+    /* Export Dropdown Styling */
+    .dropdown-menu {
+        padding: 0.5rem 0;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        color: #495057;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #2B7093;
+    }
+
+    .dropdown-item i {
+        font-size: 1rem;
+        width: 1.5rem;
+        text-align: center;
+    }
+
+    .btn-group .dropdown-toggle::after {
+        margin-left: 0.5rem;
+    }
+
+    /* Export Form Styling */
+    .input-group-sm {
+        height: 31px;
+    }
+
+    .input-group-sm .form-control,
+    .input-group-sm .btn {
+        height: 31px;
+        line-height: 1;
+        padding-top: 0;
+        padding-bottom: 0;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .input-group-sm .select2-container .select2-selection--single {
+        height: 31px !important;
+    }
+
+    .input-group-sm .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+        line-height: 31px;
+        padding-left: 8px;
+    }
+
+    .input-group .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 </style>
 
 <div class="container">
-    <!-- Header Section -->
-    <div class="page-title mb-4">
-        <div class="row">
-            <div class="col-md-6">
-                <h5 class="text-white mb-0">Employee List</h5>
-            </div>
-            <div class="col-md-6 text-end">
-                
-            </div>
-        </div>
-    </div>
-
     <!-- Filter Panel -->
     <div class="card mb-4" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
             <h6 class="mb-0 text-dark">
-                <i class="fa fa-filter"></i> Filter Options
+                <span class="">Employee List</span>
             </h6>
         </div>
         <div class="card-body">
 
+            <div class="d-flex align-items-center gap-3">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal"
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"
                         data-whatever="@mdo">
-                        <span class="fa fa-plus"></span> Add Employee
+                        <i class="fa fa-plus"></i> Add Employee
                     </button>
                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#importModal">
-                        <span class="fa fa-upload"></span> Import
+                        <i class="fa fa-upload"></i> Import Excel
                     </button>
-                    <a href="{{ route('employee_import') }}" class="btn btn-secondary btn-sm">
-                        <span class="fa fa-file-excel-o"></span> Import Page
-                    </a>
-                <form action="{{route('export')}}" method="GET" class="d-inline-block ms-2">
-                    <div class="input-group input-group-sm" style="width: 200px; display: inline-flex;">
-                        <select name="type" class="form-control form-control-sm">
-                            <option value="">Export Type</option>
-                            <option value="xlsx">XLSX</option>
-                            <option value="csv">CSV</option>
-                            <option value="xls">XLS</option>
-                        </select>
-                        <button type="submit" class="btn btn-success btn-sm">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-download"></i> Export
                         </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('export', ['type' => 'xlsx']) }}">
+                                    <i class="fa fa-file-excel-o text-success me-2"></i> Excel (XLSX)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('export', ['type' => 'csv']) }}">
+                                    <i class="fa fa-file-text-o text-info me-2"></i> CSV File
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('export', ['type' => 'xls']) }}">
+                                    <i class="fa fa-file-excel-o text-success me-2"></i> Excel 97-2003
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </form>
-
                 </div>
-
-
+            </div>
 
             <form action="" method="GET" id="filterForm">
-                <!-- Basic Filters Row -->
-                <div class="row g-3 mb-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Search</label>
-                        <input type="search" class="form-control form-control-sm" name="search"
-                               placeholder="Search ID, Name, Phone, Email..." value="{{ request('search') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Department</label>
-                        <select name="department_filter" class="form-control form-control-sm">
-                            <option value="">All Departments</option>
-                            @foreach ($departments as $dept)
-                            <option value="{{ $dept->id }}" {{ request('department_filter') == $dept->id ? 'selected' : '' }}>
-                                {{ $dept->department_name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Designation</label>
-                        <select name="designation_filter" class="form-control form-control-sm">
-                            <option value="">All Designations</option>
-                            @foreach ($designation as $desig)
-                            <option value="{{ $desig->id }}" {{ request('designation_filter') == $desig->id ? 'selected' : '' }}>
-                                {{ $desig->designation_name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Company</label>
-                        <select name="company_filter" class="form-control form-control-sm">
-                            <option value="">All Companies</option>
-                            @foreach ($company as $comp)
-                            <option value="{{ $comp->id }}" {{ request('company_filter') == $comp->id ? 'selected' : '' }}>
-                                {{ $comp->company }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Advanced Filters Toggle -->
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none"
-                                data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false">
-                            <i class="fa fa-cog"></i> Advanced Options
-                        </button>
-                    </div>
-                </div>
-
                 <!-- Advanced Filters -->
                 <div class="collapse" id="advancedFilters">
                     <div class="row g-3 mb-3 p-3 bg-light rounded">
                         <div class="col-md-3">
                             <label class="form-label">Joining Date From</label>
                             <input type="date" class="form-control form-control-sm" name="join_date_from"
-                                   value="{{ request('join_date_from') }}">
+                                value="{{ request('join_date_from') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Joining Date To</label>
                             <input type="date" class="form-control form-control-sm" name="join_date_to"
-                                   value="{{ request('join_date_to') }}">
+                                value="{{ request('join_date_to') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Picture Status</label>
@@ -372,310 +512,362 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fa fa-search"></i> Apply Filters
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
-                                <i class="fa fa-refresh"></i> Clear All
-                            </button>
-                        </div>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="search" class="form-control form-control-sm" name="search"
+                            placeholder="Search..." value="{{ request('search') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Department</label>
+                        <select name="department_filter" class="form-control form-control-sm select2-filter">
+                            <option value="">All Departments</option>
+                            @foreach ($departments as $dept)
+                            <option value="{{ $dept->id }}" {{ request('department_filter') == $dept->id ? 'selected' : '' }}>
+                                {{ $dept->department_name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Designation</label>
+                        <select name="designation_filter" class="form-control form-control-sm select2-filter">
+                            <option value="">All Designations</option>
+                            @foreach ($designation as $desig)
+                            <option value="{{ $desig->id }}" {{ request('designation_filter') == $desig->id ? 'selected' : '' }}>
+                                {{ $desig->designation_name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Company</label>
+                        <select name="company_filter" class="form-control form-control-sm select2-filter">
+                            <option value="">All Companies</option>
+                            @foreach ($company as $comp)
+                            <option value="{{ $comp->id }}" {{ request('company_filter') == $comp->id ? 'selected' : '' }}>
+                                {{ $comp->company }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="fa fa-search me-1"></i> Apply Filters
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-        <!--Modal Start-->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered"> <!--  modal-lg makes it medium/large -->
-                <div class="modal-content">
-                    <div class="modal-header" style="    background: linear-gradient(to bottom, #33cccc 0%, #ffffff 52%);">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
-                        <button type="button" class="close btn border-0 bg-transparent" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-close"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('employee.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-
-                            <!--  Row with 2 input fields side by side -->
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Employee ID <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="emp_id" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Employee Name</label>
-                                    <input type="text" class="form-control" name="emp_name">
-                                </div>
-                            </div>
-
-                            <div class="row g-3 mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Department <span class="text-danger">*</span></label>
-                                    <select class="form-control select2" name="department_id" required>
-                                        <option value="">-- Select Department --</option>
-                                        @foreach ($departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->department_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Designation</label>
-                                    <select class="form-control" name="designation_id">
-                                        @foreach ($designation as $desig)
-                                        <option value="{{ $desig->id }}">{{ $desig->designation_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-3 mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Joining Date</label>
-                                    <input type="date" class="form-control" name="join_date" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Phone Number</label>
-                                    <input type="number" class="form-control" name="phone_number">
-                                </div>
-                            </div>
-
-                            <div class="row g-3 mt-2">
-                                <div class="col-md-6">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" name="email">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Company <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="company" required>
-                                        @foreach ($company as $companys)
-                                        <option value="{{ $companys->id }}">{{ $companys->company }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mt-2">
-                                <label class="form-label">Other Info</label>
-                                <input type="text" class="form-control" name="text">
-                            </div>
-
-                            <div class="mt-2">
-                                <label class="form-label">Picture</label>
-                                <input type="file" class="form-control" name="picture">
-                            </div>
-                            <div class="modal-footer d-flex justify-content-between" style="">
-                                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn" style="background-color: #2B7093; color:white">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-
+    <!--Modal Start-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #33cccc 0%, #2B7093 100%);">
+                    <h5 class="modal-title text-white" id="exampleModalLabel">
+                        <i class="fa fa-user-plus me-2"></i> Add Employee
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
                 </div>
-            </div>
-        </div>
-        <!--Modal end-->
+                <div class="modal-body" style="background: #f8f9fa;">
+                    <form action="{{ route('employee.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
-        <!-- Import Modal Start -->
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #f8f9fa;">
-                        <h5 class="modal-title" id="importModalLabel">
-                            <i class="fa fa-upload"></i> Import Employee Data
-                        </h5>
-                        <button type="button" class="close btn border-0 bg-transparent" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if(Session::has('import_data'))
-                        <div class="alert alert-success">{{ Session::get('import_data') }}</div>
-                        @endif
-
-                        <form action="{{ route('employee_importexceldata') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="import_file" class="form-label">
-                                    <i class="fa fa-file-excel-o"></i> Select Excel File
-                                </label>
-                                <input type="file" class="form-control" name="import_file" id="import_file"
-                                       accept=".xlsx,.xls,.csv" required>
-                                <div class="form-text">
-                                    Supported formats: .xlsx, .xls, .csv
-                                </div>
+                        <!--  Row with 2 input fields side by side -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Employee ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="emp_id" required>
                             </div>
-
-                            <div class="alert alert-info">
-                                <strong><i class="fa fa-info-circle"></i> Instructions:</strong>
-                                <ul class="mb-0 mt-2">
-                                    <li>Make sure your Excel file has the correct column headers</li>
-                                    <li>Required fields: Employee ID, Employee Name, Department, Company</li>
-                                    <li>Optional fields: Designation, Phone, Email, Joining Date</li>
-                                </ul>
-                                <div class="mt-2">
-                                    <a href="{{ route('export', ['type' => 'xlsx']) }}" class="btn btn-outline-info btn-sm">
-                                        <i class="fa fa-download"></i> Download Template
-                                    </a>
-                                    <small class="text-muted ms-2">Download current data as template</small>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Employee Name</label>
+                                <input type="text" class="form-control" name="emp_name">
                             </div>
+                        </div>
 
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    <i class="fa fa-times"></i> Cancel
-                                </button>
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="fa fa-upload"></i> Import Data
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Import Modal End -->
-        <!--display form start-->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="smart-table">
-                    @if (session('delete_employee'))
-                    <div class="alert alert-success">{{ session('delete_employee') }}</div>
-                    @endif
-                    <div class="card-body">
-                        <div class="table-responsive text-nowrap">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">SL</th>
-                                        <th scope="col">EMPLOYEE ID</th>
-                                        <th scope="col">EMPLOYEE NAME</th>
-                                        <th scope="col">DEPARTMENT</th>
-                                        <th scope="col">DESIGNATION</th>
-                                        <th scope="col">JOINING DATE</th>
-                                        <th scope="col">PHONE NUMBER</th>
-                                        <th scope="col">EMAIL</th>
-                                        <th scope="col">Company</th>
-                                        <th scope="col">PICTURE</th>
-                                        <th scope="col">ACTION</th>
-
-                                    </tr>
-                                </thead>
-
-                                <tbody style="height: 5px !important; overflow: scroll;">
-                                    @foreach ($employees as $key => $employee)
-                                    <tr style="cursor: default;">
-                                        <td><span class="fw-bold text-muted">{{ $key + 1 }}</span></td>
-                                        <td>
-                                            <a href="{{ route('employee_info', $employee->id) }}" class="employee-link fw-bold">
-                                                {{ $employee->emp_id }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('employee_info', $employee->id) }}" class="employee-link">
-                                                {{ $employee->emp_name }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span class="department-badge">{{ $employee->rel_to_departmet->department_name }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="designation-badge">{{ $employee->rel_to_designation->designation_name }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-muted">{{ \Carbon\Carbon::parse($employee->join_date)->format('M d, Y') }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-muted">{{ $employee->phone_number ?: 'N/A' }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-muted">{{ $employee->email ?: 'N/A' }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark fw-medium">{{ $employee->rel_to_companies->company }}</span>
-                                        </td>
-                                        <td>
-                                            @if($employee->picture && $employee->picture !== 'default.png')
-                                                <img class="employee-picture"
-                                                    src="{{ asset('uploads/employees/' . $employee->picture) }}"
-                                                    alt="{{ $employee->emp_name }}"
-                                                    title="{{ $employee->emp_name }}">
-                                            @else
-                                                <div class="employee-picture d-flex align-items-center justify-content-center bg-light">
-                                                    <i class="fa fa-user text-muted"></i>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <button class="action-btn" title="Edit Employee">
-                                                <a class="text-primary" href="{{ route('employee_edit', $employee->id) }}">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                            </button>
-                                            {{-- Uncomment this if delete is needed --}}
-                                            {{-- <button class="action-btn" title="Delete Employee">
-                                                <a class="text-danger" href="{{ route('employee.delete', $employee->id) }}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </button> --}}
-                                        </td>
-                                    </tr>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Department <span class="text-danger">*</span></label>
+                                <select class="form-control select2-modal" name="department_id" id="department_select" required>
+                                    <option value="">Select Department</option>
+                                    @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}" data-icon="building">
+                                        {{ $department->department_name }}
+                                    </option>
                                     @endforeach
-                                </tbody>
-                            </table>
-                            <div>
-                                <!--Pagination Start-->
-                                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-                                    {{-- Left: Showing X to Y of Z --}}
-                                    <div class="d-flex align-items-center mb-2">
-                                        @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                                        <span class="me-2">
-                                            Showing {{ $employees->firstItem() }} to {{ $employees->lastItem() }} of {{ $employees->total() }} rows
-                                        </span>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Designation</label>
+                                <select class="form-control select2-modal" name="designation_id" id="designation_select">
+                                    <option value="">Select Designation</option>
+                                    @foreach ($designation as $desig)
+                                    <option value="{{ $desig->id }}" data-icon="id-badge">
+                                        {{ $desig->designation_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Joining Date</label>
+                                <input type="date" class="form-control" name="join_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="number" class="form-control" name="phone_number">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Company <span class="text-danger">*</span></label>
+                                <select class="form-control select2-modal" name="company" id="company_select" required>
+                                    <option value="">Select Company</option>
+                                    @foreach ($company as $companys)
+                                    <option value="{{ $companys->id }}" data-icon="building">
+                                        {{ $companys->company }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <label class="form-label">Other Info</label>
+                            <input type="text" class="form-control" name="text">
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="custom-file-upload">
+                                <label for="picture" class="form-label">
+                                    <i class="fa fa-cloud-upload me-2"></i>Employee Picture
+                                </label>
+                                <input type="file" class="form-control" name="picture" id="picture"
+                                    accept="image/*" onchange="previewImage(this);">
+                                <div id="imagePreview" class="mt-2 text-center d-none">
+                                    <img src="" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">
+                                <i class="fa fa-times me-2"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-check me-2"></i> Save Employee
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal end-->
+
+    <!-- Import Modal Start -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #f8f9fa;">
+                    <h5 class="modal-title" id="importModalLabel">
+                        <i class="fa fa-upload"></i> Import Employee Data
+                    </h5>
+                    <button type="button" class="close btn border-0 bg-transparent" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if(Session::has('import_data'))
+                    <div class="alert alert-success">{{ Session::get('import_data') }}</div>
+                    @endif
+
+                    <form action="{{ route('employee_importexceldata') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="import_file" class="form-label">
+                                <i class="fa fa-file-excel-o"></i> Select Excel File
+                            </label>
+                            <input type="file" class="form-control" name="import_file" id="import_file"
+                                accept=".xlsx,.xls,.csv" required>
+                            <div class="form-text">
+                                Supported formats: .xlsx, .xls, .csv
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong><i class="fa fa-info-circle"></i> Instructions:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Make sure your Excel file has the correct column headers</li>
+                                <li>Required fields: Employee ID, Employee Name, Department, Company</li>
+                                <li>Optional fields: Designation, Phone, Email, Joining Date</li>
+                            </ul>
+                            <div class="mt-2">
+                                <a href="{{ route('export', ['type' => 'xlsx']) }}" class="btn btn-outline-info btn-sm">
+                                    <i class="fa fa-download"></i> Download Template
+                                </a>
+                                <small class="text-muted ms-2">Download current data as template</small>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fa fa-times"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fa fa-upload"></i> Import Data
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Import Modal End -->
+    <!--display form start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="smart-table">
+                @if (session('delete_employee'))
+                <div class="alert alert-success">{{ session('delete_employee') }}</div>
+                @endif
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">SL</th>
+                                    <th scope="col">EMPLOYEE ID</th>
+                                    <th scope="col">EMPLOYEE NAME</th>
+                                    <th scope="col">DEPARTMENT</th>
+                                    <th scope="col">DESIGNATION</th>
+                                    <th scope="col">JOINING DATE</th>
+                                    <th scope="col">PHONE NUMBER</th>
+                                    <th scope="col">EMAIL</th>
+                                    <th scope="col">Company</th>
+                                    <th scope="col">PICTURE</th>
+                                    <th scope="col">ACTION</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody style="height: 5px !important; overflow: scroll;">
+                                @foreach ($employees as $key => $employee)
+                                <tr style="cursor: default;">
+                                    <td><span class="fw-bold text-muted">{{ $key + 1 }}</span></td>
+                                    <td>
+                                        <a href="{{ route('employee_info', $employee->id) }}" class="employee-link fw-bold">
+                                            {{ $employee->emp_id }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('employee_info', $employee->id) }}" class="employee-link">
+                                            {{ $employee->emp_name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="department-badge">{{ $employee->rel_to_departmet->department_name }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="designation-badge">{{ $employee->rel_to_designation->designation_name }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">{{ \Carbon\Carbon::parse($employee->join_date)->format('M d, Y') }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">{{ $employee->phone_number ?: 'N/A' }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">{{ $employee->email ?: 'N/A' }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark fw-medium">{{ $employee->rel_to_companies->company }}</span>
+                                    </td>
+                                    <td>
+                                        @if($employee->picture && $employee->picture !== 'default.png')
+                                        <img class="employee-picture"
+                                            src="{{ asset('uploads/employees/' . $employee->picture) }}"
+                                            alt="{{ $employee->emp_name }}"
+                                            title="{{ $employee->emp_name }}">
                                         @else
-                                        <span class="me-2">Showing all {{ $employees->count() }} rows</span>
-                                        @endif
-
-                                        {{-- Dropdown --}}
-                                        <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
-                                            <select name="per_page" class="form-select form-select-sm w-auto me-1" onchange="this.form.submit()">
-                                                @php $options = [10, 25, 50, 100, 'all']; @endphp
-                                                @foreach ($options as $option)
-                                                <option value="{{ $option }}" {{ request('per_page', 13) == $option ? 'selected' : '' }}>
-                                                    {{ is_numeric($option) ? $option : 'All' }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            <span>rows per page</span>
-
-                                            {{-- Keep filters --}}
-                                            <input type="hidden" name="search" value="{{ request('search') }}">
-                                            <input type="hidden" name="department_filter" value="{{ request('department_filter') }}">
-                                            <input type="hidden" name="designation_filter" value="{{ request('designation_filter') }}">
-                                            <input type="hidden" name="company_filter" value="{{ request('company_filter') }}">
-                                            <input type="hidden" name="join_date_from" value="{{ request('join_date_from') }}">
-                                            <input type="hidden" name="join_date_to" value="{{ request('join_date_to') }}">
-                                            <input type="hidden" name="has_picture" value="{{ request('has_picture') }}">
-                                            <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
-                                        </form>
-                                    </div>
-
-                                    {{-- Right: Pagination links --}}
-                                    <div class="mb-2">
-                                        @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                                        <div class="pagination-wrapper">
-                                            {{ $employees->appends(request()->query())->links() }}
+                                        <div class="employee-picture d-flex align-items-center justify-content-center bg-light">
+                                            <i class="fa fa-user text-muted"></i>
                                         </div>
                                         @endif
-                                    </div>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" title="Edit Employee">
+                                            <a class="text-primary" href="{{ route('employee_edit', $employee->id) }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </button>
+                                        {{-- Uncomment this if delete is needed --}}
+                                        {{-- <button class="action-btn" title="Delete Employee">
+                                                <a class="text-danger" href="{{ route('employee.delete', $employee->id) }}">
+                                        <i class="fa fa-trash"></i>
+                                        </a>
+                                        </button> --}}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div>
+                            <!--Pagination Start-->
+                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                                {{-- Left: Showing X to Y of Z --}}
+                                <div class="d-flex align-items-center mb-2">
+                                    @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    <span class="me-2">
+                                        Showing {{ $employees->firstItem() }} to {{ $employees->lastItem() }} of {{ $employees->total() }} rows
+                                    </span>
+                                    @else
+                                    <span class="me-2">Showing all {{ $employees->count() }} rows</span>
+                                    @endif
+
+                                    {{-- Dropdown --}}
+                                    <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                        <select name="per_page" class="form-select form-select-sm w-auto me-1" onchange="this.form.submit()">
+                                            @php $options = [10, 25, 50, 100, 'all']; @endphp
+                                            @foreach ($options as $option)
+                                            <option value="{{ $option }}" {{ request('per_page', 13) == $option ? 'selected' : '' }}>
+                                                {{ is_numeric($option) ? $option : 'All' }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <span>rows per page</span>
+
+                                        {{-- Keep filters --}}
+                                        <input type="hidden" name="search" value="{{ request('search') }}">
+                                        <input type="hidden" name="department_filter" value="{{ request('department_filter') }}">
+                                        <input type="hidden" name="designation_filter" value="{{ request('designation_filter') }}">
+                                        <input type="hidden" name="company_filter" value="{{ request('company_filter') }}">
+                                        <input type="hidden" name="join_date_from" value="{{ request('join_date_from') }}">
+                                        <input type="hidden" name="join_date_to" value="{{ request('join_date_to') }}">
+                                        <input type="hidden" name="has_picture" value="{{ request('has_picture') }}">
+                                        <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
+                                    </form>
                                 </div>
-                                <!--Pagination end-->
+
+                                {{-- Right: Pagination links --}}
+                                <div class="mb-2">
+                                    @if ($employees instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    <div class="pagination-wrapper">
+                                        {{ $employees->appends(request()->query())->links() }}
+                                    </div>
+                                    @endif
+                                </div>
                             </div>
+                            <!--Pagination end-->
                         </div>
                     </div>
                 </div>
@@ -684,26 +876,54 @@
     </div>
 </div>
 
+
 <!-- Ajax code -->
 
 <!--display form end-->
 @endsection
+<style>
+    .select2-container--bootstrap4 {
+        width: 100% !important;
+    }
 
-@push('styles')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-@endpush
+    .select2-container--bootstrap4 .select2-selection--single {
+        padding-top: 2px;
+    }
+</style>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+
+
 
 <script>
+    function previewImage(input) {
+        const preview = document.getElementById('imagePreview');
+        const previewImg = preview.querySelector('img');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.classList.remove('d-none');
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function() {
-        // Initialize Select2 only when modal is shown
+        // Initialize Select2 with custom styling
         $('#exampleModal').on('shown.bs.modal', function() {
             $('.select2').select2({
-                dropdownParent: $('#exampleModal'), // Fixes dropdown z-index inside modal
+                dropdownParent: $('#exampleModal'),
                 placeholder: "Please select an option",
-                allowClear: true
+                allowClear: true,
+                theme: 'bootstrap4',
+                width: '100%'
             });
         });
 

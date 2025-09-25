@@ -25,7 +25,7 @@
                 <div class="input-group">
                     <input type="search" class="form-control" name="search" placeholder="Search for..."
                         value="{{$search}}">
-                    <button class="btn btn-info" type="submit"><span class="fa fa-search"></span></button>
+                    <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
                 </div>
             </form>
         </div>

@@ -483,35 +483,10 @@
 
 <div class="container-fluid">
     <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <h2 class="mb-1">Asset Management</h2>
-                <p class="mb-0 text-light">Manage and track all your organization's assets</p>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <div class="export-section">
-                    <form action="{{ route('store_export') }}" method="GET" class="d-flex align-items-center gap-2">
-                        @foreach ($_GET as $key=> $item)
-                        <input type="hidden" name="{{$key}}" value="{{$item}}">
-                        @endforeach
-                        <select name="type" class="form-select form-select-sm" style="width: auto;">
-                            <option value="">Export Format</option>
-                            <option value="xlsx">Excel (XLSX)</option>
-                            <option value="csv">CSV</option>
-                            <option value="xls">Excel (XLS)</option>
-                        </select>
-                        <button type="submit" class="btn btn-light btn-sm">
-                            <i class="fa fa-download"></i> Export
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Summary Dashboard -->
-    <div class="summary-cards">
+    <!-- <div class="summary-cards">
         <div class="summary-card total">
             <div class="summary-icon">
                 <i class="fa fa-cube"></i>
@@ -544,7 +519,7 @@
             <h2 class="summary-number">{{ $stores->where('checkstatus', 'MAINTENANCE')->count() }}</h2>
             <small class="text-muted">Under maintenance</small>
         </div>
-    </div>
+    </div> -->
 
     <!-- Action Buttons -->
     <div class="filter-panel">
@@ -557,13 +532,13 @@
             <a href="{{ route('add_product') }}" class="action-btn btn-add">
                 <i class="fa fa-plus"></i> Add Asset
             </a>
-            <a href="{{ route('issue') }}" class="action-btn btn-issue">
+            <!-- <a href="{{ route('issue') }}" class="action-btn btn-issue">
                 <i class="fa fa-mail-forward"></i> Issue Asset
             </a>
             <a href="{{ route('return') }}" class="action-btn btn-return">
                 <i class="fa fa-mail-reply"></i> Return Asset
-            </a>
-            <a href="{{ route('transfer') }}" class="action-btn btn-transfer">
+            </a> -->
+            <!-- <a href="{{ route('transfer') }}" class="action-btn btn-transfer">
                 <i class="fa fa-send"></i> Transfer Asset
             </a>
             <a href="{{ route('maintenance') }}" class="action-btn btn-maintenance">
@@ -571,13 +546,32 @@
             </a>
             <a href="{{ route('wastproduct') }}" class="action-btn btn-waste">
                 <i class="fa fa-trash"></i> Waste Management
-            </a>
+            </a> -->
             <button class="action-btn btn-calculator" data-toggle="modal" data-target="#depreciationModal">
                 <i class="fa fa-calculator"></i> Depreciation Calculator
             </button>
             <button class="action-btn btn-print" id="bulkPrintBtn" data-toggle="modal" data-target="#bulkLabelModal" disabled>
                 <i class="fa fa-print"></i> Print Labels (<span id="selectedCount">0</span>)
             </button>
+
+                        <div class="col-md-6 text-md-end">
+                <div class="export-section">
+                    <form action="{{ route('store_export') }}" method="GET" class="d-flex align-items-center gap-2">
+                        @foreach ($_GET as $key=> $item)
+                        <input type="hidden" name="{{$key}}" value="{{$item}}">
+                        @endforeach
+                        <select name="type" class="form-select form-select-sm" style="width: auto;">
+                            <option value="">Export Format</option>
+                            <option value="xlsx">Excel (XLSX)</option>
+                            <option value="csv">CSV</option>
+                            <option value="xls">Excel (XLS)</option>
+                        </select>
+                        <button type="submit" class="btn btn-light btn-sm">
+                            <i class="fa fa-download"></i> Export
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Filter Section -->

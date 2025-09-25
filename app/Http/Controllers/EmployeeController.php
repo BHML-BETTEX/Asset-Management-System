@@ -21,6 +21,49 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
+
+    public function cloneEmployee(Request $request, $id)
+    {
+        $request->validate([
+            'emp_name' => 'required|string|max:255',
+            'emp_id' => 'required|string|max:255|unique:employees',
+            'email' => 'nullable|email|max:255|unique:employees',
+            'phone_number' => 'nullable|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'designation_id' => 'nullable|exists:designations,id',
+            'company' => 'required|exists:companies,id',
+            'join_date' => 'required|date',
+            'others' => 'nullable|string'
+        ]);
+
+        try {
+            // Find the original employee
+            $originalEmployee = Employee::findOrFail($id);
+
+            // Create new employee with validated data
+            $newEmployee = new Employee();
+            $newEmployee->emp_name = $request->emp_name;
+            $newEmployee->emp_id = $request->emp_id;
+            $newEmployee->email = $request->email;
+            $newEmployee->phone_number = $request->phone_number;
+            $newEmployee->department_id = $request->department_id;
+            $newEmployee->designation_id = $request->designation_id;
+            $newEmployee->company = $request->company;
+            $newEmployee->join_date = $request->join_date;
+            $newEmployee->others = $request->others;
+            
+            // Copy other relevant fields from original employee
+            $newEmployee->status = $originalEmployee->status;
+            // Save the new employee
+            $newEmployee->save();
+
+            return redirect()->route('employee_info', $newEmployee->id)
+                ->with('success', 'Employee cloned successfully');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error cloning employee: ' . $e->getMessage());
+        }
+    }
     //Employee
     public function employee(Request $request)
     {
@@ -295,7 +338,13 @@ class EmployeeController extends Controller
     function employee_info($id)
     {
         $employee = Employee::with(['rel_to_departmet', 'rel_to_designation'])->findOrFail($id);
-        return view('admin.employee.employee_info', compact('employee'));
+        
+        // Get data for clone modal
+        $departments = Department::all();
+        $designation = Designation::all();
+        $companies = Company::all();
+        
+        return view('admin.employee.employee_info', compact('employee', 'departments', 'designation', 'companies'));
     }
 
 

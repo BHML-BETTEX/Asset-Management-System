@@ -8,9 +8,9 @@
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 15px;
         padding: 2rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         color: white;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
 
     .employee-avatar {
@@ -34,7 +34,7 @@
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         border: none;
         transition: all 0.3s ease;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .info-card:hover {
@@ -107,7 +107,8 @@
         color: #155724;
     }
 
-    .department-link, .company-link {
+    .department-link,
+    .company-link {
         color: #007bff;
         text-decoration: none;
         font-weight: 500;
@@ -116,7 +117,8 @@
         border-radius: 5px;
     }
 
-    .department-link:hover, .company-link:hover {
+    .department-link:hover,
+    .company-link:hover {
         background-color: #e3f2fd;
         color: #0056b3;
         text-decoration: none;
@@ -156,24 +158,59 @@
         color: white;
     }
 
-    .btn-edit { background-color: #17a2b8; color: white; }
-    .btn-edit:hover { background-color: #138496; }
+    .btn-edit {
+        background-color: #17a2b8;
+        color: white;
+    }
 
-    .btn-print { background-color: #6c757d; color: white; }
-    .btn-print:hover { background-color: #545b62; }
+    .btn-edit:hover {
+        background-color: #138496;
+    }
 
-    .btn-email { background-color: #007bff; color: white; }
-    .btn-email:hover { background-color: #0056b3; }
+    .btn-print {
+        background-color: #6c757d;
+        color: white;
+    }
 
-    .btn-delete { background-color: #dc3545; color: white; }
-    .btn-delete:hover { background-color: #c82333; }
+    .btn-print:hover {
+        background-color: #545b62;
+    }
+
+    .btn-email {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-email:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    .btn-clone {
+        background-color: transparent;
+        color: #6366f1;
+        border: 2px solid #6366f1;
+    }
+
+    .btn-clone:hover {
+        background-color: #6366f1;
+        color: white;
+    }
 
     .nav-tabs-custom {
         background: white;
         border-radius: 15px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         padding: 1rem 1.5rem 0;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
 
     .nav-tabs-custom .nav-link {
@@ -245,19 +282,19 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container">
     <!-- Professional Header Section -->
     <div class="employee-profile-header">
         <div class="row align-items-center">
             <div class="col-md-2 text-center">
                 @if($employee->picture && $employee->picture !== 'default.png')
-                    <img src="{{ asset('uploads/employees/' . $employee->picture) }}"
-                         class="employee-avatar"
-                         alt="{{ $employee->emp_name }}">
+                <img src="{{ asset('uploads/employees/' . $employee->picture) }}"
+                    class="employee-avatar"
+                    alt="{{ $employee->emp_name }}">
                 @else
-                    <div class="employee-avatar d-flex align-items-center justify-content-center bg-light">
-                        <i class="fa fa-user fa-3x text-muted"></i>
-                    </div>
+                <div class="employee-avatar d-flex align-items-center justify-content-center bg-light">
+                    <i class="fa fa-user fa-3x text-muted"></i>
+                </div>
                 @endif
             </div>
             <div class="col-md-6">
@@ -344,25 +381,25 @@
                             </div>
                             <div class="info-row">
                                 <div class="info-label">
-                                    <i class="fa fa-envelope info-icon"></i>Email Address
+                                    <i class="fa fa-envelope info-icon"></i>Email
                                 </div>
                                 <div class="info-value">
                                     @if($employee->email)
-                                        <a href="mailto:{{ $employee->email }}" class="text-primary">{{ $employee->email }}</a>
+                                    <a href="mailto:{{ $employee->email }}" class="text-primary"> {{ $employee-> email }}</a>
                                     @else
-                                        <span class="text-muted">Not provided</span>
+                                    <span class="text-muted">Not provided</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="info-row">
                                 <div class="info-label">
-                                    <i class="fa fa-phone info-icon"></i>Phone Number
+                                    <i class="fa fa-phone info-icon"></i>Phone
                                 </div>
                                 <div class="info-value">
                                     @if($employee->phone_number)
-                                        <a href="tel:{{ $employee->phone_number }}" class="text-primary">{{ $employee->phone_number }}</a>
+                                    <a href="tel:{{ $employee->phone_number }}" class="text-primary">{{ $employee->phone_number }}</a>
                                     @else
-                                        <span class="text-muted">Not provided</span>
+                                    <span class="text-muted">Not provided</span>
                                     @endif
                                 </div>
                             </div>
@@ -437,6 +474,9 @@
                 <a href="{{ route('employee_edit', $employee->id) }}" class="action-btn btn-edit">
                     <i class="fa fa-edit"></i> Edit Profile
                 </a>
+                <button class="action-btn btn-clone" data-bs-toggle="modal" data-bs-target="#cloneEmployeeModal">
+                    <i class="fa fa-copy"></i> Clone Employee
+                </button>
 
                 <button class="action-btn btn-print" onclick="window.print()">
                     <i class="fa fa-print"></i> Print Information
@@ -449,6 +489,7 @@
                 <button class="action-btn btn-print">
                     <i class="fa fa-file-pdf-o"></i> Generate Report
                 </button>
+
 
                 <div class="dropdown-divider my-3"></div>
 
@@ -532,28 +573,149 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    // File upload handling
-    $('#fileInput').on('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const fileName = file.name;
-            const fileSize = (file.size / 1024 / 1024).toFixed(2);
-            $('.file-upload-area h6').html(`<i class="fa fa-check text-success me-2"></i>Selected: ${fileName} (${fileSize} MB)`);
-        }
+    $(document).ready(function() {
+        // File upload handling
+        $('#fileInput').on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const fileName = file.name;
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                $('.file-upload-area h6').html(`<i class="fa fa-check text-success me-2"></i>Selected: ${fileName} (${fileSize} MB)`);
+            }
+        });
     });
-});
 
-function emailAssignedAssets() {
-    alert('Email functionality will be implemented soon.');
-}
-
-function confirmDelete() {
-    if (confirm('Are you sure you want to delete this employee? This action cannot be undone.')) {
-        // Add delete functionality here
-        alert('Delete functionality will be implemented with proper authorization.');
+    function emailAssignedAssets() {
+        alert('Email functionality will be implemented soon.');
     }
-}
+
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete this employee? This action cannot be undone.')) {
+            // Add delete functionality here
+            alert('Delete functionality will be implemented with proper authorization.');
+        }
+    }
 </script>
+
+<!-- Clone Employee Modal -->
+<div class="modal fade" id="cloneEmployeeModal" tabindex="-1" aria-labelledby="cloneEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="modal-title text-white" id="cloneEmployeeModalLabel">
+                    <i class="fa fa-copy me-2"></i> Clone Employee
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+            </div>
+            <form action="{{ route('employee.clone', $employee->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Employee Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="emp_name" value="{{ $employee->emp_name }} (Copy)" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Employee ID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="emp_id" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ $employee->email }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" name="phone_number" value="{{ $employee->phone_number }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Company <span class="text-danger">*</span></label>
+                            <select class="form-control select2-modal" name="company" id="company_select" required>
+                                @foreach ($companies as $comp)
+                                <option value="{{ $comp->id }}" {{ $employee->company == $comp->id ? 'selected' : '' }}>
+                                    {{ $comp->company }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department <span class="text-danger">*</span></label>
+                            <select class="form-control select2-modal" name="department_id" id="department_select" required>
+                                @foreach ($departments as $department)
+                                <option value="{{ $department->id }}" {{ $employee->department_id == $department->id ? 'selected' : '' }}>
+                                    {{ $department->department_name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Designation</label>
+                            <select class="form-control select2-modal" name="designation_id" id="designation_select">
+                                @foreach ($designation as $desig)
+                                <option value="{{ $desig->id }}" {{ $employee->designation_id == $desig->id ? 'selected' : '' }}>
+                                    {{ $desig->designation_name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Join Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="join_date" value="{{ date('Y-m-d') }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Additional Information</label>
+                            <textarea class="form-control" name="others" rows="3">{{ $employee->others }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-2"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-copy me-2"></i> Clone Employee
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 for clone modal
+        $('#cloneEmployeeModal').on('shown.bs.modal', function() {
+            // Initialize Select2 with Bootstrap 4 theme
+            $('.select2-modal').select2({
+                dropdownParent: $('#cloneEmployeeModal'),
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+
+            // Generate new employee ID
+            const prefix = "EMP";
+            const timestamp = Date.now().toString().slice(-4);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            $('input[name="emp_id"]').val(`${prefix}${timestamp}${random}`);
+        });
+
+        // Initialize Select2 for clone modal
+        $('#cloneEmployeeModal').on('shown.bs.modal', function() {
+            console.log('Modal shown event fired');
+            $('.select2-modal').select2({
+                dropdownParent: $('#cloneEmployeeModal'),
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+
+            // Generate new employee ID
+            const prefix = "EMP";
+            const timestamp = Date.now().toString().slice(-4);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            $('input[name="emp_id"]').val(`${prefix}${timestamp}${random}`);
+        });
+    });
+</script>
+@endpush
 
 @endsection
