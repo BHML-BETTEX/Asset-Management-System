@@ -51,7 +51,7 @@ class EmployeeController extends Controller
             $newEmployee->company = $request->company;
             $newEmployee->join_date = $request->join_date;
             $newEmployee->others = $request->others;
-            
+
             // Copy other relevant fields from original employee
             $newEmployee->status = $originalEmployee->status;
             // Save the new employee
@@ -59,7 +59,6 @@ class EmployeeController extends Controller
 
             return redirect()->route('employee_info', $newEmployee->id)
                 ->with('success', 'Employee cloned successfully');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Error cloning employee: ' . $e->getMessage());
         }
@@ -207,10 +206,12 @@ class EmployeeController extends Controller
         $departments = Department::all();
         $designation = designation::all();
         $employees_info = Employee::find($employee_id);
+        $companies = Company::all();
         return view('admin.employee.employee_edit', [
             'employees_info' => $employees_info,
             'departments' => $departments,
             'designation' => $designation,
+            'companies' => $companies,
         ]);
     }
 
@@ -224,7 +225,9 @@ class EmployeeController extends Controller
                 'join_date' => $request->join_date,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
-
+                'department_id' => $request->department_id,
+                'designation_id' => $request->designation_id,
+                'company' => $request->company,
             ]);
             return back();
         } else {
@@ -251,6 +254,9 @@ class EmployeeController extends Controller
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'picture' => $imageName ?? 'default.png',
+                'department_id' => $request->department_id,
+                'designation_id' => $request->designation_id,
+                'company' => $request->company,
             ]);
             return back();
         }
@@ -338,12 +344,11 @@ class EmployeeController extends Controller
     function employee_info($id)
     {
         $employee = Employee::with(['rel_to_departmet', 'rel_to_designation'])->findOrFail($id);
-        
         // Get data for clone modal
         $departments = Department::all();
         $designation = Designation::all();
         $companies = Company::all();
-        
+
         return view('admin.employee.employee_info', compact('employee', 'departments', 'designation', 'companies'));
     }
 
