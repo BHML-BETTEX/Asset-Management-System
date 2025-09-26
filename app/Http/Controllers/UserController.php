@@ -213,6 +213,182 @@ class UserController extends Controller
         }
     }
 
+    function users_profile_edit($user_id)
+    {
+        try {
+            $user = User::with('roles')->find($user_id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $html = view('admin.users.partials.profile_edit', compact('user'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading profile edit form.'
+            ], 500);
+        }
+    }
+
+    function users_profile_update(Request $request, $user_id)
+    {
+        try {
+            $user = User::find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255|min:2',
+                'email' => 'required|email|unique:users,email,' . $user_id,
+                'phone' => 'nullable|string|max:20',
+                'department' => 'nullable|string|max:100',
+                'position' => 'nullable|string|max:100',
+                'location' => 'nullable|string|max:100',
+                'bio' => 'nullable|string|max:500',
+                'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $updateData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'department' => $request->department,
+                'position' => $request->position,
+                'location' => $request->location,
+                'bio' => $request->bio,
+            ];
+
+            // Handle profile photo upload
+            if ($request->hasFile('profile_photo')) {
+                // Delete old profile photo if exists
+                if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
+                    unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
+                }
+
+                $file = $request->file('profile_photo');
+                $filename = 'profile_' . $user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+                // Create directory if not exists
+                $uploadPath = public_path('uploads/profile_photos');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+
+                $file->move($uploadPath, $filename);
+                $updateData['profile_photo'] = $filename;
+            }
+
+            $user->update($updateData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating profile: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    function users_password_edit($user_id)
+    {
+        try {
+            $user = User::find($user_id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $html = view('admin.users.partials.password_change', compact('user'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading password change form.'
+            ], 500);
+        }
+    }
+
+    function users_password_update(Request $request, $user_id)
+    {
+        try {
+            $user = User::find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'current_password' => 'required',
+                'new_password' => ['required', 'min:8', 'different:current_password'],
+                'new_password_confirmation' => 'required|same:new_password',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Verify current password
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['current_password' => ['Current password is incorrect']]
+                ], 422);
+            }
+
+            // Update password
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password changed successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error changing password: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     function profile()
     {
         return view('admin.users.profile');

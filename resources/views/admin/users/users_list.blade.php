@@ -260,6 +260,20 @@
 
     .btn-edit:hover { color: white; }
 
+    .btn-profile {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .btn-profile:hover { color: white; }
+
+    .btn-password {
+        background-color: #fd7e14;
+        color: white;
+    }
+
+    .btn-password:hover { color: white; }
+
     .btn-delete {
         background-color: #dc3545;
         color: white;
@@ -468,6 +482,14 @@
                                onclick="editUser({{ $user->id }})">
                                 <i class="fa fa-edit"></i>
                             </a>
+                            <button class="action-btn btn-profile" title="Edit Profile"
+                                    onclick="editProfile({{ $user->id }})">
+                                <i class="fa fa-user-edit"></i>
+                            </button>
+                            <button class="action-btn btn-password" title="Change Password"
+                                    onclick="changePassword({{ $user->id }}, '{{ $user->name }}')">
+                                <i class="fa fa-key"></i>
+                            </button>
                             <button class="action-btn btn-delete" title="Delete User"
                                     onclick="deleteUser({{ $user->id }}, '{{ $user->name }}')">
                                 <i class="fa fa-trash"></i>
@@ -548,6 +570,48 @@
                 <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
                     <i class="fa fa-trash"></i> Delete User
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Edit Modal -->
+<div class="modal fade" id="profileEditModal" tabindex="-1" aria-labelledby="profileEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%); color: white;">
+                <h5 class="modal-title" id="profileEditModalLabel">
+                    <i class="fa fa-user-edit"></i> Edit Profile
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="profileEditContent">
+                <!-- Profile edit form will be loaded here -->
+                <div class="text-center">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                    <p>Loading profile edit form...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #fd7e14 0%, #f0ad4e 100%); color: white;">
+                <h5 class="modal-title" id="changePasswordModalLabel">
+                    <i class="fa fa-key"></i> Change Password
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="changePasswordContent">
+                <!-- Password change form will be loaded here -->
+                <div class="text-center">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                    <p>Loading password change form...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -700,6 +764,118 @@ function editUser(userId) {
     });
 }
 
+// Profile Edit Function
+function editProfile(userId) {
+    currentUserId = userId;
+
+    const modalElement = document.getElementById('profileEditModal');
+    const contentElement = document.getElementById('profileEditContent');
+
+    // Reset content
+    contentElement.innerHTML = `
+        <div class="text-center">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <p>Loading profile edit form...</p>
+        </div>
+    `;
+
+    // Show modal
+    showModal(modalElement);
+
+    // Load profile edit form via AJAX
+    fetch(`/users/${userId}/profile/edit`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            contentElement.innerHTML = data.html;
+        } else {
+            contentElement.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    ${data.message || 'Error loading profile edit form.'}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        contentElement.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i>
+                Error: Could not load profile edit form. ${error.message}
+            </div>
+        `;
+    });
+}
+
+// Change Password Function
+function changePassword(userId, userName) {
+    currentUserId = userId;
+
+    const modalElement = document.getElementById('changePasswordModal');
+    const contentElement = document.getElementById('changePasswordContent');
+
+    // Reset content
+    contentElement.innerHTML = `
+        <div class="text-center">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <p>Loading password change form...</p>
+        </div>
+    `;
+
+    // Show modal
+    showModal(modalElement);
+
+    // Load password change form via AJAX
+    fetch(`/users/${userId}/password/edit`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            contentElement.innerHTML = data.html;
+        } else {
+            contentElement.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    ${data.message || 'Error loading password change form.'}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        contentElement.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i>
+                Error: Could not load password change form. ${error.message}
+            </div>
+        `;
+    });
+}
+
 // Delete User Function
 function deleteUser(userId, userName) {
     currentUserId = userId;
@@ -847,6 +1023,132 @@ function submitUserUpdate(formData, userId) {
     .catch(error => {
         console.error('Error:', error);
         showAlert('danger', `Error: Could not update user. ${error.message}`);
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+// Submit Profile Update
+function submitProfileUpdate(formData, userId) {
+    const submitBtn = document.querySelector('#profileEditForm button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
+    submitBtn.disabled = true;
+
+    fetch(`/users/${userId}/profile/update`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            hideModal(document.getElementById('profileEditModal'));
+
+            // Show success message
+            showAlert('success', 'Profile updated successfully!');
+
+            // Reload page
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            // Show validation errors
+            if (data.errors) {
+                let errorMessage = 'Validation errors:<br>';
+                Object.values(data.errors).forEach(error => {
+                    errorMessage += `• ${error[0]}<br>`;
+                });
+                const existingAlerts = document.querySelectorAll('#profileEditContent .alert-danger');
+                existingAlerts.forEach(alert => alert.remove());
+
+                document.getElementById('profileEditContent').insertAdjacentHTML('afterbegin', `
+                    <div class="alert alert-danger">${errorMessage}</div>
+                `);
+            } else {
+                showAlert('danger', data.message || 'Error updating profile.');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('danger', `Error: Could not update profile. ${error.message}`);
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+// Submit Password Change
+function submitPasswordChange(formData, userId) {
+    const submitBtn = document.querySelector('#changePasswordForm button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Changing...';
+    submitBtn.disabled = true;
+
+    fetch(`/users/${userId}/password/update`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            hideModal(document.getElementById('changePasswordModal'));
+
+            // Show success message
+            showAlert('success', 'Password changed successfully!');
+
+            // Reload page
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            // Show validation errors
+            if (data.errors) {
+                let errorMessage = 'Validation errors:<br>';
+                Object.values(data.errors).forEach(error => {
+                    errorMessage += `• ${error[0]}<br>`;
+                });
+                const existingAlerts = document.querySelectorAll('#changePasswordContent .alert-danger');
+                existingAlerts.forEach(alert => alert.remove());
+
+                document.getElementById('changePasswordContent').insertAdjacentHTML('afterbegin', `
+                    <div class="alert alert-danger">${errorMessage}</div>
+                `);
+            } else {
+                showAlert('danger', data.message || 'Error changing password.');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('danger', `Error: Could not change password. ${error.message}`);
     })
     .finally(() => {
         submitBtn.innerHTML = originalText;

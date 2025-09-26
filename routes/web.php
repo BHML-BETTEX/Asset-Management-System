@@ -53,6 +53,14 @@ Route::get('/users/{user_id}/edit', [UserController::class, 'users_edit'])->name
 Route::put('/users/{user_id}/update', [UserController::class, 'users_update'])->name('users.update');
 Route::delete('/users/{user_id}/delete', [UserController::class, 'users_delete'])->name('users.ajax.delete');
 
+// Profile Management Routes
+Route::get('/users/{user_id}/profile/edit', [UserController::class, 'users_profile_edit'])->name('users.profile.edit');
+Route::post('/users/{user_id}/profile/update', [UserController::class, 'users_profile_update'])->name('users.profile.update');
+
+// Password Management Routes
+Route::get('/users/{user_id}/password/edit', [UserController::class, 'users_password_edit'])->name('users.password.edit');
+Route::post('/users/{user_id}/password/update', [UserController::class, 'users_password_update'])->name('users.password.update');
+
 //Role
 Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index')->middleware('role_or_permission:admin|role-list');
 Route::get('/roles/create', [RoleController::class, 'roles_create'])->name('roles.create')->middleware('role_or_permission:admin|role-create');
