@@ -18,9 +18,20 @@ use App\Exports\UserExport;
 
 class UserController extends Controller
 {
-    function users()
+    function users(Request $request)
     {
-        $users = User::all();
+        $query = User::query();
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $users = $query->latest()->get();
         $total_user = User::count();
         return view('admin.users.users_list', compact('users', 'total_user'));
     }
@@ -69,8 +80,137 @@ class UserController extends Controller
 
     function users_delete($user_id)
     {
-        User::find($user_id)->delete();
-        return back()->with('delete', 'user deleteed success!');
+        try {
+            $user = User::find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            // Delete profile photo if exists
+            if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
+                unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
+            }
+
+            $user->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User deleted successfully!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting user: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    function users_view($user_id)
+    {
+        try {
+            $user = User::with('roles')->find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $html = view('admin.users.partials.user_view', compact('user'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading user details.'
+            ], 500);
+        }
+    }
+
+    function users_edit($user_id)
+    {
+        try {
+            $user = User::with('roles')->find($user_id);
+            $roles = Role::pluck('name','name')->all();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $html = view('admin.users.partials.user_edit', compact('user', 'roles'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading edit form.'
+            ], 500);
+        }
+    }
+
+    function users_update(Request $request, $user_id)
+    {
+        try {
+            $user = User::find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user_id,
+                'password' => 'nullable|min:8',
+                'role' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            DB::transaction(function () use($request, $user) {
+                $updateData = [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                ];
+
+                // Only update password if provided
+                if ($request->filled('password')) {
+                    $updateData['password'] = Hash::make($request->password);
+                }
+
+                $user->update($updateData);
+                $user->syncRoles($request->role);
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating user: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     function profile()

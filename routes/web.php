@@ -47,6 +47,12 @@ Route::post('/name/change', [UserController::class, 'name_change'])->name('name.
 Route::post('/password/change', [UserController::class, 'password_change'])->name('password.change');
 Route::post('/profile/photo/change', [UserController::class, 'profile_photo_change'])->name('profile.photo.change');
 
+// AJAX User Management Routes
+Route::get('/users/{user_id}/view', [UserController::class, 'users_view'])->name('users.view');
+Route::get('/users/{user_id}/edit', [UserController::class, 'users_edit'])->name('users.edit');
+Route::put('/users/{user_id}/update', [UserController::class, 'users_update'])->name('users.update');
+Route::delete('/users/{user_id}/delete', [UserController::class, 'users_delete'])->name('users.ajax.delete');
+
 //Role
 Route::get('/roles', [RoleController::class, 'roles'])->name('roles.index')->middleware('role_or_permission:admin|role-list');
 Route::get('/roles/create', [RoleController::class, 'roles_create'])->name('roles.create')->middleware('role_or_permission:admin|role-create');
