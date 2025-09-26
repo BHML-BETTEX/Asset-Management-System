@@ -460,10 +460,18 @@
 
         .action-buttons {
             justify-content: center;
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 0.5rem;
         }
 
         .summary-cards {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
         }
 
         .filter-row {
@@ -471,12 +479,42 @@
         }
 
         .smart-table {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .smart-table .table {
+            min-width: 1200px;
         }
 
         .smart-table .table thead th,
         .smart-table .table tbody td {
-            padding: 0.5rem 0.25rem;
+            padding: 0.4rem 0.2rem;
+            white-space: nowrap;
+        }
+
+        .action-buttons-cell {
+            min-width: 120px;
+        }
+
+        .table-action-btn {
+            width: 28px;
+            height: 28px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .summary-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .filter-panel {
+            padding: 1rem;
         }
     }
 </style>
@@ -486,7 +524,7 @@
 
 
     <!-- Summary Dashboard -->
-    <!-- <div class="summary-cards">
+    <div class="summary-cards" style="display: none;">
         <div class="summary-card total">
             <div class="summary-icon">
                 <i class="fa fa-cube"></i>
@@ -519,7 +557,7 @@
             <h2 class="summary-number">{{ $stores->where('checkstatus', 'MAINTENANCE')->count() }}</h2>
             <small class="text-muted">Under maintenance</small>
         </div>
-    </div> -->
+    </div>
 
     <!-- Action Buttons -->
     <div class="filter-panel">
@@ -704,7 +742,6 @@
                         <th>VENDOR</th>
                         <th>PURCHASE DATE</th>
                         <th>CHALLAN NO</th>
-                        <th>STATUS</th>
                         <th>COMPANY</th>
                         <th>OTHERS</th>
                         <th>Balance</th>
@@ -728,9 +765,7 @@
                         <td>{{ $key +1 }}</td>
                         <td id="action-btn-{{ $store->id }}">
                             @if($store->checkstatus === 'INSTOCK')
-                            <button class="btn btn-outline-success btn-sm">
-                                <a href="#"
-                                    class="issue-btn text-success"
+                            <button class="btn btn-outline-success btn-sm issue-btn"
                                     data-toggle="modal"
                                     data-target="#issueModal"
                                     data-id="{{ $store->id }}"
@@ -738,41 +773,40 @@
                                     data-asset-type="{{ e($store->rel_to_ProductType->product ?? '') }}"
                                     data-model="{{ e($store->model ?? '') }}"
                                     data-company="{{ e($store->rel_to_Company->company ?? '') }}">
-                                    INSTOCK
-                                </a>
+                                INSTOCK
                             </button>
                             @else
-                            <button class="btn btn-outline-primary btn-sm">
-                                <a href="#"
-                                    class="return-btn text-primary"
+                            <button class="btn btn-outline-primary btn-sm return-btn"
                                     data-toggle="modal"
                                     data-target="#returnModal"
                                     data-id="{{ $store->id }}"
                                     data-asset-tag="{{ $store->products_id }}"
                                     data-asset-type="{{ $store->rel_to_ProductType->product}}"
                                     data-model="{{ $store->model }}">
-                                    ISSUED
-                                </a>
+                                ISSUED
                             </button>
                             @endif
                         </td>
-                        <td>
-                            <button class="border-0 bg-white"><a class="text-primary"
-                                    href="{{ route('store.edit', $store->id) }}"><i
-                                        class="fa fa-edit "
-                                        style="font-size:20px;"></a></i></button>
+                        <td class="action-buttons-cell">
+                            <a href="{{ route('store.edit', $store->id) }}"
+                               class="table-action-btn text-primary"
+                               title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
 
-                            <button class="border-0 bg-white"><a class="text-success"
-                                    href="{{ route('qr_code_view', $store->id) }}"><i
-                                        class="fa fa-eye "
-                                        style="font-size:20px;"></a></i></button>
+                            <a href="{{ route('qr_code_view', $store->id) }}"
+                               class="table-action-btn text-success"
+                               title="View">
+                                <i class="fa fa-eye"></i>
+                            </a>
 
-                            <button class="border-0 bg-white"><a class="text-success"
-                                    href="{{route('qr_code', $store->id)}}"><i
-                                        class="fa fa-qrcode "
-                                        style="font-size:20px;"></a></i></button>
+                            <a href="{{route('qr_code', $store->id)}}"
+                               class="table-action-btn text-info"
+                               title="QR Code">
+                                <i class="fa fa-qrcode"></i>
+                            </a>
 
-                            <button class="border-0 bg-white clone-btn"
+                            <button class="table-action-btn text-info clone-btn"
                                     data-toggle="modal"
                                     data-target="#cloneModal"
                                     data-id="{{ $store->id }}"
@@ -801,9 +835,7 @@
                                     data-company-id="{{ $store->rel_to_Company->id ?? '' }}"
                                     data-others="{{ e($store->others ?? '') }}"
                                     title="Clone Asset">
-                                <a class="text-info">
-                                    <i class="fa fa-copy" style="font-size:20px;"></i>
-                                </a>
+                                <i class="fa fa-copy"></i>
                             </button>
                         </td>
                         <td style="background-color: #feefe6;">
