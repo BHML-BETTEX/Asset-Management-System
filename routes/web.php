@@ -287,6 +287,13 @@ Route::get('/consumableIssue/delete/{id}', [ConsumableController::class, 'consum
 Route::get('/product', [ConsumableController::class, 'product'])->name('product');
 Route::post('/product/store', [ConsumableController::class, 'product_store'])->name('product_store');
 
+//Database Backup Routes
+Route::get('/backup', [App\Http\Controllers\DatabaseBackupController::class, 'index'])->name('backup.index');
+Route::post('/backup/full', [App\Http\Controllers\DatabaseBackupController::class, 'fullBackup'])->name('backup.full');
+Route::post('/backup/table', [App\Http\Controllers\DatabaseBackupController::class, 'tableBackup'])->name('backup.table');
+Route::get('/backup/download/{filename}', [App\Http\Controllers\DatabaseBackupController::class, 'downloadBackup'])->name('backup.download');
+Route::delete('/backup/delete/{filename}', [App\Http\Controllers\DatabaseBackupController::class, 'deleteBackup'])->name('backup.delete');
+Route::get('/backup/detect-path', [App\Http\Controllers\DatabaseBackupController::class, 'detectMysqldumpPath'])->name('backup.detect.path');
 
 //
 

@@ -72,6 +72,8 @@
                                 <li><a href="{{ route('history') }}"><i class="fa fa-newspaper-o"></i>History</a></li>
                                 <li><a href="{{ route('transfer_list') }}"><i class="fa fa-send"></i>Transfer List</a>
                                 </li>
+                                <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
+                                </li>
                                 <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
                                         List</a></li>
                                 <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
