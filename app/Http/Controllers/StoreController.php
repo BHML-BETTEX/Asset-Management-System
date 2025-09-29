@@ -558,19 +558,89 @@ class StoreController extends Controller
 
     function transfer_list(Request $request)
     {
-        $search = $request['search'] ?? "";
-        if ($search != "") {
-            $transer_data = Transfer::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('company', 'LIKE', "%$search")
-                ->select('transfers.*')
-                ->paginate(13)
-                ->appends($request->only('search'));
-        } else {
-            $transer_data = Transfer::paginate(13);
+        $search = $request->input('search', '');
+        $assetType = $request->input('asset_type', '');
+        $company = $request->input('company', '');
+        $dateFrom = $request->input('date_from', '');
+        $dateTo = $request->input('date_to', '');
+        $status = $request->input('status', '');
+        $perPage = $request->input('per_page', 15);
+
+        $query = Transfer::query();
+
+        // Search filter
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('asset_tag', 'LIKE', "%$search%")
+                  ->orWhere('asset_type', 'LIKE', "%$search%")
+                  ->orWhere('model', 'LIKE', "%$search%")
+                  ->orWhere('company', 'LIKE', "%$search%")
+                  ->orWhere('oldcompany', 'LIKE', "%$search%")
+                  ->orWhere('description', 'LIKE', "%$search%")
+                  ->orWhere('note', 'LIKE', "%$search%");
+            });
         }
+
+        // Asset type filter
+        if ($assetType) {
+            $query->where('asset_type', 'LIKE', "%$assetType%");
+        }
+
+        // Company filter
+        if ($company) {
+            $query->where('company', 'LIKE', "%$company%");
+        }
+
+        // Date range filter
+        if ($dateFrom) {
+            $query->whereDate('transfer_date', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('transfer_date', '<=', $dateTo);
+        }
+
+        // Status filter (returned or not)
+        if ($status === 'returned') {
+            $query->whereNotNull('return_date');
+        } elseif ($status === 'active') {
+            $query->whereNull('return_date');
+        }
+
+        // Get pagination results
+        if ($perPage === 'all') {
+            $transer_data = $query->orderBy('transfer_date', 'desc')->get();
+        } else {
+            $transer_data = $query->orderBy('transfer_date', 'desc')
+                ->paginate((int)$perPage)
+                ->appends($request->except('page'));
+        }
+
+        // Get unique values for filter dropdowns
+        $assetTypes = Transfer::distinct()->pluck('asset_type')->filter()->sort()->values();
+        $companies = Transfer::distinct()->pluck('company')->filter()->sort()->values();
+
+        // Get statistics
+        $stats = [
+            'total' => Transfer::count(),
+            'active' => Transfer::whereNull('return_date')->count(),
+            'returned' => Transfer::whereNotNull('return_date')->count(),
+            'this_month' => Transfer::whereMonth('transfer_date', now()->month)
+                                  ->whereYear('transfer_date', now()->year)
+                                  ->count(),
+        ];
 
         return view('admin.store.transfer.transfer_list', [
             'transer_data' => $transer_data,
             'search' => $search,
+            'assetType' => $assetType,
+            'company' => $company,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
+            'status' => $status,
+            'perPage' => $perPage,
+            'assetTypes' => $assetTypes,
+            'companies' => $companies,
+            'stats' => $stats,
         ]);
     }
 
@@ -804,15 +874,75 @@ class StoreController extends Controller
 
     function wastproduct_list(Request $request)
     {
-        $search = $request['search'] ?? "";
-        if ($search != "") {
-            $wastproduct = WastProduct::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('date', 'LIKE', "%$search")->paginate(13);
-        } else {
-            $wastproduct = WastProduct::paginate(13);
+        $search = $request->input('search', '');
+        $assetType = $request->input('asset_type', '');
+        $company = $request->input('company', '');
+        $dateFrom = $request->input('date_from', '');
+        $dateTo = $request->input('date_to', '');
+        $purchaseDateFrom = $request->input('purchase_date_from', '');
+        $purchaseDateTo = $request->input('purchase_date_to', '');
+        $perPage = $request->input('per_page', 15);
+
+        $query = WastProduct::query();
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('asset_tag', 'LIKE', "%$search%")
+                  ->orWhere('asset_type', 'LIKE', "%$search%")
+                  ->orWhere('model', 'LIKE', "%$search%")
+                  ->orWhere('description', 'LIKE', "%$search%")
+                  ->orWhere('asset_sl_no', 'LIKE', "%$search%")
+                  ->orWhere('others', 'LIKE', "%$search%")
+                  ->orWhere('note', 'LIKE', "%$search%");
+            });
         }
+
+        if ($assetType) {
+            $query->where('asset_type', $assetType);
+        }
+
+        if ($company) {
+            $query->where('others', $company);
+        }
+
+        if ($dateFrom) {
+            $query->whereDate('date', '>=', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->whereDate('date', '<=', $dateTo);
+        }
+
+        if ($purchaseDateFrom) {
+            $query->whereDate('purchase_date', '>=', $purchaseDateFrom);
+        }
+
+        if ($purchaseDateTo) {
+            $query->whereDate('purchase_date', '<=', $purchaseDateTo);
+        }
+
+        $wastproduct = $query->orderBy('date', 'desc')->paginate($perPage);
+
+        // Get filter dropdown data
+        $assetTypes = WastProduct::distinct()->pluck('asset_type')->filter()->sort()->values();
+        $companies = WastProduct::distinct()->pluck('others')->filter()->sort()->values();
+
+        // Calculate statistics
+        $statistics = [
+            'total' => WastProduct::count(),
+            'this_month' => WastProduct::whereMonth('date', now()->month)
+                                      ->whereYear('date', now()->year)
+                                      ->count(),
+            'this_year' => WastProduct::whereYear('date', now()->year)->count(),
+            'total_value' => 0
+        ];
+
         return view('admin.store.wastproduct.wastproduct_list', [
             'wastproduct' => $wastproduct,
             'search' => $search,
+            'assetTypes' => $assetTypes,
+            'companies' => $companies,
+            'statistics' => $statistics,
         ]);
     }
 
