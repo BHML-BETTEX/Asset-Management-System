@@ -198,4 +198,17 @@ return [
 
     'same_site' => 'lax',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Timeout
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the number of minutes of inactivity before a user
+    | session is considered expired. When a user's session expires, they will
+    | be automatically logged out and redirected to the login page.
+    |
+    */
+
+    'timeout' => env('SESSION_TIMEOUT', 30), // 30 minutes default
+
 ];

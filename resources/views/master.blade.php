@@ -277,6 +277,117 @@
     <script src="{{ asset('backend/build/js/custom.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Session Timeout Handler -->
+    @auth
+    <script>
+        $(document).ready(function() {
+            initSessionTimeout();
+        });
+
+        function initSessionTimeout() {
+            const timeout = {{ config('session.timeout', 30) }}; // minutes
+            const warningTime = Math.max(5, Math.floor(timeout * 0.1)); // Warn 10% before timeout (min 5 min)
+            const checkInterval = 60000; // Check every minute
+
+            let lastActivity = Date.now();
+            let warningShown = false;
+            let warningModal = null;
+
+            // Track user activity
+            $(document).on('mousedown keydown scroll touchstart', function() {
+                lastActivity = Date.now();
+                warningShown = false;
+                if (warningModal) {
+                    warningModal.close();
+                    warningModal = null;
+                }
+            });
+
+            // Check session status periodically
+            setInterval(function() {
+                const now = Date.now();
+                const minutesInactive = Math.floor((now - lastActivity) / 60000);
+                const timeoutMinutes = timeout;
+                const timeUntilTimeout = timeoutMinutes - minutesInactive;
+
+                // Show warning if approaching timeout
+                if (!warningShown && timeUntilTimeout <= warningTime && timeUntilTimeout > 0) {
+                    showSessionWarning(timeUntilTimeout);
+                    warningShown = true;
+                }
+
+                // Check if session is expired (with small buffer for network delays)
+                if (timeUntilTimeout <= -1) {
+                    handleSessionExpired();
+                }
+            }, checkInterval);
+
+            // Handle AJAX errors (session expired)
+            $(document).ajaxError(function(event, xhr, settings, thrownError) {
+                if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.redirect) {
+                    handleSessionExpired(xhr.responseJSON.message);
+                }
+            });
+        }
+
+        function showSessionWarning(minutesLeft) {
+            warningModal = Swal.fire({
+                title: 'Session Timeout Warning',
+                html: `Your session will expire in <strong>${minutesLeft}</strong> minute(s) due to inactivity.<br><br>Move your mouse or press any key to stay logged in.`,
+                icon: 'warning',
+                timer: (minutesLeft * 60000) - 10000, // Close 10 seconds before actual timeout
+                timerProgressBar: true,
+                showCancelButton: true,
+                confirmButtonText: 'Stay Logged In',
+                cancelButtonText: 'Logout Now',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.cancel) {
+                    // User chose to logout
+                    window.location.href = '{{ route("logout") }}';
+                } else if (result.isConfirmed) {
+                    // User chose to stay logged in
+                    updateActivity();
+                }
+            });
+        }
+
+        function handleSessionExpired(message = 'Your session has expired due to inactivity.') {
+            Swal.fire({
+                title: 'Session Expired',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'Login Again',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+            }).then(() => {
+                window.location.href = '{{ route("login") }}';
+            });
+        }
+
+        function updateActivity() {
+            // Send a heartbeat to the server to refresh session
+            $.ajax({
+                url: '{{ route("home") }}',
+                type: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function() {
+                    // Session refreshed successfully
+                    lastActivity = Date.now();
+                    warningShown = false;
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        handleSessionExpired();
+                    }
+                }
+            });
+        }
+    </script>
+    @endauth
 
     @stack('script')
 

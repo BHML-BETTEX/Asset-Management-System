@@ -1025,31 +1025,11 @@
                                             <i class="fa fa-qrcode"></i>
                                         </a>
 
-                                        <button class="btn btn-outline-secondary btn-sm clone-btn"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#cloneModal"
-                                            data-id="{{ $store->id }}"
-                                            data-asset-tag="{{ e($store->products_id ?? '') }}"
-                                            data-product-type-id="{{ e($store->rel_to_ProductType->id ?? '') }}"
-                                            data-model="{{ e($store->model ?? '') }}"
-                                            data-brand-id="{{ e($store->rel_to_brand->id ?? '') }}"
-                                            data-description="{{ e($store->description ?? '') }}"
-                                            data-asset-sl-no="{{ e($store->asset_sl_no ?? '') }}"
-                                            data-qty="{{ e($store->qty ?? '1') }}"
-                                            data-units-id="{{ e($store->rel_to_SizeMaseurment->id ?? '') }}"
-                                            data-warranty="{{ e($store->warrenty ?? '') }}"
-                                            data-durability="{{ e($store->durablity ?? '') }}"
-                                            data-cost="{{ e($store->cost ?? '') }}"
-                                            data-currency="{{ e($store->currency ?? 'USD') }}"
-                                            data-vendor-id="{{ e($store->rel_to_Supplier->id ?? '') }}"
-                                            data-purchase-date="{{ $store->purchase_date ? \Carbon\Carbon::parse($store->purchase_date)->format('Y-m-d') : '' }}"
-                                            data-challan-no="{{ e($store->challan_no ?? '') }}"
-                                            data-status-id="{{ e($store->rel_to_Status->id ?? '') }}"
-                                            data-company-id="{{ e($store->rel_to_Company->id ?? '') }}"
-                                            data-others="{{ e($store->others ?? '') }}"
-                                            title="Clone Asset">
+                                        <a href="{{ route('store.clone', $store->id) }}"
+                                           class="btn btn-outline-secondary btn-sm"
+                                           title="Clone Asset">
                                             <i class="fa fa-copy"></i>
-                                        </button>
+                                        </a>
                                     </td>
 
                                     <td data-column="checkstatus" style="background-color: #feefe6;">
@@ -1264,195 +1244,8 @@
     </div>
 </div>
 
-<!-- Clone Modal -->
-<div class="modal fade" id="cloneModal" tabindex="-1" aria-labelledby="cloneModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
-                <h5 class="modal-title text-white" id="cloneModalLabel">
-                    <i class="fa fa-copy me-2"></i> Clone Asset
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info">
-                    <i class="fa fa-info-circle me-2"></i>
-                    <strong>Clone Asset:</strong> This will create a new asset with the same details. You can modify any field before saving.
-                </div>
 
-                <form action="{{ route('store.store') }}" method="POST" enctype="multipart/form-data" id="cloneForm">
-                    @csrf
-                    <div class="row g-3">
-                        <!-- Asset Tag -->
-                        <div class="col-md-4">
-                            <label class="form-label">Asset Tag <span class="text-danger">*</span></label>
-                            <input type="text" id="clone_asset_tag" class="form-control" name="products_id" required>
-                            <small class="text-muted">Must be unique</small>
-                        </div>
-
-                        <!-- Asset Type -->
-                        <div class="col-md-4">
-                            <label class="form-label">Asset Type <span class="text-danger">*</span></label>
-                            <select id="clone_product_type" class="form-control" name="product_type_id" required>
-                                <option value="">Select Asset Type</option>
-                                @foreach ($all_product_types as $product_type)
-                                <option value="{{ $product_type->id }}">{{ $product_type->product }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Model -->
-                        <div class="col-md-4">
-                            <label class="form-label">Model</label>
-                            <input type="text" id="clone_model" class="form-control" name="model">
-                        </div>
-
-                        <!-- Brand -->
-                        <div class="col-md-4">
-                            <label class="form-label">Brand</label>
-                            <select id="clone_brand" class="form-control" name="brand_id">
-                                <option value="">Select Brand</option>
-                                @if(isset($all_brands))
-                                @foreach ($all_brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Serial Number -->
-                        <div class="col-md-4">
-                            <label class="form-label">Serial Number</label>
-                            <input type="text" id="clone_serial" class="form-control" name="asset_sl_no">
-                        </div>
-
-                        <!-- Quantity -->
-                        <div class="col-md-4">
-                            <label class="form-label">Quantity</label>
-                            <input type="number" id="clone_qty" class="form-control" name="qty" min="1" value="1">
-                        </div>
-
-                        <!-- Units -->
-                        <div class="col-md-4">
-                            <label class="form-label">Units</label>
-                            <select id="clone_units" class="form-control" name="units">
-                                <option value="">Select Units</option>
-                                @if(isset($all_SizeMaseurment))
-                                @foreach ($all_SizeMaseurment as $unit)
-                                <option value="{{ $unit->id }}">{{ $unit->size }}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Warranty -->
-                        <div class="col-md-4">
-                            <label class="form-label">Warranty Period</label>
-                            <input type="text" id="clone_warranty" class="form-control" name="warrenty" placeholder="e.g., 2 years">
-                        </div>
-
-                        <!-- Durability -->
-                        <div class="col-md-4">
-                            <label class="form-label">Durability</label>
-                            <input type="text" id="clone_durability" class="form-control" name="durablity" placeholder="e.g., 5 years">
-                        </div>
-
-                        <!-- Cost -->
-                        <div class="col-md-4">
-                            <label class="form-label">Cost</label>
-                            <div class="input-group">
-                                <select id="clone_currency" class="form-control" name="currency" style="max-width: 80px;">
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="BDT">BDT</option>
-                                    <option value="GBP">GBP</option>
-                                </select>
-                                <input type="number" id="clone_cost" class="form-control" name="cost" step="0.01" min="0">
-                            </div>
-                        </div>
-
-                        <!-- Vendor -->
-                        <div class="col-md-4">
-                            <label class="form-label">Vendor/Supplier</label>
-                            <select id="clone_vendor" class="form-control" name="supplier_id">
-                                <option value="">Select Vendor</option>
-                                @if(isset($all_supplier))
-                                @foreach ($all_supplier as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Purchase Date -->
-                        <div class="col-md-4">
-                            <label class="form-label">Purchase Date</label>
-                            <input type="date" id="clone_purchase_date" class="form-control" name="purchase_date">
-                        </div>
-
-                        <!-- Challan Number -->
-                        <div class="col-md-4">
-                            <label class="form-label">Challan Number</label>
-                            <input type="text" id="clone_challan" class="form-control" name="challan_no">
-                        </div>
-
-                        <!-- Status -->
-                        <div class="col-md-4">
-                            <label class="form-label">Status</label>
-                            <select id="clone_status" class="form-control" name="status_id">
-                                <option value="">Select Status</option>
-                                @if(isset($all_status))
-                                @foreach ($all_status as $status)
-                                <option value="{{ $status->id }}">{{ $status->status_name }}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Company -->
-                        <div class="col-md-4">
-                            <label class="form-label">Company <span class="text-danger">*</span></label>
-                            <select id="clone_company" class="form-control" name="company_id" required>
-                                <option value="">Select Company</option>
-                                @if(isset($all_company))
-                                @foreach ($all_company as $company)
-                                <option value="{{ $company->id }}">{{ $company->company }}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="col-md-12">
-                            <label class="form-label">Description</label>
-                            <textarea id="clone_description" class="form-control" name="description" rows="3"></textarea>
-                        </div>
-
-                        <!-- Others -->
-                        <div class="col-md-12">
-                            <label class="form-label">Additional Notes</label>
-                            <textarea id="clone_others" class="form-control" name="others" rows="2"></textarea>
-                        </div>
-
-                        <!-- Picture Upload -->
-                        <div class="col-md-12">
-                            <label class="form-label">Asset Picture</label>
-                            <input type="file" class="form-control" name="picture" accept="image/*">
-                            <small class="text-muted">Upload a new picture for the cloned asset (optional)</small>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer border-0 pt-4">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">
-                            <i class="fa fa-copy me-2"></i> Clone Asset
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Clone Modal removed - now using direct link to edit page -->
 
 <!-- Depreciation Calculator Modal -->
 <div class="modal fade" id="depreciationModal" tabindex="-1" aria-labelledby="depreciationModalLabel" aria-hidden="true">
@@ -1859,6 +1652,7 @@
             console.log('All data attributes:', btn.dataset);
 
             // Get data attributes using getAttribute (most reliable method)
+            const originalId = btn.getAttribute('data-id') || '';
             const originalTag = btn.getAttribute('data-asset-tag') || '';
             const productTypeId = btn.getAttribute('data-product-type-id') || '';
             const model = btn.getAttribute('data-model') || '';
@@ -1888,6 +1682,9 @@
 
             // Populate form fields immediately (no delay)
             console.log('Populating form fields...');
+
+            // Set original asset ID for cloning
+            $('#clone_original_id').val(originalId);
 
             // Basic text inputs
             $('#clone_asset_tag').val(newTag);

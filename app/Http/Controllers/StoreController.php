@@ -889,4 +889,68 @@ class StoreController extends Controller
 
         return view('admin.store.store_info', compact('stores', 'issues'));
     }
+
+    //store Clone - Show edit page with cloned data
+    function store_clone($stores_id)
+    {
+        $originalAsset = Store::findOrFail($stores_id);
+
+        // Get all the necessary data for the edit form
+        $all_product_types = ProductType::all();
+        $all_brands = Brand::all();
+        $all_supplier = Supplier::all();
+        $all_company = Company::all();
+        $all_status = Status::all();
+        $all_departments = Department::all();
+        $all_SizeMaseurment = SizeMaseurment::all();
+
+        return view('admin.store.store_edit', [
+            'all_store' => $originalAsset,
+            'all_product_types' => $all_product_types,
+            'all_brands' => $all_brands,
+            'all_supplier' => $all_supplier,
+            'all_company' => $all_company,
+            'all_status' => $all_status,
+            'all_departments' => $all_departments,
+            'all_SizeMaseurment' => $all_SizeMaseurment,
+            'is_clone' => true // Flag to indicate this is a clone operation
+        ]);
+    }
+
+    //store Clone Save - Actually create the new asset
+    function store_clone_save(Request $request)
+    {
+        $newAssetId = Store::insertGetId([
+            'products_id' => $request->products_id,
+            'asset_type' => $request->asset_type,
+            'model' => $request->model,
+            'brand' => $request->brand,
+            'description' => $request->description,
+            'asset_sl_no' => $request->asset_sl_no,
+            'qty' => $request->qty,
+            'units' => $request->units,
+            'warrenty' => $request->warrenty,
+            'durablity' => $request->durablity,
+            'cost' => $request->cost,
+            'currency' => $request->currency,
+            'vendor' => $request->vendor,
+            'purchase_date' => $request->purchase_date,
+            'challan_no' => $request->challan_no,
+            'status' => $request->status,
+            'location' => $request->location,
+            'company' => $request->company,
+            'others' => $request->others,
+            'checkstatus' => $request->checkstatus,
+            'others2' => $request->others2,
+            'created_at' => Carbon::now(),
+        ]);
+
+        if ($request->file('picture')) {
+            $imageName = $newAssetId . '.' . $request->picture->extension();
+            $request->picture->move(public_path('uploads/store/'), $imageName);
+            Store::find($newAssetId)->update(['picture' => $imageName]);
+        }
+
+        return redirect()->route('store')->with('success', 'Asset cloned and saved successfully!');
+    }
 }

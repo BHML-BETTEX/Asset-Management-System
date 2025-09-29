@@ -5,10 +5,10 @@
         <div class="col-lg-8 m-auto">
             <div class="card">
                 <div class="card-header">
-                    <h3>Edit Products</h3>
+                    <h3>{{ isset($is_clone) && $is_clone ? 'Clone Asset' : 'Edit Products' }}</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('store.update') }}" Method="POST" enctype="multipart/form-data">
+                    <form action="{{ isset($is_clone) && $is_clone ? route('store.clone.save') : route('store.update') }}" Method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="controls">
                             <!-- Asset Type & brand start -->
@@ -19,7 +19,9 @@
 
                                             </span>
                                         </label>
+                                        @if(!isset($is_clone) || !$is_clone)
                                         <input type="hidden" value="{{ $all_store->id }}" name="stores_id">
+                                        @endif
                                         <select id="form_need" name="asset_type" class="form-control" required="required"
                                             data-error="Please specify your need.">
                                             @foreach ($all_product_types as $all_product_types)
