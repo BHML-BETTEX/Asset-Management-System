@@ -442,7 +442,6 @@
             </h6>
         </div>
         <div class="card-body">
-
             <div class="d-flex align-items-center gap-3">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"

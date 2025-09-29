@@ -348,8 +348,9 @@ class EmployeeController extends Controller
         $departments = Department::all();
         $designation = Designation::all();
         $companies = Company::all();
+        $totalIssues = Issue::where('emp_id', $employee->emp_id)->count();
 
-        return view('admin.employee.employee_info', compact('employee', 'departments', 'designation', 'companies'));
+        return view('admin.employee.employee_info', compact('employee', 'departments', 'designation', 'companies', 'totalIssues'));
     }
 
 

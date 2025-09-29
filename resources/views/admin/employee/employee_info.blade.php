@@ -509,7 +509,7 @@
                     <div class="row text-center">
                         <div class="col-6">
                             <div class="border-end">
-                                <h4 class="text-primary mb-0">0</h4>
+                                <h4 class="text-primary mb-0">{{ $totalIssues }}</h4>
                                 <small class="text-muted">Assets</small>
                             </div>
                         </div>

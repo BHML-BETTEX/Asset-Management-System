@@ -130,6 +130,7 @@ Route::get('/company/search_by_id/{company_id}', [CategoryController::class, 'se
 Route::get('/store', [StoreController::class, 'store'])->name('store');
 Route::get('/store/product', [StoreController::class, 'add_product'])->name('add_product');
 Route::post('/store/store', [StoreController::class, 'store_store'])->name('store.store');
+Route::post('/store/clone', [StoreController::class, 'store_clone'])->name('store.clone');
 Route::get('/store/delete/{stores_id}', [StoreController::class, 'store_delete'])->name('store.delete');
 Route::get('/store/edit/{stores_id}', [StoreController::class, 'store_edit'])->name('store.edit');
 Route::post('/store/update', [StoreController::class, 'store_update'])->name('store.update');
