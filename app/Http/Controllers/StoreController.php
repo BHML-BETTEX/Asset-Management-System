@@ -517,15 +517,13 @@ class StoreController extends Controller
         $issue_info = $perPage === 'all'
             ? $query->get()
             : $query->paginate((int)$perPage)->appends($request->all());
-
-        $stores = Store::all();
+            
 
         return view('admin.store.history', [
             'issue_info' => $issue_info,
             'search' => $search,
             'perPage' => $perPage,
-            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge\
-            'stores'=> $stores,
+            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge
         ]);
     }
 
