@@ -406,7 +406,6 @@ class DatabaseBackupController extends Controller
                 return $path;
             }
         }
-
         // Try system PATH
         if ($this->isExecutableValid('mysqldump')) {
             return 'mysqldump';
@@ -516,7 +515,7 @@ class DatabaseBackupController extends Controller
         if (PHP_OS_FAMILY === 'Windows') {
             return [
                 'XAMPP' => 'C:\xampp\mysql\bin\mysqldump.exe',
-                'Laragon' => 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqldump.exe',
+                'Laragon' => 'C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqldump.exe',
                 'WAMP' => 'C:\wamp64\bin\mysql\mysql8.0.31\bin\mysqldump.exe',
             ];
         } else {

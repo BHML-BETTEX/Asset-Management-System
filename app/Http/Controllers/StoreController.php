@@ -486,6 +486,7 @@ class StoreController extends Controller
     //History
     public function history(Request $request, $asset_tag = null)
     {
+
         $companies = [];
         $role = auth()->user()->roles[0];
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
@@ -517,11 +518,14 @@ class StoreController extends Controller
             ? $query->get()
             : $query->paginate((int)$perPage)->appends($request->all());
 
+        $stores = Store::all();
+
         return view('admin.store.history', [
             'issue_info' => $issue_info,
             'search' => $search,
             'perPage' => $perPage,
-            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge
+            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge\
+            'stores'=> $stores,
         ]);
     }
 
@@ -570,14 +574,14 @@ class StoreController extends Controller
 
         // Search filter
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'LIKE', "%$search%")
-                  ->orWhere('asset_type', 'LIKE', "%$search%")
-                  ->orWhere('model', 'LIKE', "%$search%")
-                  ->orWhere('company', 'LIKE', "%$search%")
-                  ->orWhere('oldcompany', 'LIKE', "%$search%")
-                  ->orWhere('description', 'LIKE', "%$search%")
-                  ->orWhere('note', 'LIKE', "%$search%");
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('model', 'LIKE', "%$search%")
+                    ->orWhere('company', 'LIKE', "%$search%")
+                    ->orWhere('oldcompany', 'LIKE', "%$search%")
+                    ->orWhere('description', 'LIKE', "%$search%")
+                    ->orWhere('note', 'LIKE', "%$search%");
             });
         }
 
@@ -625,8 +629,8 @@ class StoreController extends Controller
             'active' => Transfer::whereNull('return_date')->count(),
             'returned' => Transfer::whereNotNull('return_date')->count(),
             'this_month' => Transfer::whereMonth('transfer_date', now()->month)
-                                  ->whereYear('transfer_date', now()->year)
-                                  ->count(),
+                ->whereYear('transfer_date', now()->year)
+                ->count(),
         ];
 
         return view('admin.store.transfer.transfer_list', [
@@ -752,19 +756,42 @@ class StoreController extends Controller
         return redirect()->route('maintenance_list');
     }
 
-    function maintenance_list(Request $request)
+    public function maintenance_list(Request $request, $store_id = null)
     {
-        $search = $request['search'] ?? "";
-        if ($search != "") {
-            $maintenance_data = Maintenance::where('asset_tag', 'LIKE', "%$search")->orwhere('asset_type', 'LIKE', "%$search")->orwhere('vendor', 'LIKE', "%$search")->orwhere('others', 'LIKE', "%$search")->paginate(13);
-        } else {
-            $maintenance_data = Maintenance::paginate(13);
+        $search = $request->input('search', "");
+
+        $query = Maintenance::query();
+
+        if ($store_id) {
+            $store = Store::findOrFail($store_id);
+
+            // ✅ Use products_id because that's your asset identifier
+            $assetTag = $store->products_id;
+
+            $query->where('asset_tag', $assetTag);
         }
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('asset_tag', 'LIKE', "%{$search}%")
+                    ->orWhere('asset_type', 'LIKE', "%{$search}%")
+                    ->orWhere('vendor', 'LIKE', "%{$search}%")
+                    ->orWhere('others', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $maintenance_data = $query->paginate(13);
+
         return view('admin.store.maintenance.maintenance_list', [
             'maintenance_data' => $maintenance_data,
             'search' => $search,
+            'store' => $store ?? null,
         ]);
     }
+
+
+
+
 
 
     function maintenance_search_id($store_id)
@@ -886,14 +913,14 @@ class StoreController extends Controller
         $query = WastProduct::query();
 
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'LIKE', "%$search%")
-                  ->orWhere('asset_type', 'LIKE', "%$search%")
-                  ->orWhere('model', 'LIKE', "%$search%")
-                  ->orWhere('description', 'LIKE', "%$search%")
-                  ->orWhere('asset_sl_no', 'LIKE', "%$search%")
-                  ->orWhere('others', 'LIKE', "%$search%")
-                  ->orWhere('note', 'LIKE', "%$search%");
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('model', 'LIKE', "%$search%")
+                    ->orWhere('description', 'LIKE', "%$search%")
+                    ->orWhere('asset_sl_no', 'LIKE', "%$search%")
+                    ->orWhere('others', 'LIKE', "%$search%")
+                    ->orWhere('note', 'LIKE', "%$search%");
             });
         }
 
@@ -931,8 +958,8 @@ class StoreController extends Controller
         $statistics = [
             'total' => WastProduct::count(),
             'this_month' => WastProduct::whereMonth('date', now()->month)
-                                      ->whereYear('date', now()->year)
-                                      ->count(),
+                ->whereYear('date', now()->year)
+                ->count(),
             'this_year' => WastProduct::whereYear('date', now()->year)->count(),
             'total_value' => 0
         ];
@@ -1016,8 +1043,9 @@ class StoreController extends Controller
         $stores = Store::with(['rel_to_ProductType', 'rel_to_brand', 'rel_to_SizeMaseurment', 'rel_to_Supplier', 'rel_to_Status', 'rel_to_Company', 'rel_to_Department', 'rel_to_Designation'])->findOrFail($stores_id);
 
         $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
+        $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
 
-        return view('admin.store.store_info', compact('stores', 'issues'));
+        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances'));
     }
 
     //store Clone - Show edit page with cloned data

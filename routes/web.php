@@ -185,7 +185,7 @@ Route::post('/transfer/return/update', [StoreController::class, 'transfer_return
 //Maintenance start
 Route::get('/store/maintenance', [StoreController::class, 'maintenance'])->name('maintenance');
 Route::post('/maintenance/store', [StoreController::class, 'maintenance_store'])->name('maintenance_store');
-Route::get('/maintenance/list', [StoreController::class, 'maintenance_list'])->name('maintenance_list');
+Route::get('/maintenance/list/{store_id?}', [StoreController::class, 'maintenance_list'])->name('maintenance_list');
 Route::get('/maintenance/return', [StoreController::class, 'maintenance_return'])->name('maintenance_return');
 Route::post('/maintenance/return/update', [StoreController::class, 'ma_return_update'])->name('ma_return_update');
 Route::get('/maintenance/maintenance_search_id/{store_id}', [StoreController::class, 'maintenance_search_id'])->name('maintenance_search_id');

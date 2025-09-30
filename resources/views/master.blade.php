@@ -69,7 +69,6 @@
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('home') }}"><i class="fa fa-home"></i>Dashboard</a></li>
                                 <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>Assets</a></li>
-                                <li><a href="{{ route('history') }}"><i class="fa fa-newspaper-o"></i>History</a></li>
                                 <li><a href="{{ route('transfer_list') }}"><i class="fa fa-send"></i>Transfer List</a>
                                 </li>
                                 <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
@@ -153,7 +152,7 @@
 
             <!-- top navigation -->
             <div class="top_nav ">
-                <div class="nav_menu ">
+                <div class="nav_menu">
                     <div class="nav toggle">
                         <a id="menu_toggle"><i class="fa fa-bars"></i></a>
                     </div>

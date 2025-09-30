@@ -14,7 +14,7 @@ return [
     | - Linux/Mac: /usr/bin/mysqldump or /usr/local/bin/mysqldump
     |
     */
-    'mysqldump_path' => env('MYSQLDUMP_PATH', ''),
+    'mysqldump_path' => env('MYSQLDUMP_PATH', 'C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqldump.exe'),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,6 +27,7 @@ return [
     'common_paths' => [
         // Windows paths
         'C:\xampp\mysql\bin\mysqldump.exe',
+        'C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqldump.exe',
         'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqldump.exe',
         'C:\laragon\bin\mysql\mysql-8.0.35-winx64\bin\mysqldump.exe',
         'C:\laragon\bin\mysql\mysql-5.7.33-winx64\bin\mysqldump.exe',

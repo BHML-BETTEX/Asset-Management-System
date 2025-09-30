@@ -813,14 +813,13 @@
 
 <div class="container">
     <!-- Page Header -->
-    <div class="card mb-4" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+    <div class="card mb-2" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
             <h6 class="mb-0 text-dark">
                 <span class="">Asset List</span>
             </h6>
         </div>
         <div class="card-body">
-
             <div class="d-flex align-items-center gap-3">
                 <div class="btn-group" role="group">
                     <a href="{{ route('add_product') }}" class="action-btn btn-add">
