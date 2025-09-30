@@ -486,7 +486,6 @@ class StoreController extends Controller
     //History
     public function history(Request $request, $asset_tag = null)
     {
-
         $companies = [];
         $role = auth()->user()->roles[0];
         $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
@@ -494,16 +493,38 @@ class StoreController extends Controller
         $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
         $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
 
-        $search = $request->input('search', '');
-        $perPage = $request->input('per_page', 10); // default is 10
+        $search  = $request->input('search', '');
+        $perPage = $request->input('per_page', 10);
 
+        // start query
         $query = Issue::whereIn('others', $companies);
 
-        // ✅ Filter by asset_tag if passed from store_info page
+        $stores = null;
+
+        // ✅ If asset_tag is provided
         if ($asset_tag) {
             $query->where('asset_tag', $asset_tag);
+
+            // find first issue with this asset_tag
+            $issue = Issue::where('asset_tag', $asset_tag)->first();
+
+            if ($issue && isset($issue->store_id)) {
+                // find related store by id
+                $stores = Store::with([
+                    'rel_to_ProductType',
+                    'rel_to_brand',
+                    'rel_to_SizeMaseurment',
+                    'rel_to_Supplier',
+                    'rel_to_Status',
+                    'rel_to_Company',
+                    'rel_to_Department',
+                    'rel_to_Designation'
+                ])->find($issue->store_id);
+            }
         }
 
+
+        // ✅ Search filter
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'LIKE', "%$search%")
@@ -514,18 +535,21 @@ class StoreController extends Controller
             });
         }
 
+        // ✅ Pagination
         $issue_info = $perPage === 'all'
             ? $query->get()
             : $query->paginate((int)$perPage)->appends($request->all());
-            
 
         return view('admin.store.history', [
             'issue_info' => $issue_info,
-            'search' => $search,
-            'perPage' => $perPage,
-            'asset_tag' => $asset_tag, // so blade can show a heading/filter badge
+            'search'     => $search,
+            'perPage'    => $perPage,
+            'asset_tag'  => $asset_tag,
+            'stores'     => $stores, // now a single store model (or null)
         ]);
     }
+
+
 
 
     //Transfer Start
