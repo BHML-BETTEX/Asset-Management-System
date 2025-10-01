@@ -26,6 +26,7 @@ use App\Models\Transfer;
 use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
+use App\Models\SizeMeasurement;
 use App\Exports\WastProductExport;
 use App\Imports\StoreImport;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -38,18 +39,22 @@ class StoreController extends Controller
 
         $search = $request->input('search', '');
         $productSearch = $request->input('product_search');
-        $perPage = $request->input('per_page', 10); // Default to 10 per page
+        $perPage = $request->input('per_page', 10); // Default 10 per page
 
+        // Determine which companies the user can view
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
         if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
         if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
         if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-        $query = Store::join('brands', 'brands.id', '=', 'stores.brand')
+        // Base query with joins
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
             ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-            ->whereIn('stores.company', $companies);
+            ->whereIn('stores.company_id', $companies);
 
+        // Apply search filters
         if ($search || $productSearch) {
             $query->where(function ($q) use ($search, $productSearch) {
                 if ($productSearch) {
@@ -58,10 +63,10 @@ class StoreController extends Controller
 
                 if ($search) {
                     $q->where(function ($sq) use ($search) {
-                        $sq->where('stores.products_id', 'LIKE', "%{$search}%")
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")  // products_id → asset_tag
                             ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
                             ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.company', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.company_id', 'LIKE', "%{$search}%") // or join company table if needed
                             ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
                             ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
                             ->orWhere('product_types.product', 'LIKE', "%{$search}%");
@@ -70,6 +75,7 @@ class StoreController extends Controller
             });
         }
 
+        // Get results
         if ($perPage === 'all') {
             $stores = $query->select('stores.*')->get();
         } else {
@@ -86,7 +92,7 @@ class StoreController extends Controller
             'all_product_types' => ProductType::all(),
             'all_departments' => Department::all(),
             'all_brands' => Brand::all(),
-            'all_SizeMaseurment' => SizeMaseurment::all(),
+            'all_SizeMeasurement' => SizeMaseurment::all(),
             'all_status' => Status::all(),
             'all_supplier' => Supplier::all(),
             'all_company' => Company::all(),
@@ -94,6 +100,7 @@ class StoreController extends Controller
             'all_issue' => Issue::all(),
         ]);
     }
+
 
     function add_product()
     {
@@ -118,14 +125,14 @@ class StoreController extends Controller
     function store_store(Request $request)
     {
         $picture_id = Store::insertGetId([
-            'products_id' => $request->products_id,
+            'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
             'model' => $request->model,
-            'brand' => $request->brand,
+            'brand_id' => $request->brand_id,
             'description' => $request->description,
             'asset_sl_no' => $request->asset_sl_no,
             'qty' => $request->qty,
-            'units' => $request->units,
+            'units_id' => $request->units_id,
             'warrenty' => $request->warrenty,
             'durablity' => $request->durablity,
             'cost' => $request->cost,
@@ -133,16 +140,14 @@ class StoreController extends Controller
             'vendor' => $request->vendor,
             'purchase_date' => $request->purchase_date,
             'challan_no' => $request->challan_no,
-            'status' => $request->status,
-            'location' => $request->location,
-            'company' => $request->company,
+            'status_id' => $request->status_id,
+            'location' => $request->department_id,
+            'company_id' => $request->company_id,
             'others' => $request->others,
             'checkstatus' => $request->checkstatus,
             'others2' => $request->others2,
             'created_at' => Carbon::now(),
-
         ]);
-
         if ($request->file('picture')) {
             $imageName = $picture_id . '.' . $request->picture->extension();
             $request->picture->move(public_path('uploads/store/'), $imageName);
@@ -192,14 +197,14 @@ class StoreController extends Controller
     {
         if ($request->picture == '') {
             Store::find($request->stores_id)->update([
-                'products_id' => $request->products_id,
+                'asset_tag' => $request->asset_tag,
                 'asset_type' => $request->asset_type,
                 'model' => $request->model,
-                'brand' => $request->brand,
+                'brand_id' => $request->brand_id,
                 'description' => $request->description,
                 'asset_sl_no' => $request->asset_sl_no,
                 'qty' => $request->qty,
-                'units' => $request->units,
+                'units_id' => $request->units_id,
                 'warrenty' => $request->warrenty,
                 'durablity' => $request->durablity,
                 'cost' => $request->cost,
@@ -207,12 +212,11 @@ class StoreController extends Controller
                 'vendor' => $request->vendor,
                 'purchase_date' => $request->purchase_date,
                 'challan_no' => $request->challan_no,
-                'status' => $request->status,
+                'status_id' => $request->status_id,
                 'location' => $request->location,
-                'company' => $request->company,
+                'company_id' => $request->company_id,
                 'others' => $request->others,
                 'others2' => $request->others2,
-
             ]);
             return back();
         } else {
@@ -296,13 +300,12 @@ class StoreController extends Controller
     {
         $issued_products = Store::find($store_id);
         $issued_products_data = [
-            'products_id' => $issued_products->products_id,
+            'asset_tag' => $issued_products->asset_tag,
             'asset_type' => $issued_products->rel_to_ProductType->product,
             'model' => $issued_products->model,
             'purchase_date' => $issued_products->purchase_date,
             'asset_sl_no' => $issued_products->asset_sl_no,
-            'company' => $issued_products->rel_to_Company->company,
-
+            'others' => $issued_products->others, // using `others` instead of company_id
         ];
         $issued_products = Store::find($store_id);
         return response()->json(['data' => $issued_products_data]);
@@ -397,25 +400,30 @@ class StoreController extends Controller
             'issue_info' => $issue_info,
         ]);
     }
-
-    function return_update(Request $request)
+    public function return_update(Request $request)
     {
+        // 1. Update issues table using issue ID
         DB::table("issues")
-            ->where(['asset_tag' => $request->asset_tag])
+            ->where('asset_tag', $request->asset_tag)  // safer than asset_tag
             ->update(['return_date' => $request->return_date]);
 
-        return redirect()->back()->with('return_success', 'Product return success...!');
+        // 2. Reset asset status in stores
+        DB::table("stores")
+            ->where('id', $request->store_id)
+            ->update(['checkstatus' => 'INSTOCK']);
+
+        return redirect()->back()->with('return_success', 'Product return successful!');
     }
 
-
-    //return end.
-
-    //autofill start...
-    function return_search_by_id($store_id)
+    // Autofill return modal
+    public function return_search_by_id($issue_id)
     {
-        $return_products = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date')->where('id', $store_id)->first();
+        $return_product = DB::table('issues')
+            ->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date')
+            ->where('id', $issue_id)   // must be issue id
+            ->first();
 
-        return response()->json(['data' => $return_products]);
+        return response()->json(['data' => $return_product]);
     }
 
     function history_export(Request $request)
@@ -748,13 +756,13 @@ class StoreController extends Controller
 
 
     //maintenance start...
-
-    function maintenance()
+    public function maintenance($store_id = null)
     {
-        $issued_products = Store::all();
-        return view('admin.store.maintenance.maintenance', [
-            'issued_products' => $issued_products,
-        ]);
+        if ($store_id) {
+            echo $store_id;
+        } else {
+            echo "No store selected";
+        }
     }
 
     function maintenance_store(Request $request)
@@ -810,8 +818,6 @@ class StoreController extends Controller
             'store' => $store ?? null,
         ]);
     }
-
-
 
 
 
@@ -1101,14 +1107,14 @@ class StoreController extends Controller
     function store_clone_save(Request $request)
     {
         $newAssetId = Store::insertGetId([
-            'products_id' => $request->products_id,
+            'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
             'model' => $request->model,
-            'brand' => $request->brand,
+            'brand_id' => $request->brand_id,
             'description' => $request->description,
             'asset_sl_no' => $request->asset_sl_no,
             'qty' => $request->qty,
-            'units' => $request->units,
+            'units_id' => $request->units_id,
             'warrenty' => $request->warrenty,
             'durablity' => $request->durablity,
             'cost' => $request->cost,
@@ -1116,9 +1122,9 @@ class StoreController extends Controller
             'vendor' => $request->vendor,
             'purchase_date' => $request->purchase_date,
             'challan_no' => $request->challan_no,
-            'status' => $request->status,
+            'status_id' => $request->status_id,
             'location' => $request->location,
-            'company' => $request->company,
+            'company_id' => $request->company_id,
             'others' => $request->others,
             'checkstatus' => $request->checkstatus,
             'others2' => $request->others2,

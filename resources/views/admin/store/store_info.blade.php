@@ -13,7 +13,7 @@
             </li>
             <li class="nav-item">
 
-                <a class="nav-link" href="{{ route('history', $stores->products_id) }}">History</a>
+                <a class="nav-link" href="{{ route('history', $stores->asset_tag) }}">History</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('maintenance_list', $stores->id) }}">Maintenance</a>
@@ -21,7 +21,6 @@
             <li class="nav-item">
                 <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab">Files</a>
             </li>
-
             <!-- Uploads tab -->
             <li class="nav-item">
                 <a class="nav-link" id="uploads-tab" href="#history" role="tab" data-toggle="modal" data-target="#uploadsModal">
@@ -99,13 +98,13 @@
                 <div class="tab-pane fade show active" id="info" role="tabpanel">
                     <div class="card shadow-sm">
                         <div class="card-header">
-                            <h5 class="mb-0">{{ $stores->products_id }}/{{ $stores->model }}/Profile</h5>
+                            <h5 class="mb-0">{{ $stores->asset_tag }}/{{ $stores->model }}/Profile</h5>
                         </div>
                         <div class="card-body">
                             <table class="table table-striped">
                                 <tr>
                                     <th>Asset Tag</th>
-                                    <td class="text-success"><B>{{ $stores->products_id }}</B></td>
+                                    <td class="text-success"><B>{{ $stores->asset_tag }}</B></td>
                                 </tr>
                                 <tr>
                                     <th>Asset Type</th>

@@ -42,7 +42,7 @@ class HomeController extends Controller
         foreach ($product_summary_bt as $product_summary) {
             //dd($product_summary->asset_type);
             $product_type = ProductType::find($product_summary->asset_type);
-            $units = SizeMaseurment::find($product_summary->units);
+            $units = SizeMaseurment::find($product_summary->units_id);
             //dd($units );
 
             $product_summary->asset_type = $product_type;
@@ -51,7 +51,7 @@ class HomeController extends Controller
 
         foreach ($product_summary_bhml as $product_summary) {
             $product_type = ProductType::find($product_summary->asset_type);
-            $units = SizeMaseurment::find($product_summary->units);
+            $units = SizeMaseurment::find($product_summary->units_id);
 
             $product_summary->asset_type = $product_type;
             $product_summary->units = $units;
@@ -59,7 +59,7 @@ class HomeController extends Controller
 
         foreach ($product_summary_bp as $product_summary) {
             $product_type = ProductType::find($product_summary->asset_type);
-            $units = SizeMaseurment::find($product_summary->units);
+            $units = SizeMaseurment::find($product_summary->units_id);
 
             $product_summary->asset_type = $product_type;
             $product_summary->units = $units;
@@ -67,7 +67,7 @@ class HomeController extends Controller
 
         foreach ($product_summary_bt_ind as $product_summary) {
             $product_type = ProductType::find($product_summary->asset_type);
-            $units = SizeMaseurment::find($product_summary->units);
+            $units = SizeMaseurment::find($product_summary->units_id);
 
             $product_summary->asset_type = $product_type;
             $product_summary->units = $units;

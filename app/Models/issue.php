@@ -13,6 +13,6 @@ class issue extends Model
     }
 
     function rel_to_brand(){
-        return $this->belongsTo(Brand::class, 'brand');
+        return $this->belongsTo(Brand::class, 'brand_is');
     }
 }

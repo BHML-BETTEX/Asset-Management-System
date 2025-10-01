@@ -181,9 +181,8 @@ Route::post('/transfer/return/update', [StoreController::class, 'transfer_return
 
 //Transfer end
 
-
 //Maintenance start
-Route::get('/store/maintenance', [StoreController::class, 'maintenance'])->name('maintenance');
+Route::get('/store/maintenance/{store_id?}', [StoreController::class, 'maintenance'])->name('maintenance');
 Route::post('/maintenance/store', [StoreController::class, 'maintenance_store'])->name('maintenance_store');
 Route::get('/maintenance/list/{store_id?}', [StoreController::class, 'maintenance_list'])->name('maintenance_list');
 Route::get('/maintenance/return', [StoreController::class, 'maintenance_return'])->name('maintenance_return');
@@ -192,7 +191,6 @@ Route::get('/maintenance/maintenance_search_id/{store_id}', [StoreController::cl
 Route::get('/maintenance/export', [StoreController::class, 'maintenance_export'])->name('maintenance_export');
 Route::get('/maintenance/edit/{id}', [StoreController::class, 'maintenance_edit'])->name('maintenance_edit');
 Route::post('/maintenance/update', [StoreController::class, 'maintenance_update'])->name('maintenance_update');
-
 //Maintenance end
 
 //wastproduct start

@@ -443,7 +443,7 @@
     }
 
     .modal-header {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        background-color: #26B99A;
         color: white;
         border-radius: 15px 15px 0 0;
         border: none;
@@ -924,6 +924,9 @@
                 @if (session('delete_employee'))
                 <div class="alert alert-success">{{ session('delete_employee') }}</div>
                 @endif
+                @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
                         <table class="table">
@@ -942,20 +945,20 @@
                                     <th data-column="asset_tag" data-essential="true">ASSET TAG</th>
                                     <th data-column="asset_type" data-essential="true">ASSET TYPE</th>
                                     <th data-column="model">MODEL</th>
-                                    <th data-column="brand">BRAND</th>
+                                    <th data-column="brand_id">BRAND</th>
                                     <th data-column="description">DESCRIPTION</th>
                                     <th data-column="asset_sl_no">ASSET SL No</th>
                                     <th data-column="qty">QTY</th>
-                                    <th data-column="units">UNITS</th>
-                                    <th data-column="warranty">WARRENTY</th>
-                                    <th data-column="durability">DURABLITY</th>
+                                    <th data-column="units_id">UNITS</th>
+                                    <th data-column="warrenty">WARRENTY</th>
+                                    <th data-column="durablity">DURABLITY</th>
                                     <th data-column="cost">COST</th>
                                     <th data-column="currency">CURRENCY</th>
                                     <th data-column="vendor">VENDOR</th>
                                     <th data-column="purchase_date">PURCHASE DATE</th>
                                     <th data-column="challan_no">CHALLAN NO</th>
                                     <th data-column="status_name">STATUS NAME</th>
-                                    <th data-column="company">COMPANY</th>
+                                    <th data-column="company_id">COMPANY</th>
                                     <th data-column="others">OTHERS</th>
                                     <th data-column="balance">Balance</th>
                                     <th data-column="picture">PICTURE</th>
@@ -969,37 +972,38 @@
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input asset-checkbox"
                                                 data-asset-id="{{ $store->id }}"
-                                                data-asset-tag="{{ e($store->products_id) }}"
+                                                data-asset-tag="{{ e($store->asset_tag) }}"
                                                 data-asset-type="{{ e($store->rel_to_ProductType->product ?? 'N/A') }}"
                                                 data-model="{{ e($store->model ?? '') }}"
                                                 data-brand="{{ e($store->rel_to_brand->brand_name ?? 'N/A') }}"
-                                                data-company="{{ e($store->rel_to_Company->company ?? 'N/A') }}">
+                                                data-company="{{ e($store->others ?? $store->rel_to_Company->company ?? 'N/A') }}">
                                         </div>
                                     </td>
 
                                     <td></td>
                                     <td data-column="sl">{{ $key + 1 }}</td>
-
                                     <td data-column="status" id="action-btn-{{ $store->id }}">
                                         @if ($store->checkstatus === 'INSTOCK')
                                         <button class="btn btn-outline-success btn-sm issue-btn"
                                             data-bs-toggle="modal"
                                             data-bs-target="#issueModal"
                                             data-id="{{ $store->id }}"
-                                            data-asset-tag="{{ e($store->products_id) }}"
-                                            data-asset-type="{{ e($store->rel_to_ProductType->product ?? '') }}"
-                                            data-model="{{ e($store->model ?? '') }}"
-                                            data-company="{{ e($store->rel_to_Company->company ?? '') }}">
+                                            data-asset-tag="{{ $store->asset_tag }}"
+                                            data-asset-type="{{ $store->rel_to_ProductType->product }}"
+                                            data-model="{{ $store->model }}"
+                                            data-company="{{ $store->rel_to_Company->company ?? '' }}">
                                             INSTOCK
                                         </button>
                                         @else
                                         <button class="btn btn-outline-primary btn-sm return-btn"
                                             data-bs-toggle="modal"
                                             data-bs-target="#returnModal"
-                                            data-id="{{ $store->id }}"
-                                            data-asset-tag="{{ $store->products_id }}"
+                                            data-issue-id="{{ $store->rel_to_issue->id ?? '' }}" {{-- issue id --}}
+                                            data-store-id="{{ $store->id }}"
+                                            data-asset-tag="{{ $store->asset_tag }}"
                                             data-asset-type="{{ $store->rel_to_ProductType->product }}"
-                                            data-model="{{ $store->model }}">
+                                            data-model="{{ $store->model }}"
+                                            data-company="{{ $store->rel_to_Company->company ?? '' }}">
                                             ISSUED
                                         </button>
                                         @endif
@@ -1025,8 +1029,8 @@
                                         </a>
 
                                         <a href="{{ route('store.clone', $store->id) }}"
-                                           class="btn btn-outline-secondary btn-sm"
-                                           title="Clone Asset">
+                                            class="btn btn-outline-secondary btn-sm"
+                                            title="Clone Asset">
                                             <i class="fa fa-copy"></i>
                                         </a>
                                     </td>
@@ -1043,32 +1047,30 @@
 
                                     <td data-column="asset_tag">
                                         <a href="{{ route('store_info', $store->id) }}">
-                                            {{ $store->products_id }}
+                                            {{ $store->asset_tag }}
                                         </a>
                                     </td>
                                     <td data-column="asset_type">{{ $store->rel_to_ProductType->product ?? '' }}</td>
                                     <td data-column="model">{{ $store->model }}</td>
-                                    <td data-column="brand">{{ $store->rel_to_brand->brand_name }}</td>
+                                    <td data-column="brand">{{ $store->rel_to_brand->brand_name ?? 'N/A' }}</td>
                                     <td data-column="description">{{ $store->description }}</td>
                                     <td data-column="asset_sl_no">{{ $store->asset_sl_no }}</td>
                                     <td data-column="qty">{{ $store->qty }}</td>
-                                    <td data-column="units">{{ $store->rel_to_SizeMaseurment->size }}</td>
-                                    <td data-column="warranty">{{ $store->warrenty }}</td>
-                                    <td data-column="durability">{{ $store->durablity }}</td>
+                                    <td data-column="units_id">{{ $store->rel_to_SizeMaseurment->size}}</td>
+                                    <td data-column="warrenty">{{ $store->warrenty ?? '' }}</td>
+                                    <td data-column="durablity">{{ $store->durablity ?? '' }}</td>
                                     <td data-column="cost">{{ $store->cost }}</td>
                                     <td data-column="currency">{{ $store->currency }}</td>
-                                    <td data-column="vendor">{{ $store->rel_to_Supplier->supplier_name }}</td>
+                                    <td data-column="vendor">{{ $store->rel_to_Supplier->supplier_name ?? '' }}</td>
                                     <td data-column="purchase_date">{{ $store->purchase_date }}</td>
                                     <td data-column="challan_no">{{ $store->challan_no }}</td>
-                                    <td data-column="status_name">{{ $store->rel_to_Status->status_name }}</td>
-                                    <td data-column="company">{{ $store->rel_to_Company->company }}</td>
+                                    <td data-column="status_name">{{ $store->rel_to_Status->status_name ?? '' }}</td>
+                                    <td data-column="company">{{ $store->rel_to_Company->company ?? '' }}</td>
                                     <td data-column="others">{{ $store->others }}</td>
                                     <td data-column="balance">{{ $store->balance ?? '' }}</td>
                                     <td data-column="picture">
                                         @if ($store->picture)
-                                        <img width="40" height="15"
-                                            src="{{ asset('uploads/store/' . $store->picture) }}"
-                                            alt="Picture">
+                                        <img width="40" height="15" src="{{ asset('uploads/store/' . $store->picture) }}" alt="Picture">
                                         @endif
                                     </td>
                                 </tr>
@@ -1200,18 +1202,21 @@
     </div>
 </div>
 
+
 <!-- Return Modal -->
 <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="returnModalLabel">Return Asset
-                </h5>
+                <h5 class="modal-title" id="returnModalLabel">Return Asset</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
             </div>
             <div class="modal-body">
-                <form action="{{route('return_update')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('return_update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" id="return_id" name="store_id" value="">
+                    
+
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Asset Tag</label>
@@ -1224,6 +1229,10 @@
                         <div class="col-md-6">
                             <label class="form-label">Model</label>
                             <input type="text" id="return_model" class="form-control" name="model" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Company</label>
+                            <input type="text" id="return_company" class="form-control" name="others" readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Return Date</label>
@@ -1242,6 +1251,7 @@
         </div>
     </div>
 </div>
+
 
 
 <!-- Clone Modal removed - now using direct link to edit page -->
@@ -1278,11 +1288,13 @@
                                         <option value="">Select an Asset</option>
                                         @foreach ($stores as $asset)
                                         <option value="{{ $asset->id }}"
-                                            data-tag="{{ $asset->products_id }}"
+                                            data-asset_tag="{{ $asset->asset_tag }}"
                                             data-cost="{{ $asset->cost ?? 0 }}"
-                                            data-purchase-date="{{ $asset->purchase_date }}"
-                                            data-type="{{ $asset->rel_to_ProductType->product ?? '' }}">
-                                            {{ $asset->products_id }} - {{ $asset->rel_to_ProductType->product ?? 'N/A' }}
+                                            data-purchase_date="{{ $asset->purchase_date }}"
+                                            data-asset_type="{{ $asset->rel_to_ProductType->product ?? '' }}"
+                                            data-model="{{ $asset->model }}"
+                                            data-company="{{ $asset->company }}">
+                                            {{ $asset->asset_tag }} - {{ $asset->rel_to_ProductType->product ?? 'N/A' }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -1296,6 +1308,16 @@
                                 <div class="mb-3">
                                     <label class="form-label">Asset Type</label>
                                     <input type="text" id="dep_asset_type" class="form-control" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Model</label>
+                                    <input type="text" id="dep_model" class="form-control" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" id="dep_company" class="form-control" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1459,6 +1481,7 @@
     </div>
 </div>
 
+
 <!-- Bulk Label Print Modal -->
 <div class="modal fade" id="bulkLabelModal" tabindex="-1" aria-labelledby="bulkLabelModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -1533,10 +1556,12 @@
                                             <strong>SAMPLE ASSET</strong>
                                         </div>
                                         <div class="label-content">
-                                            <div class="asset-tag">AST-001</div>
+                                            <div class="asset-tag" id="previewAssetTag">BETTEX-0001</div>
                                             <div class="asset-info">
-                                                <small>Type: Laptop</small><br>
-                                                <small>Brand: Dell</small>
+                                                <small id="previewAssetType">Type: Laptop</small><br>
+                                                <small id="previewAssetBrand">Brand: Dell</small><br>
+                                                <small id="previewAssetModel">Model: XPS 13</small><br>
+                                                <small id="previewAssetCompany">Company: BETTEX</small>
                                             </div>
                                         </div>
                                         <div class="label-codes">
@@ -1587,6 +1612,7 @@
     </div>
 </div>
 
+
 @endsection
 
 @push('script')
@@ -1604,23 +1630,25 @@
             width: '100%',
             dropdownParent: $('#issueModal')
         });
-
         // Issue modal data population
         $('.issue-btn').on('click', function() {
             const ds = this.dataset;
             $('#issue_id').val(ds.id);
-            $('#asset_tag').val(ds.assetTag);
-            $('#asset_type').val(ds.assetType);
-            $('#model').val(ds.model);
-            $('#company').val(ds.company);
+            $('#asset_tag').val(ds.assetTag); // from stores.asset_tag
+            $('#asset_type').val(ds.assetType); // from stores.asset_type
+            $('#model').val(ds.model); // from stores.model
+            $('#company').val(ds.company); // use "others" field instead of company_id
         });
 
         // Return modal data population
         $('.return-btn').on('click', function() {
             const ds = this.dataset;
+            $('#return_issue_id').val(ds.issueId);
+            $('#return_store_id').val(ds.storeId);
             $('#return_asset_tag').val(ds.assetTag);
             $('#return_asset_type').val(ds.assetType);
             $('#return_model').val(ds.model);
+            $('#return_company').val(ds.company);
         });
 
         // Employee selection handler
@@ -1639,266 +1667,263 @@
                 });
             }
         });
+    });
+    // Clone modal data population using event delegation
+    $(document).on('click', '.clone-btn', function(e) {
+        e.preventDefault();
+        console.log('Clone button clicked'); // Debug log
 
-        // Clone modal data population using event delegation
-        $(document).on('click', '.clone-btn', function(e) {
-            e.preventDefault();
-            console.log('Clone button clicked'); // Debug log
+        const btn = this;
 
-            const btn = this;
+        // Log all data attributes to debug
+        console.log('All data attributes:', btn.dataset);
 
-            // Log all data attributes to debug
-            console.log('All data attributes:', btn.dataset);
+        // Get data attributes using getAttribute
+        const originalId = btn.getAttribute('data-id') || '';
+        const originalCode = btn.getAttribute('data-asset-code') || ''; // updated
+        const productType = btn.getAttribute('data-product-type') || ''; // updated
+        const modelName = btn.getAttribute('data-model-name') || ''; // updated
+        const brandId = btn.getAttribute('data-brand-id') || '';
+        const qty = btn.getAttribute('data-qty') || '1';
+        const unitsId = btn.getAttribute('data-units-id') || '';
+        const warrenty = btn.getAttribute('data-warrenty') || '';
+        const durablity = btn.getAttribute('data-durablity') || '';
+        const cost = btn.getAttribute('data-cost') || '';
+        const currency = btn.getAttribute('data-currency') || 'USD';
+        const vendorId = btn.getAttribute('data-vendor-id') || '';
+        const statusId = btn.getAttribute('data-status-id') || '';
+        const companyId = btn.getAttribute('data-company-id') || '';
+        const description = btn.getAttribute('data-description') || '';
+        const others = btn.getAttribute('data-others') || '';
 
-            // Get data attributes using getAttribute (most reliable method)
-            const originalId = btn.getAttribute('data-id') || '';
-            const originalTag = btn.getAttribute('data-asset-tag') || '';
-            const productTypeId = btn.getAttribute('data-product-type-id') || '';
-            const model = btn.getAttribute('data-model') || '';
-            const brandId = btn.getAttribute('data-brand-id') || '';
-            const qty = btn.getAttribute('data-qty') || '1';
-            const unitsId = btn.getAttribute('data-units-id') || '';
-            const warranty = btn.getAttribute('data-warranty') || '';
-            const durability = btn.getAttribute('data-durability') || '';
-            const cost = btn.getAttribute('data-cost') || '';
-            const currency = btn.getAttribute('data-currency') || 'USD';
-            const vendorId = btn.getAttribute('data-vendor-id') || '';
-            const statusId = btn.getAttribute('data-status-id') || '';
-            const companyId = btn.getAttribute('data-company-id') || '';
-            const description = btn.getAttribute('data-description') || '';
-            const others = btn.getAttribute('data-others') || '';
+        console.log('Extracted data:');
+        console.log('- Original Code:', originalCode);
+        console.log('- Product Type:', productType);
+        console.log('- Model Name:', modelName);
+        console.log('- Brand ID:', brandId);
+        console.log('- Company ID:', companyId);
 
-            console.log('Extracted data:');
-            console.log('- Original Tag:', originalTag);
-            console.log('- Product Type ID:', productTypeId);
-            console.log('- Model:', model);
-            console.log('- Brand ID:', brandId);
-            console.log('- Company ID:', companyId);
+        // Generate new asset code based on original
+        const timestamp = Date.now().toString().slice(-4);
+        const newCode = originalCode ? originalCode + '_COPY_' + timestamp : 'CLONE_' + timestamp;
 
-            // Generate new asset tag based on original
-            const timestamp = Date.now().toString().slice(-4);
-            const newTag = originalTag ? originalTag + '_COPY_' + timestamp : 'CLONE_' + timestamp;
+        // Populate form fields
+        console.log('Populating form fields...');
 
-            // Populate form fields immediately (no delay)
-            console.log('Populating form fields...');
+        // Set original asset ID for cloning
+        $('#clone_original_id').val(originalId);
 
-            // Set original asset ID for cloning
-            $('#clone_original_id').val(originalId);
+        // Basic text inputs
+        $('#clone_asset_code').val(newCode); // updated
+        $('#clone_model_name').val(modelName); // updated
+        $('#clone_serial').val(''); // Clear for uniqueness
+        $('#clone_qty').val(qty);
+        $('#clone_warrenty').val(warrenty);
+        $('#clone_durablity').val(durablity);
+        $('#clone_cost').val(cost);
+        $('#clone_currency').val(currency);
+        $('#clone_purchase_date').val(''); // Clear for new entry
+        $('#clone_challan').val(''); // Clear for uniqueness
+        $('#clone_description').val(description);
+        $('#clone_others').val(others);
 
-            // Basic text inputs
-            $('#clone_asset_tag').val(newTag);
-            $('#clone_model').val(model);
-            $('#clone_serial').val(asset_sl_no); // Clear for uniqueness
-            $('#clone_qty').val(qty);
-            $('#clone_warranty').val(warranty);
-            $('#clone_durability').val(durability);
-            $('#clone_cost').val(cost);
-            $('#clone_currency').val(currency);
-            $('#clone_purchase_date').val(''); // Clear for new entry
-            $('#clone_challan').val(''); // Clear for uniqueness
-            $('#clone_description').val(description);
-            $('#clone_others').val(others);
+        // Select dropdowns
+        $('#clone_product_type').val(productType).trigger('change'); // updated
+        $('#clone_brand').val(brandId).trigger('change');
+        $('#clone_units').val(unitsId).trigger('change');
+        $('#clone_vendor').val(vendorId).trigger('change');
+        $('#clone_status').val(statusId).trigger('change');
+        $('#clone_company').val(companyId).trigger('change');
 
-            // Select dropdowns (without Select2 for now)
-            $('#clone_product_type').val(products_id);
-            $('#clone_brand').val(brandId);
-            $('#clone_units').val(unitsId);
-            $('#clone_vendor').val(vendorId);
-            $('#clone_status').val(statusId);
-            $('#clone_company').val(companyId);
+        console.log('Form fields populated');
+        console.log('Asset code field value:', $('#clone_asset_code').val());
+        console.log('Model name field value:', $('#clone_model_name').val());
+        console.log('Product type field value:', $('#clone_product_type').val());
 
-            console.log('Form fields populated');
-            console.log('Asset tag field value:', $('#clone_asset_tag').val());
-            console.log('Model field value:', $('#clone_model').val());
-            console.log('Product type field value:', $('#clone_product_type').val());
+        // Add clone notification
+        const notification = `<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+        <i class="fa fa-info-circle me-2"></i>
+        <strong>Cloning:</strong> Asset Code and Serial Number have been cleared/modified for uniqueness.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>`;
 
-            // Add clone notification
-            const notification = `<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
-            <i class="fa fa-info-circle me-2"></i>
-            <strong>Cloning:</strong> Asset Tag and Serial Number have been cleared/modified for uniqueness.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>`;
+        // Remove any existing notifications and add new one
+        $('#cloneModal .alert-warning').remove();
+        $('#cloneModal .alert-info').after(notification);
 
-            // Remove any existing notifications and add new one
-            $('#cloneModal .alert-warning').remove();
-            $('#cloneModal .alert-info').after(notification);
-
-            console.log('Data populated successfully'); // Debug log
-        });
-
-        // Initialize Select2 for clone modal (simple initialization)
-        try {
-            $('#clone_product_type, #clone_brand, #clone_units, #clone_vendor, #clone_status, #clone_company').select2({
-                width: '100%',
-                placeholder: 'Select an option'
-            });
-        } catch (e) {
-            console.log('Select2 initialization skipped:', e);
-        }
-
-        // Auto-generate asset tag suggestion
-        $('#clone_asset_tag').on('blur', function() {
-            const value = $(this).val();
-            if (value && !value.includes('_COPY_')) {
-                $(this).val(value + '_COPY');
-            }
-        });
-
-        // Form validation before submit
-        $('#cloneForm').on('submit', function(e) {
-            const assetTag = $('#clone_asset_tag').val().trim();
-            const productType = $('#clone_product_type').val();
-            const company = $('#clone_company').val();
-
-            if (!assetTag) {
-                e.preventDefault();
-                alert('Asset Tag is required!');
-                $('#clone_asset_tag').focus();
-                return false;
-            }
-
-            if (!productType) {
-                e.preventDefault();
-                alert('Asset Type is required!');
-                $('#clone_product_type').focus();
-                return false;
-            }
-
-            if (!company) {
-                e.preventDefault();
-                alert('Company is required!');
-                $('#clone_company').focus();
-                return false;
-            }
-
-            // Show loading state
-            $(this).find('button[type="submit"]').html('<i class="fa fa-spinner fa-spin me-2"></i>Cloning Asset...').prop('disabled', true);
-        });
-
-        // Initialize Select2 for depreciation asset dropdown
-        try {
-            $('#depreciation_asset').select2({
-                placeholder: 'Select an Asset',
-                allowClear: true,
-                width: '100%'
-            });
-        } catch (e) {
-            console.log('Select2 for depreciation asset skipped:', e);
-        }
-
-        // Asset selection handler
-        $('#depreciation_asset').on('change', function() {
-            const selectedOption = $(this).find('option:selected');
-            const assetTag = selectedOption.data('tag') || '';
-            const cost = selectedOption.data('cost') || 0;
-            const purchaseDate = selectedOption.data('purchase-date') || '';
-            const assetType = selectedOption.data('type') || '';
-
-            // Populate asset information fields
-            $('#dep_asset_tag').val(assetTag);
-            $('#dep_asset_type').val(assetType);
-            $('#dep_original_cost').val(cost);
-            $('#dep_purchase_date').val(purchaseDate);
-
-            // Calculate current age if purchase date is available
-            if (purchaseDate) {
-                const purchase = new Date(purchaseDate);
-                const today = new Date();
-                const ageInYears = ((today - purchase) / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
-                $('#dep_current_age').val(ageInYears);
-            }
-        });
-
-        // Show/hide depreciation rate field based on method
-        $('#dep_method').on('change', function() {
-            const method = $(this).val();
-            if (method === 'declining_balance') {
-                $('#dep_rate_container').show();
-                $('#dep_rate').val(25); // Default 25% rate
-            } else {
-                $('#dep_rate_container').hide();
-            }
-        });
-
-        // Auto-calculate current age when purchase date changes
-        $('#dep_purchase_date').on('change', function() {
-            const purchaseDate = $(this).val();
-            if (purchaseDate) {
-                const purchase = new Date(purchaseDate);
-                const today = new Date();
-                const ageInYears = ((today - purchase) / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
-                $('#dep_current_age').val(ageInYears);
-            }
-        });
-
-        // Select all checkbox functionality
-        $('#selectAll').on('change', function() {
-            const isChecked = $(this).is(':checked');
-            $('.asset-checkbox').prop('checked', isChecked);
-            updateSelectedAssets();
-        });
-
-        // Individual asset checkbox functionality
-        $('.asset-checkbox').on('change', function() {
-            updateSelectedAssets();
-
-            // Update select all checkbox state
-            const totalCheckboxes = $('.asset-checkbox').length;
-            const checkedCheckboxes = $('.asset-checkbox:checked').length;
-
-            $('#selectAll').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
-            $('#selectAll').prop('checked', checkedCheckboxes === totalCheckboxes);
-        });
-
-        // Label size change handler
-        $('#labelSize').on('change', function() {
-            updateLabelPreview();
-        });
-
-        // Other setting change handlers
-        $('#includeQR, #includeBarcode').on('change', function() {
-            updateLabelPreview();
-        });
+        console.log('Data populated successfully'); // Debug log
     });
 
+
+    // Initialize Select2 for clone modal
+    try {
+        $('#clone_product_type, #clone_brand, #clone_units, #clone_vendor, #clone_status, #clone_company').select2({
+            width: '100%',
+            placeholder: 'Select an option'
+        });
+    } catch (e) {
+        console.log('Select2 initialization skipped:', e);
+    }
+
+    // Auto-generate asset code suggestion
+    $('#clone_asset_code').on('blur', function() { // updated field
+        const value = $(this).val();
+        if (value && !value.includes('_COPY_')) {
+            $(this).val(value + '_COPY');
+        }
+    });
+
+    // Form validation before submit
+    $('#cloneForm').on('submit', function(e) {
+        const assetCode = $('#clone_asset_code').val().trim(); // updated
+        const productType = $('#clone_product_type').val(); // updated
+        const company = $('#clone_company').val(); // updated
+
+        if (!assetCode) {
+            e.preventDefault();
+            alert('Asset Code is required!');
+            $('#clone_asset_code').focus();
+            return false;
+        }
+
+        if (!productType) {
+            e.preventDefault();
+            alert('Asset Type is required!');
+            $('#clone_product_type').focus();
+            return false;
+        }
+
+        if (!company) {
+            e.preventDefault();
+            alert('Company is required!');
+            $('#clone_company').focus();
+            return false;
+        }
+
+        // Show loading state
+        $(this).find('button[type="submit"]').html('<i class="fa fa-spinner fa-spin me-2"></i>Cloning Asset...').prop('disabled', true);
+    });
+
+    // Initialize Select2 for depreciation asset dropdown
+    try {
+        $('#depreciation_asset_code').select2({ // updated field
+            placeholder: 'Select an Asset',
+            allowClear: true,
+            width: '100%'
+        });
+    } catch (e) {
+        console.log('Select2 for depreciation asset skipped:', e);
+    }
+
+    // Asset selection handler for depreciation
+    $('#depreciation_asset_code').on('change', function() { // updated field
+        const selectedOption = $(this).find('option:selected');
+        const assetCode = selectedOption.data('code') || ''; // updated
+        const cost = selectedOption.data('cost') || 0;
+        const purchaseDate = selectedOption.data('purchase-date') || '';
+        const assetType = selectedOption.data('type') || '';
+
+        // Populate asset information fields
+        $('#dep_asset_code').val(assetCode); // updated
+        $('#dep_asset_type').val(assetType);
+        $('#dep_original_cost').val(cost);
+        $('#dep_purchase_date').val(purchaseDate);
+
+        // Calculate current age if purchase date is available
+        if (purchaseDate) {
+            const purchase = new Date(purchaseDate);
+            const today = new Date();
+            const ageInYears = ((today - purchase) / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
+            $('#dep_current_age').val(ageInYears);
+        }
+    });
+
+    // Show/hide depreciation rate field based on method
+    $('#dep_method').on('change', function() {
+        const method = $(this).val();
+        if (method === 'declining_balance') {
+            $('#dep_rate_container').show();
+            $('#dep_rate').val(25); // Default 25% rate
+        } else {
+            $('#dep_rate_container').hide();
+            $('#dep_rate').val(''); // Clear rate if not needed
+        }
+    });
+
+    // Auto-calculate current age when purchase date changes
+    $('#dep_purchase_dt').on('change', function() { // updated
+        const purchaseDate = $(this).val();
+        if (purchaseDate) {
+            const purchase = new Date(purchaseDate);
+            const today = new Date();
+            const ageInYears = ((today - purchase) / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
+            $('#dep_age_years').val(ageInYears); // updated
+        }
+    });
+
+    // Select all checkbox functionality
+    $('#select_all_assets').on('change', function() { // updated
+        const isChecked = $(this).is(':checked');
+        $('.asset_item_checkbox').prop('checked', isChecked); // updated
+        updateSelectedAssets(); // your existing function
+    });
+
+    // Individual asset checkbox functionality
+    $('.asset_item_checkbox').on('change', function() { // updated
+        updateSelectedAssets();
+
+        // Update select all checkbox state
+        const totalCheckboxes = $('.asset_item_checkbox').length; // updated
+        const checkedCheckboxes = $('.asset_item_checkbox:checked').length; // updated
+
+        $('#select_all_assets').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes); // updated
+        $('#select_all_assets').prop('checked', checkedCheckboxes === totalCheckboxes); // updated
+    });
+
+    // Label size change handler
+    $('#label_size').on('change', function() { // updated
+        updateLabelPreview(); // your existing function
+    });
+
+    // Other setting change handlers
+    $('#include_qr, #include_barcode').on('change', function() { // updated
+        updateLabelPreview(); // your existing function
+    });
+
+
     function clearFilters() {
-        // Reset form
         document.getElementById('filterForm').reset();
-        // Redirect to clean URL
         window.location.href = window.location.pathname;
     }
 
     function calculateDepreciation() {
-        // Get input values
-        const originalCost = parseFloat($('#dep_original_cost').val()) || 0;
-        const salvageValue = parseFloat($('#dep_salvage_value').val()) || 0;
-        const usefulLife = parseInt($('#dep_useful_life').val()) || 0;
-        const method = $('#dep_method').val();
-        const purchaseDate = $('#dep_purchase_date').val();
-        const customRate = parseFloat($('#dep_rate').val()) || 25;
+        const originalCost = parseFloat($('#dep_cost').val()) || 0;
+        const salvageValue = parseFloat($('#dep_salvage').val()) || 0;
+        const usefulLife = parseInt($('#dep_life').val()) || 0;
+        const method = $('#dep_method_type').val();
+        const purchaseDate = $('#dep_purchase_dt').val();
+        const customRate = parseFloat($('#dep_custom_rate').val()) || 25;
 
-        // Validation
         if (originalCost <= 0) {
             alert('Please enter a valid original cost');
-            $('#dep_original_cost').focus();
+            $('#dep_cost').focus();
             return;
         }
 
         if (usefulLife <= 0) {
             alert('Please enter a valid useful life');
-            $('#dep_useful_life').focus();
+            $('#dep_life').focus();
             return;
         }
 
         if (salvageValue >= originalCost) {
             alert('Salvage value cannot be greater than or equal to original cost');
-            $('#dep_salvage_value').focus();
+            $('#dep_salvage').focus();
             return;
         }
 
-        // Calculate current age
         let currentAge = 0;
         if (purchaseDate) {
             const purchase = new Date(purchaseDate);
@@ -1911,7 +1936,6 @@
         let annualDepreciation = 0;
         let depreciationRate = 0;
 
-        // Calculate based on method
         switch (method) {
             case 'straight_line':
                 annualDepreciation = (originalCost - salvageValue) / usefulLife;
@@ -1939,7 +1963,6 @@
                 break;
         }
 
-        // Calculate totals based on current age
         if (currentAge > 0 && currentAge <= usefulLife) {
             totalDepreciation = calculateCurrentDepreciation(schedule, currentAge);
         } else if (currentAge > usefulLife) {
@@ -1948,33 +1971,31 @@
 
         const currentBookValue = originalCost - totalDepreciation;
 
-        // Update results
-        $('#dep_total_depreciation').val(formatCurrency(totalDepreciation));
-        $('#dep_book_value').val(formatCurrency(Math.max(currentBookValue, salvageValue)));
-        $('#dep_annual_depreciation').val(formatCurrency(annualDepreciation));
-        $('#dep_percentage').val(depreciationRate.toFixed(2));
+        $('#dep_total').val(formatCurrency(totalDepreciation));
+        $('#dep_book_val').val(formatCurrency(Math.max(currentBookValue, salvageValue)));
+        $('#dep_annual').val(formatCurrency(annualDepreciation));
+        $('#dep_percent').val(depreciationRate.toFixed(2));
 
-        // Update schedule table
         updateScheduleTable(schedule);
     }
 
     function calculateStraightLine(cost, salvage, life) {
-        const annualDepreciation = (cost - salvage) / life;
+        const annualDep = (cost - salvage) / life;
         const schedule = [];
-        let accumulatedDepreciation = 0;
+        let accumulatedDep = 0;
 
         for (let year = 1; year <= life; year++) {
             const beginningValue = year === 1 ? cost : schedule[year - 2].endingValue;
-            const depreciation = annualDepreciation;
-            accumulatedDepreciation += depreciation;
-            const endingValue = Math.max(cost - accumulatedDepreciation, salvage);
+            const depreciation = annualDep;
+            accumulatedDep += depreciation;
+            const endingValue = Math.max(cost - accumulatedDep, salvage);
 
             schedule.push({
-                year: year,
-                beginningValue: beginningValue,
-                depreciation: depreciation,
-                accumulatedDepreciation: accumulatedDepreciation,
-                endingValue: endingValue
+                year,
+                beginningValue,
+                depreciation,
+                accumulatedDepreciation: accumulatedDep,
+                endingValue
             });
         }
 
@@ -1984,32 +2005,28 @@
     function calculateDecliningBalance(cost, salvage, life, rate) {
         const schedule = [];
         let bookValue = cost;
-        let accumulatedDepreciation = 0;
+        let accumulatedDep = 0;
 
         for (let year = 1; year <= life; year++) {
             const beginningValue = bookValue;
             let depreciation = bookValue * (rate / 100);
 
-            // Ensure we don't depreciate below salvage value
             if (bookValue - depreciation < salvage) {
                 depreciation = bookValue - salvage;
             }
 
-            accumulatedDepreciation += depreciation;
+            accumulatedDep += depreciation;
             bookValue -= depreciation;
 
             schedule.push({
-                year: year,
-                beginningValue: beginningValue,
-                depreciation: depreciation,
-                accumulatedDepreciation: accumulatedDepreciation,
+                year,
+                beginningValue,
+                depreciation,
+                accumulatedDepreciation: accumulatedDep,
                 endingValue: bookValue
             });
 
-            // Stop if we've reached salvage value
-            if (bookValue <= salvage) {
-                break;
-            }
+            if (bookValue <= salvage) break;
         }
 
         return schedule;
@@ -2023,22 +2040,22 @@
     function calculateSumOfYears(cost, salvage, life) {
         const schedule = [];
         const sumOfYears = (life * (life + 1)) / 2;
-        const depreciableBase = cost - salvage;
-        let accumulatedDepreciation = 0;
+        const base = cost - salvage;
+        let accumulatedDep = 0;
 
         for (let year = 1; year <= life; year++) {
             const beginningValue = year === 1 ? cost : schedule[year - 2].endingValue;
             const remainingLife = life - year + 1;
-            const depreciation = depreciableBase * (remainingLife / sumOfYears);
-            accumulatedDepreciation += depreciation;
-            const endingValue = cost - accumulatedDepreciation;
+            const depreciation = base * (remainingLife / sumOfYears);
+            accumulatedDep += depreciation;
+            const endingValue = cost - accumulatedDep;
 
             schedule.push({
-                year: year,
-                beginningValue: beginningValue,
-                depreciation: depreciation,
-                accumulatedDepreciation: accumulatedDepreciation,
-                endingValue: endingValue
+                year,
+                beginningValue,
+                depreciation,
+                accumulatedDepreciation: accumulatedDep,
+                endingValue
             });
         }
 
@@ -2050,20 +2067,17 @@
 
         const fullYears = Math.floor(currentAge);
         const partialYear = currentAge - fullYears;
+        let totalDep = 0;
 
-        let totalDepreciation = 0;
-
-        // Add depreciation for full years
         for (let i = 0; i < Math.min(fullYears, schedule.length); i++) {
-            totalDepreciation += schedule[i].depreciation;
+            totalDep += schedule[i].depreciation;
         }
 
-        // Add partial year depreciation
         if (partialYear > 0 && fullYears < schedule.length) {
-            totalDepreciation += schedule[fullYears].depreciation * partialYear;
+            totalDep += schedule[fullYears].depreciation * partialYear;
         }
 
-        return totalDepreciation;
+        return totalDep;
     }
 
     function updateScheduleTable(schedule) {
@@ -2071,27 +2085,18 @@
         tbody.empty();
 
         if (!schedule || schedule.length === 0) {
-            tbody.append(`
-            <tr>
-                <td colspan="5" class="text-center text-muted">
-                    <i class="fa fa-info-circle"></i> No data to display
-                </td>
-            </tr>
-        `);
+            tbody.append(`<tr><td colspan="5" class="text-center text-muted"><i class="fa fa-info-circle"></i> No data to display</td></tr>`);
             return;
         }
 
-        schedule.forEach(function(row) {
-            const tr = `
-            <tr>
-                <td>${row.year}</td>
-                <td>$${formatNumber(row.beginningValue)}</td>
-                <td>$${formatNumber(row.depreciation)}</td>
-                <td>$${formatNumber(row.accumulatedDepreciation)}</td>
-                <td>$${formatNumber(row.endingValue)}</td>
-            </tr>
-        `;
-            tbody.append(tr);
+        schedule.forEach(row => {
+            tbody.append(`<tr>
+            <td>${row.year}</td>
+            <td>$${formatNumber(row.beginningValue)}</td>
+            <td>$${formatNumber(row.depreciation)}</td>
+            <td>$${formatNumber(row.accumulatedDepreciation)}</td>
+            <td>$${formatNumber(row.endingValue)}</td>
+        </tr>`);
         });
     }
 
@@ -2110,7 +2115,6 @@
     }
 
     function exportDepreciationSchedule() {
-        const schedule = [];
         const tbody = $('#depreciation_schedule tbody tr');
 
         if (tbody.length <= 1 || tbody.first().find('td').attr('colspan')) {
@@ -2118,19 +2122,13 @@
             return;
         }
 
-        // Get asset information
-        const assetTag = $('#dep_asset_tag').val() || 'Unknown';
-        const assetType = $('#dep_asset_type').val() || 'Unknown';
-        const originalCost = $('#dep_original_cost').val() || '0';
-        const method = $('#dep_method option:selected').text();
+        const assetTag = $('#dep_tag').val() || 'Unknown';
+        const assetType = $('#dep_type').val() || 'Unknown';
+        const originalCost = $('#dep_cost').val() || '0';
+        const method = $('#dep_method_type option:selected').text();
 
-        // Create CSV content
         let csv = 'Asset Depreciation Schedule\n';
-        csv += `Asset Tag:,${assetTag}\n`;
-        csv += `Asset Type:,${assetType}\n`;
-        csv += `Original Cost:,$${originalCost}\n`;
-        csv += `Method:,${method}\n`;
-        csv += `Generated:,${new Date().toLocaleString()}\n\n`;
+        csv += `Asset Tag:,${assetTag}\nAsset Type:,${assetType}\nOriginal Cost:,$${originalCost}\nMethod:,${method}\nGenerated:,${new Date().toLocaleString()}\n\n`;
         csv += 'Year,Beginning Value,Depreciation,Accumulated Depreciation,Ending Value\n';
 
         tbody.each(function() {
@@ -2144,7 +2142,6 @@
             }
         });
 
-        // Download file
         const blob = new Blob([csv], {
             type: 'text/csv;charset=utf-8;'
         });
@@ -2159,28 +2156,24 @@
     }
 
     function resetCalculator() {
-        // Clear all form fields
-        $('#depreciation_asset').val('').trigger('change');
-        $('#dep_asset_tag').val('');
-        $('#dep_asset_type').val('');
-        $('#dep_original_cost').val('');
-        $('#dep_salvage_value').val('0');
-        $('#dep_useful_life').val('');
-        $('#dep_purchase_date').val('');
-        $('#dep_method').val('straight_line');
-        $('#dep_rate').val('25');
-        $('#dep_rate_container').hide();
+        $('#dep_asset_select').val('').trigger('change');
+        $('#dep_tag').val('');
+        $('#dep_type').val('');
+        $('#dep_cost').val('');
+        $('#dep_salvage').val('0');
+        $('#dep_life').val('');
+        $('#dep_purchase_dt').val('');
+        $('#dep_method_type').val('straight_line');
+        $('#dep_custom_rate').val('25');
+        $('#dep_rate_div').hide();
 
-        // Clear results
-        $('#dep_current_age').val('');
-        $('#dep_total_depreciation').val('');
-        $('#dep_book_value').val('');
-        $('#dep_annual_depreciation').val('');
-        $('#dep_percentage').val('');
+        $('#dep_age_years').val('');
+        $('#dep_total').val('');
+        $('#dep_book_val').val('');
+        $('#dep_annual').val('');
+        $('#dep_percent').val('');
 
-        // Reset table
-        const tbody = $('#depreciation_schedule tbody');
-        tbody.html(`
+        $('#depreciation_schedule tbody').html(`
         <tr>
             <td colspan="5" class="text-center text-muted">
                 <i class="fa fa-info-circle"></i> Enter parameters and click Calculate to see depreciation schedule
@@ -2197,22 +2190,20 @@
         $('.asset-checkbox:checked').each(function() {
             const checkbox = $(this);
             selectedAssets.push({
-                id: checkbox.data('asset-id'),
-                tag: checkbox.data('asset-tag'),
-                type: checkbox.data('asset-type'),
-                model: checkbox.data('model'),
-                brand: checkbox.data('brand'),
-                company: checkbox.data('company')
+                id: checkbox.data('asset_id'),
+                tag: checkbox.data('tag'),
+                type: checkbox.data('type'),
+                model: checkbox.data('model_name'),
+                brand: checkbox.data('brand_name'),
+                company: checkbox.data('company_name')
             });
         });
 
-        // Update UI
         const count = selectedAssets.length;
         $('#selectedCount').text(count);
         $('#modalSelectedCount').text(count);
         $('#bulkPrintBtn').prop('disabled', count === 0);
 
-        // Update selected assets list in modal
         updateSelectedAssetsList();
     }
 
@@ -2250,25 +2241,19 @@
 
     function removeSelectedAsset(index) {
         const asset = selectedAssets[index];
-
-        // Uncheck the checkbox
-        $(`.asset-checkbox[data-asset-id="${asset.id}"]`).prop('checked', false);
-
-        // Update selected assets
+        $(`.asset-checkbox[data-asset_id="${asset.id}"]`).prop('checked', false);
         updateSelectedAssets();
     }
 
     function updateLabelPreview() {
-        const labelSize = $('#labelSize').val();
-        const includeQR = $('#includeQR').is(':checked');
-        const includeBarcode = $('#includeBarcode').is(':checked');
+        const labelSize = $('#label_size').val();
+        const includeQR = $('#show_qr').is(':checked');
+        const includeBarcode = $('#show_barcode').is(':checked');
 
-        // Update preview label size class
         const previewLabel = $('#labelPreview .preview-label');
         previewLabel.removeClass('small-label medium-label large-label');
         previewLabel.addClass(`${labelSize}-label`);
 
-        // Update codes visibility
         const qrPlaceholder = previewLabel.find('.qr-placeholder');
         const barcodePlaceholder = previewLabel.find('.barcode-placeholder');
 
@@ -2282,12 +2267,11 @@
             return;
         }
 
-        const labelSize = $('#labelSize').val();
-        const includeQR = $('#includeQR').is(':checked');
-        const includeBarcode = $('#includeBarcode').is(':checked');
-        const additionalText = $('#additionalText').val();
+        const labelSize = $('#label_size').val();
+        const includeQR = $('#show_qr').is(':checked');
+        const includeBarcode = $('#show_barcode').is(':checked');
+        const additionalText = $('#label_text').val();
 
-        // Create preview window
         const previewWindow = window.open('', '_blank', 'width=800,height=600');
         let previewHtml = `
         <!DOCTYPE html>
@@ -2297,14 +2281,7 @@
             <style>
                 body { font-family: Arial, sans-serif; padding: 20px; }
                 .preview-container { display: flex; flex-wrap: wrap; gap: 10px; }
-                .preview-label {
-                    border: 2px solid #000;
-                    padding: 8px;
-                    background: white;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                }
+                .preview-label { border: 2px solid #000; padding: 8px; background: white; display: flex; flex-direction: column; justify-content: space-between; }
                 .label-small { width: 160px; height: 80px; font-size: 8px; }
                 .label-medium { width: 240px; height: 120px; font-size: 10px; }
                 .label-large { width: 320px; height: 160px; font-size: 12px; }
@@ -2312,30 +2289,32 @@
                 .label-content { flex: 1; }
                 .asset-tag { font-weight: bold; margin: 4px 0; }
                 .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ccc; padding-top: 2px; }
-                .qr-code, .barcode { border: 1px solid #ccc; background: #f5f5f5; }
-                .qr-code { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-                .barcode { height: 20px; flex: 1; margin-left: 5px; display: flex; align-items: center; justify-content: center; }
+                .qr-code, .barcode { border: 1px solid #ccc; background: #f5f5f5; display: flex; align-items: center; justify-content: center; }
+                .qr-code { width: 30px; height: 30px; }
+                .barcode { height: 20px; flex: 1; margin-left: 5px; }
             </style>
         </head>
         <body>
-            <h2>Label Preview (' + selectedAssets.length + ' labels)</h2>
+            <h2>Label Preview (${selectedAssets.length} labels)</h2>
             <div class="preview-container">
     `;
 
         selectedAssets.forEach(asset => {
-            previewHtml += '<div class="preview-label label-' + labelSize + '">' +
-                '<div class="label-header">' + (asset.company || 'COMPANY') + '</div>' +
-                '<div class="label-content">' +
-                '<div class="asset-tag">' + asset.tag + '</div>' +
-                '<div>' + asset.type + '</div>' +
-                '<div>' + asset.brand + '</div>' +
-                (additionalText ? '<div><small>' + additionalText + '</small></div>' : '') +
-                '</div>' +
-                '<div class="label-footer">' +
-                (includeQR ? '<div class="qr-code">QR</div>' : '') +
-                (includeBarcode ? '<div class="barcode">|||||||||||</div>' : '') +
-                '</div>' +
-                '</div>';
+            previewHtml += `
+            <div class="preview-label label-${labelSize}">
+                <div class="label-header">${asset.company || 'COMPANY'}</div>
+                <div class="label-content">
+                    <div class="asset-tag">${asset.tag}</div>
+                    <div>${asset.type}</div>
+                    <div>${asset.brand}</div>
+                    ${additionalText ? `<div><small>${additionalText}</small></div>` : ''}
+                </div>
+                <div class="label-footer">
+                    ${includeQR ? '<div class="qr-code">QR</div>' : ''}
+                    ${includeBarcode ? '<div class="barcode">|||||||||||</div>' : ''}
+                </div>
+            </div>
+        `;
         });
 
         previewHtml += `
@@ -2351,55 +2330,55 @@
         previewWindow.document.close();
     }
 
+
     function printLabels() {
         if (selectedAssets.length === 0) {
             alert('Please select at least one asset to print.');
             return;
         }
 
-        const labelSize = $('#labelSize').val();
+        const labelSize = $('#label_size').val();
         const copies = parseInt($('#copiesCount').val()) || 1;
-        const includeQR = $('#includeQR').is(':checked');
-        const includeBarcode = $('#includeBarcode').is(':checked');
-        const additionalText = $('#additionalText').val();
+        const includeQR = $('#show_qr').is(':checked');
+        const includeBarcode = $('#show_barcode').is(':checked');
+        const additionalText = $('#label_text').val();
 
-        // Create print window
         const printWindow = window.open('', '_blank', 'width=800,height=600');
         let printHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Asset Labels</title>
-            <style>
-                @media print {
-                    body { margin: 0; }
-                    .print-label { page-break-inside: avoid; }
-                }
-                body { font-family: Arial, sans-serif; }
-                .print-container { display: flex; flex-wrap: wrap; }
-                .print-label {
-                    border: 2px solid #000;
-                    padding: 4px;
-                    margin: 2mm;
-                    background: white;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                }
-                .label-small { width: 50mm; height: 25mm; font-size: 6px; }
-                .label-medium { width: 76mm; height: 38mm; font-size: 8px; }
-                .label-large { width: 100mm; height: 50mm; font-size: 10px; }
-                .label-header { text-align: center; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 1px; margin-bottom: 2px; }
-                .label-content { flex: 1; }
-                .asset-tag { font-weight: bold; margin: 1px 0; }
-                .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; padding-top: 1px; margin-top: 2px; }
-                .qr-code { width: 15px; height: 15px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
-                .barcode { height: 10px; flex: 1; margin-left: 2px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
-            </style>
-        </head>
-        <body>
-            <div class="print-container">
-    `;
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Asset Labels</title>
+        <style>
+            @media print {
+                body { margin: 0; }
+                .print-label { page-break-inside: avoid; }
+            }
+            body { font-family: Arial, sans-serif; }
+            .print-container { display: flex; flex-wrap: wrap; }
+            .print-label {
+                border: 2px solid #000;
+                padding: 4px;
+                margin: 2mm;
+                background: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            .label-small { width: 50mm; height: 25mm; font-size: 6px; }
+            .label-medium { width: 76mm; height: 38mm; font-size: 8px; }
+            .label-large { width: 100mm; height: 50mm; font-size: 10px; }
+            .label-header { text-align: center; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 1px; margin-bottom: 2px; }
+            .label-content { flex: 1; }
+            .asset-tag { font-weight: bold; margin: 1px 0; }
+            .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; padding-top: 1px; margin-top: 2px; }
+            .qr-code { width: 15px; height: 15px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
+            .barcode { height: 10px; flex: 1; margin-left: 2px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
+        </style>
+    </head>
+    <body>
+        <div class="print-container">
+`;
 
         selectedAssets.forEach(asset => {
             for (let copy = 0; copy < copies; copy++) {
@@ -2420,18 +2399,16 @@
         });
 
         printHtml += `
-            </div>
-        </body>
-        </html>
+        </div>
+    </body>
+    </html>
     `;
 
         printWindow.document.write(printHtml);
         printWindow.document.close();
 
-        // Close the modal
         $('#bulkLabelModal').modal('hide');
 
-        // Show success message
         setTimeout(() => {
             alert('Successfully sent ' + (selectedAssets.length * copies) + ' labels to printer!');
         }, 500);
@@ -2440,8 +2417,6 @@
     // Column Selector Functionality
     $(document).ready(function() {
         initializeColumnSelector();
-
-        // Load saved column preferences
         loadColumnPreferences();
     });
 
@@ -2449,59 +2424,40 @@
         const table = $('.smart-table table');
         const headers = table.find('thead th[data-column]');
         const dropdownMenu = $('#columnDropdownMenu');
-
-        // Clear existing items
         dropdownMenu.empty();
 
-        // Create checkbox items for each column
         headers.each(function() {
             const columnName = $(this).data('column');
             const columnText = $(this).text().trim() || columnName.toUpperCase();
             const isEssential = $(this).data('essential') === true;
 
-            // Skip checkbox column from toggles
             if (columnName === 'checkbox') return;
 
             const checkboxItem = $(`
-            <div class="dropdown-item">
-                <div class="column-checkbox-item ${isEssential ? 'essential' : ''}"
-                     data-column="${columnName}"
-                     ${isEssential ? 'data-essential="true"' : ''}>
-                    <input type="checkbox"
-                           id="col-${columnName}"
-                           class="form-check-input column-checkbox"
-                           data-column="${columnName}"
-                           ${isEssential ? 'disabled' : ''}>
-                    <label for="col-${columnName}" class="form-check-label">
-                        ${columnText}
-                        ${isEssential ? ' <small class="text-muted">(Essential)</small>' : ''}
-                    </label>
-                </div>
+        <div class="dropdown-item">
+            <div class="column-checkbox-item ${isEssential ? 'essential' : ''}" data-column="${columnName}" ${isEssential ? 'data-essential="true"' : ''}>
+                <input type="checkbox" id="col-${columnName}" class="form-check-input column-checkbox" data-column="${columnName}" ${isEssential ? 'disabled' : ''}>
+                <label for="col-${columnName}" class="form-check-label">
+                    ${columnText} ${isEssential ? ' <small class="text-muted">(Essential)</small>' : ''}
+                </label>
             </div>
+        </div>
         `);
 
             dropdownMenu.append(checkboxItem);
         });
 
-        // Add click handlers for checkbox items
         $('.column-checkbox-item').on('click', function(e) {
-            // Don't toggle if clicking on essential items or the checkbox itself
             if ($(this).hasClass('essential') || $(e.target).is('input')) return;
-
             const checkbox = $(this).find('input[type="checkbox"]');
             checkbox.prop('checked', !checkbox.prop('checked'));
-
-            const columnName = $(this).data('column');
-            toggleColumn(columnName);
+            toggleColumn($(this).data('column'));
         });
 
-        // Add change handlers for checkboxes
         $('.column-checkbox').on('change', function() {
-            const columnName = $(this).data('column');
-            toggleColumn(columnName);
+            toggleColumn($(this).data('column'));
         });
 
-        // Prevent dropdown from closing when clicking inside
         $('#columnDropdownMenu').on('click', function(e) {
             e.stopPropagation();
         });
@@ -2513,115 +2469,65 @@
         const checkbox = $(`.column-checkbox[data-column="${columnName}"]`);
         const isChecked = checkbox.prop('checked');
 
-        if (isChecked) {
-            // Show column
-            columnElements.show();
-        } else {
-            // Hide column
-            columnElements.hide();
-        }
+        if (isChecked) columnElements.show();
+        else columnElements.hide();
 
-        // Save preference
         saveColumnPreferences();
     }
 
     function showAllColumns() {
         const table = $('.smart-table table');
-        const allColumns = table.find('[data-column]');
-        const checkboxes = $('.column-checkbox');
-
-        allColumns.show();
-        checkboxes.prop('checked', true);
-
+        table.find('[data-column]').show();
+        $('.column-checkbox').prop('checked', true);
         saveColumnPreferences();
     }
 
     function hideAllColumns() {
         const table = $('.smart-table table');
-        const nonEssentialColumns = table.find('[data-column]:not([data-essential="true"])');
-        const nonEssentialCheckboxes = $('.column-checkbox:not(:disabled)');
-
-        nonEssentialColumns.hide();
-        nonEssentialCheckboxes.prop('checked', false);
-
+        table.find('[data-column]:not([data-essential="true"])').hide();
+        $('.column-checkbox:not(:disabled)').prop('checked', false);
         saveColumnPreferences();
     }
 
     function resetToDefault() {
-        const defaultVisibleColumns = [
-            'sl', 'status', 'action', 'asset_tag', 'asset_type',
-            'model', 'brand', 'cost', 'purchase_date', 'company'
-        ];
-
+        const defaultVisibleColumns = ['sl', 'status', 'action', 'asset_tag', 'asset_type', 'model', 'brand', 'cost', 'purchase_date', 'company'];
         const table = $('.smart-table table');
-        const allColumns = table.find('[data-column]');
-        const checkboxes = $('.column-checkbox');
+        table.find('[data-column]').hide();
+        $('.column-checkbox').prop('checked', false);
 
-        // Hide all columns and uncheck all checkboxes first
-        allColumns.hide();
-        checkboxes.prop('checked', false);
-
-        // Show essential columns and default visible columns
         defaultVisibleColumns.forEach(columnName => {
-            const columnElements = table.find(`[data-column="${columnName}"]`);
-            const checkbox = $(`.column-checkbox[data-column="${columnName}"]`);
-
-            columnElements.show();
-            checkbox.prop('checked', true);
+            table.find(`[data-column="${columnName}"]`).show();
+            $(`.column-checkbox[data-column="${columnName}"]`).prop('checked', true);
         });
 
-        // Always show essential columns (they should be disabled but ensure they're visible)
-        const essentialColumns = table.find('[data-essential="true"]');
-        essentialColumns.show();
-
+        table.find('[data-essential="true"]').show();
         saveColumnPreferences();
     }
 
     function saveColumnPreferences() {
         const visibleColumns = [];
         $('.column-checkbox').each(function() {
-            const columnName = $(this).data('column');
-            const isChecked = $(this).prop('checked');
-            if (isChecked) {
-                visibleColumns.push(columnName);
-            }
+            if ($(this).prop('checked')) visibleColumns.push($(this).data('column'));
         });
-
         localStorage.setItem('storeListVisibleColumns', JSON.stringify(visibleColumns));
     }
 
     function loadColumnPreferences() {
         const saved = localStorage.getItem('storeListVisibleColumns');
-        if (!saved) {
-            // Load default configuration
-            resetToDefault();
-            return;
-        }
+        if (!saved) return resetToDefault();
 
         try {
             const visibleColumns = JSON.parse(saved);
             const table = $('.smart-table table');
+            table.find('[data-column]:not([data-essential="true"])').hide();
+            $('.column-checkbox:not(:disabled)').prop('checked', false);
 
-            // Hide all non-essential columns and uncheck all non-essential checkboxes first
-            const allColumns = table.find('[data-column]:not([data-essential="true"])');
-            const checkboxes = $('.column-checkbox:not(:disabled)');
-
-            allColumns.hide();
-            checkboxes.prop('checked', false);
-
-            // Show saved visible columns and check corresponding checkboxes
             visibleColumns.forEach(columnName => {
-                const columnElements = table.find(`[data-column="${columnName}"]`);
-                const checkbox = $(`.column-checkbox[data-column="${columnName}"]`);
-
-                columnElements.show();
-                checkbox.prop('checked', true);
+                table.find(`[data-column="${columnName}"]`).show();
+                $(`.column-checkbox[data-column="${columnName}"]`).prop('checked', true);
             });
 
-            // Always show essential columns
-            const essentialColumns = table.find('[data-essential="true"]');
-            essentialColumns.show();
-
+            table.find('[data-essential="true"]').show();
         } catch (e) {
             console.error('Error loading column preferences:', e);
             resetToDefault();
