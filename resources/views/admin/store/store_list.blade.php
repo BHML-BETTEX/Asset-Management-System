@@ -1216,7 +1216,6 @@
                     @csrf
                     <input type="hidden" id="return_id" name="store_id" value="">
                     
-
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Asset Tag</label>

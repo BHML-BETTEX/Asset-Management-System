@@ -1,81 +1,88 @@
 @extends('master')
 
 @section('content')
-    <div class="container position-sticky z-index-sticky top-0">
-        <div class="row d-flex justify-content-center">
-            <div class="col-xl-6 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="font-weight-bolder">Maintenance info Edit</h4>
-                        <p class="mb-0">Enter All information to Maintenance Product</p>
-                    </div>
-                    <div class="card-body">
-                            <form action="{{route('maintenance_update')}}" method="POST" enctype="multipart/form-data"
-                                class="form-card">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h4 class="font-weight-bolder mb-1">Edit Maintenance</h4>
+                    <p class="mb-0 text-light small">Update maintenance details for the asset</p>
+                </div>
 
+                <div class="card-body">
+                    <form action="{{ route('maintenance_update', $maintenance_data->id) }}" method="POST" class="form-card">
                         @csrf
-                        <div class="input-group input-group-outline mb-3">
-                            <input type="text" id="asset_tag"  class="form-control " value="{{$maintenance_data->asset_tag}}" name="asset_tag" readonly >
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Asset Tag</label>
+                            <input type="text" class="form-control" value="{{ $maintenance_data->asset_tag }}" readonly>
                         </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <input type="text" id="asset_type"  class="form-control " value="{{$maintenance_data->asset_type}}" name="asset_type" readonly >
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Asset Type</label>
+                            <input type="text" class="form-control" value="{{ $maintenance_data->asset_type }}" readonly>
                         </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <input type="text" id="model"  class="form-control " value="{{$maintenance_data->model}}" name="model" readonly >
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Model</label>
+                            <input type="text" class="form-control" value="{{ $maintenance_data->model }}" readonly>
                         </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <input type="text" id="purchase_date"  class="form-control " value="{{$maintenance_data->purchase_date}}" name="purchase_date" readonly>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <input type="text" class="form-control" name="description" value="{{ $maintenance_data->description }}">
                         </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <input class="form-control" rows="3" id="description" value="{{$maintenance_data->description}}" name="description" placeholder="Type Reason..."></input>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Start Date</label>
+                            <input type="date" class="form-control" name="strat_date" value="{{ $maintenance_data->strat_date }}">
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label>Start Date</label>
-                            <input type="date" class="form-control" id="start_date" name="strat_date" 
-                                value="{{$maintenance_data->strat_date}}">
-                                
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">End Date</label>
+                            <input type="date" class="form-control" name="end_date" value="{{ $maintenance_data->end_date }}">
                         </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <input class="form-control" rows="3" id="note" name="note" placeholder="Note" value="{{$maintenance_data->note}}">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Note</label>
+                            <input type="text" class="form-control" name="note" value="{{ $maintenance_data->note }}">
                         </div>
-                       
-                    <button class="btn btn-lg btn-success btn-lg w-100 mt-4 mb-0">Submit</button>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Amount</label>
+                            <input type="number" class="form-control" name="amount" value="{{ $maintenance_data->amount }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Currency</label>
+                            <input type="text" class="form-control" name="currency" value="{{ $maintenance_data->currency }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Vendor</label>
+                            <input type="text" class="form-control" name="vendor" value="{{ $maintenance_data->vendor }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Others</label>
+                            <input type="text" class="form-control" name="others" value="{{ $maintenance_data->others }}">
+                        </div>
+
+                        <!-- Back and Update Buttons -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ route('maintenance_list', ['store_id' => $store->id]) }}" class="btn btn-secondary btn-lg fw-bold">
+                                <i class="fa fa-arrow-left me-2"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                                <i class="fa fa-save me-2"></i> Update
+                            </button>
+                        </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+</div>
 @endsection
-
-@push('script')
-   
-
-
-{{-- <script>
-    $(document).ready(function() {
-        $('#products_id').on('change', function() {   
-            let products_id = $('#products_id option:selected').data("products_id")
-            $.ajax({
-                url: "{{ route('search.product', '') }}/" + products_id,
-                success: function(result) {
-                     //$("#div1").html(result);
-                       //console.log (result.data.products_id);
-                    $('#asset_type').val(result.data.asset_type);
-                    $('#model').val(result.data.model);
-                    $('#purchase_date').val(result.data.purchase_date);
-                }
-            });
-
-        });
-    });
-</script> --}}
-
-
-@endpush

@@ -756,14 +756,48 @@ class StoreController extends Controller
 
 
     //maintenance start...
-    public function maintenance($store_id = null)
+
+    public function maintenance_form($stores_id)
     {
-        if ($store_id) {
-            echo $store_id;
-        } else {
-            echo "No store selected";
+        // Load the store with its relationships
+        $stores = Store::with([
+            'rel_to_ProductType',
+            'rel_to_brand',
+            'rel_to_SizeMaseurment',
+            'rel_to_Supplier',
+            'rel_to_Status',
+            'rel_to_Company',
+            'rel_to_Department',
+            'rel_to_Designation'
+        ])->findOrFail($stores_id);
+
+        // Find the latest maintenance record
+        $maintenance_data = Maintenance::where('asset_tag', $stores->asset_tag)
+            ->orderByDesc('id')
+            ->first();
+
+        // If no maintenance record exists, use store info
+        if (!$maintenance_data) {
+            $maintenance_data = new Maintenance([
+                'asset_tag'      => $stores->asset_tag,
+                'asset_type'     => $stores->asset_type,
+                'model'          => $stores->model,
+                'purchase_date'  => $stores->purchase_date,
+                'description'    => $stores->description,
+            ]);
         }
+
+        // ✅ Check maintenance button visibility
+        // Show button only if store checkstatus is 'INSTOCK'
+        $canShowMaintenanceButton = strtoupper(trim($stores->checkstatus)) === 'INSTOCK';
+
+        return view('admin.store.maintenance.maintenance_form', compact(
+            'maintenance_data',
+            'stores',
+            'canShowMaintenanceButton'
+        ));
     }
+
 
     function maintenance_store(Request $request)
     {
@@ -790,15 +824,17 @@ class StoreController extends Controller
     {
         $search = $request->input('search', "");
 
+        // Fetch all stores for the dropdown/filter
+        $stores_list = Store::all();
+
         $query = Maintenance::query();
+        $store = null;
 
         if ($store_id) {
             $store = Store::findOrFail($store_id);
-
-            // ✅ Use products_id because that's your asset identifier
-            $assetTag = $store->products_id;
-
-            $query->where('asset_tag', $assetTag);
+            if ($store->asset_tag) {
+                $query->where('asset_tag', $store->asset_tag);
+            }
         }
 
         if (!empty($search)) {
@@ -810,13 +846,11 @@ class StoreController extends Controller
             });
         }
 
-        $maintenance_data = $query->paginate(13);
+        // Get all results without pagination
+        $maintenance_data = $query->orderBy('id', 'desc')->get();
 
-        return view('admin.store.maintenance.maintenance_list', [
-            'maintenance_data' => $maintenance_data,
-            'search' => $search,
-            'store' => $store ?? null,
-        ]);
+        // Pass $stores_list to the view
+        return view('admin.store.maintenance.maintenance_list', compact('maintenance_data', 'search', 'store', 'stores_list'));
     }
 
 
@@ -885,16 +919,51 @@ class StoreController extends Controller
         return Excel::download(new MaintenanceExport($request->input("search")), $Filename, $exportFormat);
     }
 
-    function maintenance_edit($id)
+    // Show the edit form
+    public function maintenance_edit($id)
     {
-        $maintenance_data = Maintenance::find($id);
+        $maintenance_data = Maintenance::findOrFail($id);
+
+        // Get the store for this asset_tag
+        $store = Store::where('asset_tag', $maintenance_data->asset_tag)->first();
+
         return view('admin.store.maintenance.maintenance_edit', [
             'maintenance_data' => $maintenance_data,
+            'store' => $store,
         ]);
     }
 
-    function maintenance_update() {}
-    //maintenance end...
+    // Update the maintenance record
+    public function maintenance_update(Request $request, $id)
+    {
+        $request->validate([
+            'description' => 'nullable|string|max:255',
+            'strat_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:strat_date',
+            'note' => 'nullable|string|max:255',
+            'amount' => 'nullable|numeric',
+            'currency' => 'nullable|string|max:10',
+            'vendor' => 'nullable|string|max:255',
+            'others' => 'nullable|string|max:255',
+        ]);
+
+        $maintenance = Maintenance::findOrFail($id);
+
+        $maintenance->update([
+            'description' => $request->description,
+            'strat_date' => $request->strat_date,
+            'end_date' => $request->end_date,
+            'note' => $request->note,
+            'amount' => $request->amount,
+            'currency' => $request->currency,
+            'vendor' => $request->vendor,
+            'others' => $request->others,
+        ]);
+
+        return redirect()->route('maintenance_list')
+            ->with('success', 'Maintenance record updated successfully!');
+    }
+
 
 
     //wastproduct start..
