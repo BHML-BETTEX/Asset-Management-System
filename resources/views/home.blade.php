@@ -46,7 +46,7 @@
                             style="font-size:48px; opacity:0.2;"></i>
                     </div>
                     <div class="px-3 py-2 text-end" style="background:rgba(0,0,0,0.1); border-bottom-left-radius:0.7rem; border-bottom-right-radius:0.7rem;">
-                        <a href="{{route('employee')}}" class="text-white fw-bold text-decoration-none">
+                        <a href="{{route('employee_list')}}" class="text-white fw-bold text-decoration-none">
                             view all <i class="fa fa-arrow-right"></i>
                         </a>
                     </div>

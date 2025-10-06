@@ -107,7 +107,7 @@
 
 
                     <button class="btn btn-success" type="submit">submit</button>
-                    <a href="{{route('employee')}}" class="btn btn-info">Back</a>
+                    <a href="{{route('employee_list')}}" class="btn btn-info">Back</a>
                     <div class="modal-footer">
 
                     </div>

@@ -64,7 +64,7 @@ class EmployeeController extends Controller
         }
     }
     //Employee
-    public function employee(Request $request)
+    public function employee_list(Request $request)
     {
         $role = auth()->user()->roles[0];
         $search = $request->input('search', '');
@@ -375,54 +375,46 @@ class EmployeeController extends Controller
     }
 
 
-    //employee update
-    function employee_update(Request $request)
-    {
-        if ($request->picture == '') {
-            Employee::find($request->employee_id)->update([
-                'emp_id' => $request->emp_id,
-                'emp_name' => $request->emp_name,
-                'join_date' => $request->join_date,
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
-                'department_id' => $request->department_id,
-                'designation_id' => $request->designation_id,
-                'company' => $request->company,
-                'status' => $request->status,
-            ]);
-            return back();
-        } else {
-            $employee = Employee::find($request->employee_id);
-            $delete_from = public_path('/uploads/employees/' . $employee->picture);
-            if (file_exists($delete_from)) {
-                unlink($delete_from);
-            }
+// employee update
+function employee_update(Request $request)
+{
+    $employee = Employee::findOrFail($request->employee_id);
 
-            $imageName = null;
-            if ($request->file('picture')) {
-                $imageName = $request->employee_id . '.' . $request->picture->extension();
-                $request->picture->move(public_path('uploads/employees/'), $imageName);
+    // Handle image upload
+    $imageName = $employee->picture;
 
-                Employee::where('id', $request->employee_id)->update([
-                    'picture' => $imageName,
-                ]);
-            }
-
-            Employee::find($request->employee_id)->update([
-                'emp_id' => $request->emp_id,
-                'emp_name' => $request->emp_name,
-                'join_date' => $request->join_date,
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
-                'picture' => $imageName ?? 'default.png',
-                'department_id' => $request->department_id,
-                'designation_id' => $request->designation_id,
-                'company' => $request->company,
-                'status' => $request->status,
-            ]);
-            return back();
+    if ($request->hasFile('picture')) {
+        // Delete old image
+        $oldPath = public_path('uploads/employees/' . $employee->picture);
+        if (file_exists($oldPath)) {
+            unlink($oldPath);
         }
+
+        // Upload new image
+        $imageName = $request->employee_id . '.' . $request->picture->extension();
+        $request->picture->move(public_path('uploads/employees/'), $imageName);
     }
+
+    // Update employee data
+    $employee->update([
+        'emp_id' => $request->emp_id,
+        'emp_name' => $request->emp_name,
+        'join_date' => $request->join_date,
+        'phone_number' => $request->phone_number,
+        'email' => $request->email,
+        'picture' => $imageName ?? 'default.png',
+        'department_id' => $request->department_id,
+        'designation_id' => $request->designation_id,
+        'company' => $request->company,
+        'status' => $request->status,
+    ]);
+
+    // Redirect with SweetAlert
+    return redirect()
+        ->route('employee_list')
+        ->with('employee_update', 'Employee updated successfully!');
+}
+
 
 
     //Edit end

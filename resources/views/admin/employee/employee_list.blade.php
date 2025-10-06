@@ -438,7 +438,7 @@
     <div class="card mb-4" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
             <h6 class="mb-0 text-dark">
-                <span class="">Employee List</span>
+                <span class="">Active Employee List</span>
             </h6>
         </div>
         <div class="card-body">
@@ -745,8 +745,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="smart-table">
-                @if (session('success'))
-                <div class="alert alert-success">{{ session('delete_employee') }}</div>
+                @if (session('employee_update'))
+                <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
+                    <span>{{ session('employee_update') }}</span>
+                    <button type="button" class="border-0 bg-warning text-white fw-bold px-2 rounded" data-bs-dismiss="alert" aria-label="Close">X</button>
+                </div>
                 @endif
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
@@ -754,7 +757,7 @@
                             <thead>
                                 <tr>
                                     <th>SL</th>
-                                    <th>EMPLOYEE ID</th>
+                                    <th>EMP ID</th>
                                     <th>EMPLOYEE NAME</th>
                                     <th>DEPARTMENT</th>
                                     <th>DESIGNATION</th>
@@ -768,7 +771,7 @@
                             </thead>
 
                             <tbody style="height: 5px !important; overflow: scroll;">
-                                @foreach ($employees_active  as $key => $employee)
+                                @foreach ($employees_active as $key => $employee)
                                 <tr style="cursor: default;">
                                     <td><span class="fw-bold text-muted">{{ $key + 1 }}</span></td>
                                     <td>
@@ -834,7 +837,7 @@
                             <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
                                 {{-- Left: Showing X to Y of Z --}}
                                 <div class="d-flex align-items-center mb-2">
-                                    @if ($employees_active  instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    @if ($employees_active instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     <span class="me-2">
                                         Showing {{ $employees_active ->firstItem() }} to {{ $employees_active ->lastItem() }} of {{ $employees_active ->total() }} rows
                                     </span>
@@ -868,7 +871,7 @@
 
                                 {{-- Right: Pagination links --}}
                                 <div class="mb-2">
-                                    @if ($employees_active  instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    @if ($employees_active instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     <div class="pagination-wrapper">
                                         {{ $employees_active ->appends(request()->query())->links() }}
                                     </div>
