@@ -88,7 +88,14 @@
                                         <li><a href="{{ route('others_pass') }}">Othres</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ route('employee') }}"><i class="fa fa-group"></i>Employee List</a></li>
+
+                                <li><a><i class="fa fa-tasks"></i>Employee<span
+                                            class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                         <li><a href="{{ route('employee') }}"><i class="fa fa-group"></i>Active Employee</a></li>
+                                         <li><a href="{{ route('delete_list') }}"><i class="fa fa-group"></i>Delete Employee</a></li>
+                                    </ul>
+                                </li>
                                 <li><a href="{{ route('users') }}"><i class="fa fa-user"></i>User List</a></li>
                                 <li><a><i class="fa fa-table"></i> Import Data <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">

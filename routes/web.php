@@ -249,6 +249,7 @@ Route::get('/others_pass', [PasswordController::class, 'others_pass'])->name('ot
 
 //employee Managment
 Route::get('/employee', [EmployeeController::class, 'employee'])->name('employee');
+Route::get('/employee/delete/List', [EmployeeController::class, 'delete_list'])->name('delete_list');
 Route::post('/employee/clone/{id}', [EmployeeController::class, 'cloneEmployee'])->name('employee.clone');
 Route::post('/employee/store', [EmployeeController::class, 'employee_store'])->name('employee.store');
 Route::get('/employee/delete/{employee_id}', [EmployeeController::class, 'employee_delete'])->name('employee.delete');

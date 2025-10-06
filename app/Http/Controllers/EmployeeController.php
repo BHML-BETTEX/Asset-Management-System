@@ -87,10 +87,10 @@ class EmployeeController extends Controller
         if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
         if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-        // Base query
+        // Base query with filters
         $query = Employee::whereIn('company', $companies);
 
-        // Apply search
+        // Apply filters & search (same logic)
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('emp_id', 'LIKE', "%{$search}%")
@@ -99,31 +99,11 @@ class EmployeeController extends Controller
                     ->orWhere('email', 'LIKE', "%{$search}%");
             });
         }
-
-        // Apply department filter
-        if (!empty($departmentFilter)) {
-            $query->where('department_id', $departmentFilter);
-        }
-
-        // Apply designation filter
-        if (!empty($designationFilter)) {
-            $query->where('designation_id', $designationFilter);
-        }
-
-        // Apply company filter
-        if (!empty($companyFilter)) {
-            $query->where('company', $companyFilter);
-        }
-
-        // Apply joining date range filter
-        if (!empty($joinDateFrom)) {
-            $query->whereDate('join_date', '>=', $joinDateFrom);
-        }
-        if (!empty($joinDateTo)) {
-            $query->whereDate('join_date', '<=', $joinDateTo);
-        }
-
-        // Apply picture filter
+        if (!empty($departmentFilter)) $query->where('department_id', $departmentFilter);
+        if (!empty($designationFilter)) $query->where('designation_id', $designationFilter);
+        if (!empty($companyFilter)) $query->where('company', $companyFilter);
+        if (!empty($joinDateFrom)) $query->whereDate('join_date', '>=', $joinDateFrom);
+        if (!empty($joinDateTo)) $query->whereDate('join_date', '<=', $joinDateTo);
         if ($hasPicture === 'yes') {
             $query->whereNotNull('picture')->where('picture', '!=', '')->where('picture', '!=', 'default.png');
         } elseif ($hasPicture === 'no') {
@@ -132,7 +112,7 @@ class EmployeeController extends Controller
             });
         }
 
-        // Apply sorting
+        // Sorting
         switch ($sortBy) {
             case 'emp_name':
                 $query->orderBy('emp_name', 'asc');
@@ -148,24 +128,118 @@ class EmployeeController extends Controller
                 break;
         }
 
-        // Fetch records
+        // 👇 Split into active/inactive
+        $activeEmployees = (clone $query)->where('status', 'Active');
+        $inactiveEmployees = (clone $query)->where('status', 'In-Active');
+
         if ($showAll || $perPage === 'all') {
-            $employees = $query->get();
+            $employees_active = $activeEmployees->get();
+            $employees_inactive = $inactiveEmployees->get();
         } else {
-            $employees = $query->paginate((int) $perPage)->appends($request->all());
+            $employees_active = $activeEmployees->paginate((int)$perPage)->appends($request->all());
+            $employees_inactive = $inactiveEmployees->paginate((int)$perPage, ['*'], 'inactive_page')->appends($request->all());
         }
 
         return view('admin.employee.employee_list', [
-            'product_types' => ProductType::all(),
             'departments' => Department::all(),
             'designation' => Designation::all(),
-            'employees' => $employees,
+            'employees_active' => $employees_active,
+            'employees_inactive' => $employees_inactive,
             'company' => Company::all(),
             'search' => $search,
             'perPage' => $perPage,
             'showAll' => $showAll,
         ]);
     }
+
+        public function delete_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10);
+        $showAll = $request->input('show_all', false);
+
+        // Get filter parameters
+        $departmentFilter = $request->input('department_filter', '');
+        $designationFilter = $request->input('designation_filter', '');
+        $companyFilter = $request->input('company_filter', '');
+        $joinDateFrom = $request->input('join_date_from', '');
+        $joinDateTo = $request->input('join_date_to', '');
+        $hasPicture = $request->input('has_picture', '');
+        $sortBy = $request->input('sort_by', 'emp_id');
+
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        // Base query with filters
+        $query = Employee::whereIn('company', $companies);
+
+        // Apply filters & search (same logic)
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_id', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_name', 'LIKE', "%{$search}%")
+                    ->orWhere('phone_number', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+        if (!empty($departmentFilter)) $query->where('department_id', $departmentFilter);
+        if (!empty($designationFilter)) $query->where('designation_id', $designationFilter);
+        if (!empty($companyFilter)) $query->where('company', $companyFilter);
+        if (!empty($joinDateFrom)) $query->whereDate('join_date', '>=', $joinDateFrom);
+        if (!empty($joinDateTo)) $query->whereDate('join_date', '<=', $joinDateTo);
+        if ($hasPicture === 'yes') {
+            $query->whereNotNull('picture')->where('picture', '!=', '')->where('picture', '!=', 'default.png');
+        } elseif ($hasPicture === 'no') {
+            $query->where(function ($q) {
+                $q->whereNull('picture')->orWhere('picture', '')->orWhere('picture', 'default.png');
+            });
+        }
+
+        // Sorting
+        switch ($sortBy) {
+            case 'emp_name':
+                $query->orderBy('emp_name', 'asc');
+                break;
+            case 'join_date':
+                $query->orderBy('join_date', 'desc');
+                break;
+            case 'created_at':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('emp_id', 'asc');
+                break;
+        }
+
+        // 👇 Split into active/inactive
+        $activeEmployees = (clone $query)->where('status', 'Active');
+        $inactiveEmployees = (clone $query)->where('status', 'In Active');
+
+        if ($showAll || $perPage === 'all') {
+            $employees_active = $activeEmployees->get();
+            $employees_inactive = $inactiveEmployees->get();
+        } else {
+            $employees_active = $activeEmployees->paginate((int)$perPage)->appends($request->all());
+            $employees_inactive = $inactiveEmployees->paginate((int)$perPage, ['*'], 'inactive_page')->appends($request->all());
+        }
+
+        return view('admin.employee.delete_list', [
+            'departments' => Department::all(),
+            'designation' => Designation::all(),
+            'employees_active' => $employees_active,
+            'employees_inactive' => $employees_inactive,
+            'company' => Company::all(),
+            'search' => $search,
+            'perPage' => $perPage,
+            'showAll' => $showAll,
+        ]);
+    }
+
 
 
     function employee_store(Request $request)
@@ -180,6 +254,7 @@ class EmployeeController extends Controller
             'email' => $request->email,
             'others' => $request->others,
             'company' => $request->company,
+            'status' => $request->status,
             'created_at' => Carbon::now(),
         ]);
 
@@ -195,25 +270,20 @@ class EmployeeController extends Controller
     }
 
     //employee delete
-    function employee_delete($employee_id)
+    public function employee_delete($id)
     {
-        Employee::find($employee_id)->delete();
-        return back()->with('delete_employee', 'Employee delete success');
+        $employee = Employee::find($id);
+
+        if ($employee) {
+            $employee->status = 'In Active';
+            $employee->save();
+
+            return redirect()->back()->with('success', 'Employee status changed to inactive successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Employee not found.');
     }
 
-    function employee_edit($employee_id)
-    {
-        $departments = Department::all();
-        $designation = designation::all();
-        $employees_info = Employee::find($employee_id);
-        $companies = Company::all();
-        return view('admin.employee.employee_edit', [
-            'employees_info' => $employees_info,
-            'departments' => $departments,
-            'designation' => $designation,
-            'companies' => $companies,
-        ]);
-    }
 
     //employee update
     function employee_update(Request $request)
@@ -228,6 +298,7 @@ class EmployeeController extends Controller
                 'department_id' => $request->department_id,
                 'designation_id' => $request->designation_id,
                 'company' => $request->company,
+                'status' => $request->status,
             ]);
             return back();
         } else {
@@ -257,6 +328,7 @@ class EmployeeController extends Controller
                 'department_id' => $request->department_id,
                 'designation_id' => $request->designation_id,
                 'company' => $request->company,
+                'status' => $request->status,
             ]);
             return back();
         }

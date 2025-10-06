@@ -768,7 +768,7 @@
                             </thead>
 
                             <tbody style="height: 5px !important; overflow: scroll;">
-                                @foreach ($employees_active  as $key => $employee)
+                                @foreach ($employees_inactive   as $key => $employee)
                                 <tr style="cursor: default;">
                                     <td><span class="fw-bold text-muted">{{ $key + 1 }}</span></td>
                                     <td>
@@ -834,12 +834,12 @@
                             <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
                                 {{-- Left: Showing X to Y of Z --}}
                                 <div class="d-flex align-items-center mb-2">
-                                    @if ($employees_active  instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    @if ($employees_inactive   instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     <span class="me-2">
-                                        Showing {{ $employees_active ->firstItem() }} to {{ $employees_active ->lastItem() }} of {{ $employees_active ->total() }} rows
+                                        Showing {{ $employees_inactive  ->firstItem() }} to {{ $employees_inactive  ->lastItem() }} of {{ $employees_inactive  ->total() }} rows
                                     </span>
                                     @else
-                                    <span class="me-2">Showing all {{ $employees_active ->count() }} rows</span>
+                                    <span class="me-2">Showing all {{ $employees_inactive ->count() }} rows</span>
                                     @endif
 
                                     {{-- Dropdown --}}
@@ -868,9 +868,9 @@
 
                                 {{-- Right: Pagination links --}}
                                 <div class="mb-2">
-                                    @if ($employees_active  instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    @if ($employees_inactive   instanceof \Illuminate\Pagination\LengthAwarePaginator)
                                     <div class="pagination-wrapper">
-                                        {{ $employees_active ->appends(request()->query())->links() }}
+                                        {{ $employees_inactive  ->appends(request()->query())->links() }}
                                     </div>
                                     @endif
                                 </div>
