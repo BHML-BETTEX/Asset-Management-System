@@ -590,9 +590,8 @@
     }
 
     function confirmDelete() {
-        if (confirm('Are you sure you want to delete this employee? This action cannot be undone.')) {
-            // Add delete functionality here
-            alert('Delete functionality will be implemented with proper authorization.');
+        if (confirm('Are you sure you want to delete this employee? This will change their status to "Delete".')) {
+            window.location.href = "{{ route('employee.delete', $employee->id) }}";
         }
     }
 </script>
