@@ -152,7 +152,7 @@ class EmployeeController extends Controller
         ]);
     }
 
-        public function delete_list(Request $request)
+    public function inactive_list(Request $request)
     {
         $role = auth()->user()->roles[0];
         $search = $request->input('search', '');
@@ -216,22 +216,18 @@ class EmployeeController extends Controller
                 break;
         }
 
-        // 👇 Split into active/inactive
-        $activeEmployees = (clone $query)->where('status', 'Active');
-        $inactiveEmployees = (clone $query)->where('status', 'In Active');
+        // Filter by In Active status
+        $employees = $query->where('status', 'inactive');
 
         if ($showAll || $perPage === 'all') {
-            $employees_active = $activeEmployees->get();
-            $employees_inactive = $inactiveEmployees->get();
+            $employees_inactive = $employees->get();
         } else {
-            $employees_active = $activeEmployees->paginate((int)$perPage)->appends($request->all());
-            $employees_inactive = $inactiveEmployees->paginate((int)$perPage, ['*'], 'inactive_page')->appends($request->all());
+            $employees_inactive = $employees->paginate((int)$perPage)->appends($request->all());
         }
 
         return view('admin.employee.delete_list', [
             'departments' => Department::all(),
             'designation' => Designation::all(),
-            'employees_active' => $employees_active,
             'employees_inactive' => $employees_inactive,
             'company' => Company::all(),
             'search' => $search,
@@ -240,6 +236,89 @@ class EmployeeController extends Controller
         ]);
     }
 
+    public function delete_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10);
+        $showAll = $request->input('show_all', false);
+
+        // Get filter parameters
+        $departmentFilter = $request->input('department_filter', '');
+        $designationFilter = $request->input('designation_filter', '');
+        $companyFilter = $request->input('company_filter', '');
+        $joinDateFrom = $request->input('join_date_from', '');
+        $joinDateTo = $request->input('join_date_to', '');
+        $hasPicture = $request->input('has_picture', '');
+        $sortBy = $request->input('sort_by', 'emp_id');
+
+        // Get allowed companies based on role
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        // Base query with filters
+        $query = Employee::whereIn('company', $companies);
+
+        // Apply filters & search (same logic)
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_id', 'LIKE', "%{$search}%")
+                    ->orWhere('emp_name', 'LIKE', "%{$search}%")
+                    ->orWhere('phone_number', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+        if (!empty($departmentFilter)) $query->where('department_id', $departmentFilter);
+        if (!empty($designationFilter)) $query->where('designation_id', $designationFilter);
+        if (!empty($companyFilter)) $query->where('company', $companyFilter);
+        if (!empty($joinDateFrom)) $query->whereDate('join_date', '>=', $joinDateFrom);
+        if (!empty($joinDateTo)) $query->whereDate('join_date', '<=', $joinDateTo);
+        if ($hasPicture === 'yes') {
+            $query->whereNotNull('picture')->where('picture', '!=', '')->where('picture', '!=', 'default.png');
+        } elseif ($hasPicture === 'no') {
+            $query->where(function ($q) {
+                $q->whereNull('picture')->orWhere('picture', '')->orWhere('picture', 'default.png');
+            });
+        }
+
+        // Sorting
+        switch ($sortBy) {
+            case 'emp_name':
+                $query->orderBy('emp_name', 'asc');
+                break;
+            case 'join_date':
+                $query->orderBy('join_date', 'desc');
+                break;
+            case 'created_at':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('emp_id', 'asc');
+                break;
+        }
+
+        // Filter by Delete Active status
+        $employees = $query->where('status', 'Delete');
+
+        if ($showAll || $perPage === 'all') {
+            $employees_inactive = $employees->get();
+        } else {
+            $employees_inactive = $employees->paginate((int)$perPage)->appends($request->all());
+        }
+
+        return view('admin.employee.delete_list', [
+            'departments' => Department::all(),
+            'designation' => Designation::all(),
+            'employees_inactive' => $employees_inactive,
+            'company' => Company::all(),
+            'search' => $search,
+            'perPage' => $perPage,
+            'showAll' => $showAll,
+        ]);
+    }
 
 
     function employee_store(Request $request)
@@ -269,13 +348,24 @@ class EmployeeController extends Controller
         return back();
     }
 
+    //employee edit
+    public function employee_edit($id)
+    {
+        $employees_info = Employee::findOrFail($id);
+        $departments = Department::all();
+        $designation = Designation::all();
+        $companies = Company::all();
+
+        return view('admin.employee.employee_edit', compact('employees_info', 'departments', 'designation', 'companies'));
+    }
+
     //employee delete
     public function employee_delete($id)
     {
         $employee = Employee::find($id);
 
         if ($employee) {
-            $employee->status = 'In Active';
+            $employee->status = 'Delete';
             $employee->save();
 
             return redirect()->back()->with('success', 'Employee status changed to inactive successfully.');

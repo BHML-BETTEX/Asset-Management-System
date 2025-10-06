@@ -93,7 +93,8 @@
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                          <li><a href="{{ route('employee') }}"><i class="fa fa-group"></i>Active Employee</a></li>
-                                         <li><a href="{{ route('delete_list') }}"><i class="fa fa-group"></i>Delete Employee</a></li>
+                                         <li><a href="{{ route('inactive_list') }}"><i class="fa fa-user-times"></i>Inactive Employee</a></li>
+                                         <li><a href="{{ route('delete_list') }}"><i class="fa fa-trash"></i>Delete Employee</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('users') }}"><i class="fa fa-user"></i>User List</a></li>

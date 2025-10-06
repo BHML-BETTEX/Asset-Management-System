@@ -93,7 +93,7 @@
                             <label class="form-label">Status</label>
                             <select class="form-control" name="status">
                                 <option value="active" {{ $employees_info->status == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ $employees_info->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="inactive" {{ $employees_info->status == 'inactive' ? 'selected' : '' }}>In Active</option>
                             </select>
                         </div>
                     </div>
