@@ -304,7 +304,7 @@
             </div>
             <div class="col-md-4 text-md-right">
                 <span class="status-badge status-active">
-                    <i class="fa fa-check-circle"></i> Active Employee
+                    <i class="fa fa-check-circle"></i> {{ $employee->status }}
                 </span>
                 <div class="mt-2">
                     <small class="text-light">Employee ID: <strong>{{ $employee->emp_id }}</strong></small>
