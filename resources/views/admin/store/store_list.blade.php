@@ -940,7 +940,6 @@
                                     </th>
                                     <th data-column="sl" data-essential="true">SL</th>
                                     <th data-column="status" data-essential="true">STATUS</th>
-                                    <th data-column="action" data-essential="true">ACTION</th>
                                     <th data-column="checkstatus">CHECKSTATUS</th>
                                     <th data-column="asset_tag" data-essential="true">ASSET TAG</th>
                                     <th data-column="asset_type" data-essential="true">ASSET TYPE</th>
@@ -957,7 +956,7 @@
                                     <th data-column="vendor">VENDOR</th>
                                     <th data-column="purchase_date">PURCHASE DATE</th>
                                     <th data-column="challan_no">CHALLAN NO</th>
-                                    <th data-column="status_name">STATUS NAME</th>
+                                    <th data-column="status_name">CONDITION</th>
                                     <th data-column="company_id">COMPANY</th>
                                     <th data-column="others">OTHERS</th>
                                     <th data-column="balance">Balance</th>
@@ -979,8 +978,6 @@
                                                 data-company="{{ e($store->others ?? $store->rel_to_Company->company ?? 'N/A') }}">
                                         </div>
                                     </td>
-
-                                    <td></td>
                                     <td data-column="sl">{{ $key + 1 }}</td>
                                     <td data-column="status" id="action-btn-{{ $store->id }}">
                                         @if ($store->checkstatus === 'INSTOCK')
@@ -1008,33 +1005,6 @@
                                         </button>
                                         @endif
                                     </td>
-
-                                    <td data-column="action" class="action-buttons-cell">
-                                        <a href="{{ route('store.edit', $store->id) }}"
-                                            class="btn btn-outline-primary table-action-btn"
-                                            title="Edit">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-
-                                        <a href="{{ route('qr_code_view', $store->id) }}"
-                                            class="btn btn-outline-success table-action-btn"
-                                            title="View">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-
-                                        <a href="{{ route('qr_code', $store->id) }}"
-                                            class="btn btn-outline-info table-action-btn"
-                                            title="QR Code">
-                                            <i class="fa fa-qrcode"></i>
-                                        </a>
-
-                                        <a href="{{ route('store.clone', $store->id) }}"
-                                            class="btn btn-outline-secondary btn-sm"
-                                            title="Clone Asset">
-                                            <i class="fa fa-copy"></i>
-                                        </a>
-                                    </td>
-
                                     <td data-column="checkstatus" style="background-color: #feefe6;">
                                         @if ($store->checkstatus == "INSTOCK")
                                         <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
@@ -1044,7 +1014,6 @@
                                         <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                         @endif
                                     </td>
-
                                     <td data-column="asset_tag">
                                         <a href="{{ route('store_info', $store->id) }}">
                                             {{ $store->asset_tag }}
@@ -1052,7 +1021,7 @@
                                     </td>
                                     <td data-column="asset_type">{{ $store->rel_to_ProductType->product ?? '' }}</td>
                                     <td data-column="model">{{ $store->model }}</td>
-                                    <td data-column="brand">{{ $store->rel_to_brand->brand_name ?? 'N/A' }}</td>
+                                    <td data-column="brand_id">{{$store->rel_to_brand->brand_name}}</td>
                                     <td data-column="description">{{ $store->description }}</td>
                                     <td data-column="asset_sl_no">{{ $store->asset_sl_no }}</td>
                                     <td data-column="qty">{{ $store->qty }}</td>
@@ -1065,7 +1034,7 @@
                                     <td data-column="purchase_date">{{ $store->purchase_date }}</td>
                                     <td data-column="challan_no">{{ $store->challan_no }}</td>
                                     <td data-column="status_name">{{ $store->rel_to_Status->status_name ?? '' }}</td>
-                                    <td data-column="company">{{ $store->rel_to_Company->company ?? '' }}</td>
+                                    <td data-column="company_id">{{$store->rel_to_Company->company}}</td>
                                     <td data-column="others">{{ $store->others }}</td>
                                     <td data-column="balance">{{ $store->balance ?? '' }}</td>
                                     <td data-column="picture">
@@ -1144,24 +1113,24 @@
                     @csrf
                     <input type="hidden" id="issue_id" name="store_id" value="">
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
+                    <div class="row g-3 ">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Asset Tag</label>
                             <input type="text" id="asset_tag" class="form-control" name="asset_tag" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Asset Type</label>
                             <input type="text" id="asset_type" class="form-control" name="asset_type" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Model</label>
                             <input type="text" id="model" class="form-control" name="model" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Company</label>
                             <input type="text" id="company" class="form-control" name="others" readonly>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Select Employee</label>
                             <select id="empl_id" name="emp_id" class="form-control select2">
                                 <option value="" selected disabled>-- Select Employee --</option>
@@ -1172,19 +1141,19 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Employee Name</label>
                             <input type="text" id="emp_name" class="form-control" name="emp_name" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Designation</label>
                             <input type="text" id="designation_id" class="form-control" name="designation_id" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Department</label>
                             <input type="text" id="department_id" class="form-control" name="department_id" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 ">
                             <label class="form-label">Issue Date</label>
                             <input type="date" id="issue_date" class="form-control" name="issue_date" required>
                         </div>
@@ -1215,9 +1184,9 @@
                 <form action="{{ route('return_update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="return_id" name="store_id" value="">
-                    
+
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Asset Tag</label>
                             <input type="text" id="return_asset_tag" class="form-control" name="asset_tag" readonly>
                         </div>
@@ -1225,7 +1194,7 @@
                             <label class="form-label">Asset Type</label>
                             <input type="text" id="return_asset_type" class="form-control" name="asset_type" readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Model</label>
                             <input type="text" id="return_model" class="form-control" name="model" readonly>
                         </div>

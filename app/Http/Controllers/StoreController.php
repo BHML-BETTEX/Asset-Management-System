@@ -249,20 +249,31 @@ class StoreController extends Controller
             'stores_info' => $stores_info,
         ]);
     }
-
     //view end
 
 
     //issue start...
-    function issue()
+    public function issue($stores_id)
     {
+        // get store info
+        $store = Store::with([
+            'rel_to_ProductType',
+            'rel_to_brand',
+            'rel_to_Company',
+            'rel_to_Department',
+            'rel_to_Designation'
+        ])->findOrFail($stores_id);
+
+        // previous data
         $issued_products = DB::select("CALL sp_issued_products()");
         $product_types = ProductType::all();
         $departments = Department::all();
-        $designation = designation::all();
+        $designation = Designation::all();
         $stores = Store::all();
         $employee = Employee::all();
+
         return view('admin.store.issue', [
+            'store' => $store, // 👈 single store data
             'issued_products' => $issued_products,
             'stores' => $stores,
             'departments' => $departments,
@@ -272,9 +283,11 @@ class StoreController extends Controller
         ]);
     }
 
-    function issue_store(Request $request)
+
+    public function issue_store(Request $request)
     {
-        issue::insertGetId([
+        // Insert issue record
+        Issue::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
             'model' => $request->model,
@@ -289,9 +302,11 @@ class StoreController extends Controller
             'issue_date' => $request->issue_date,
             'return_date' => $request->return_date,
             'created_at' => Carbon::now(),
-
         ]);
-        return redirect()->back()->with('issue_success', 'Product issued...!');
+
+        // Redirect to the specific store info page
+        return redirect()->route('store_info', $request->store_id)
+            ->with('issue_success', 'Product issued successfully!');
     }
     //issue end
 
@@ -390,30 +405,42 @@ class StoreController extends Controller
 
 
     //return start...
-    function return()
+    public function return_form(Request $request)
     {
-        $return_products = DB::select("CALL sp_return_products()");
-        $issue_info = issue::all();
-
         return view('admin.store.return', [
-            'return_products' => $return_products,
-            'issue_info' => $issue_info,
+            'asset_tag' => $request->asset_tag,
+            'asset_type' => $request->asset_type,
+            'model' => $request->model,
+            'emp_id' => $request->emp_id,
+            'emp_name' => $request->emp_name,
+            'issue_date' => $request->issue_date,
         ]);
     }
+
+
     public function return_update(Request $request)
     {
-        // 1. Update issues table using issue ID
-        DB::table("issues")
-            ->where('asset_tag', $request->asset_tag)  // safer than asset_tag
+        // Validate
+        $request->validate([
+            'asset_tag' => 'required|string',
+            'return_date' => 'required|date',
+        ]);
+
+        // Update only return_date in issues table
+        $updated = DB::table('issues')
+            ->where('asset_tag', $request->asset_tag)
             ->update(['return_date' => $request->return_date]);
 
-        // 2. Reset asset status in stores
-        DB::table("stores")
-            ->where('id', $request->store_id)
-            ->update(['checkstatus' => 'INSTOCK']);
+        if ($updated) {
+            // Redirect to the specific asset’s history page
+            return redirect()->route('history', ['asset_tag' => $request->asset_tag])
+                ->with('return_success', 'Product return successful!');
+        }
 
-        return redirect()->back()->with('return_success', 'Product return successful!');
+        return redirect()->back()->with('error', 'No matching record found for this asset.');
     }
+
+
 
     // Autofill return modal
     public function return_search_by_id($issue_id)
@@ -491,71 +518,69 @@ class StoreController extends Controller
     //store search end.
 
 
-    //History
-    public function history(Request $request, $asset_tag = null)
-    {
-        $companies = [];
-        $role = auth()->user()->roles[0];
-        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
-        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
-        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
-        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
+public function history(Request $request, $asset_tag = null)
+{
+    $companies = [];
+    $role = auth()->user()->roles[0];
+    $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 'BHML INDUSTRIES LTD') : '';
+    $role->hasPermissionTo('view BETTEX') ? array_push($companies, 'BETTEX HK LTD') : '';
+    $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 'BETTEX PREMIUM') : '';
+    $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 'BETTEX INDIA') : '';
 
-        $search  = $request->input('search', '');
-        $perPage = $request->input('per_page', 10);
+    $search  = $request->input('search', '');
+    $perPage = $request->input('per_page', 10);
 
-        // start query
-        $query = Issue::whereIn('others', $companies);
+    $query = Issue::whereIn('others', $companies);
 
-        $stores = null;
+    $store = null; // single store
+    $maintenances = collect(); // default empty collection
 
-        // ✅ If asset_tag is provided
-        if ($asset_tag) {
-            $query->where('asset_tag', $asset_tag);
+    if ($asset_tag) {
+        $query->where('asset_tag', $asset_tag);
 
-            // find first issue with this asset_tag
-            $issue = Issue::where('asset_tag', $asset_tag)->first();
+        $issue = Issue::where('asset_tag', $asset_tag)->first();
 
-            if ($issue && isset($issue->store_id)) {
-                // find related store by id
-                $stores = Store::with([
-                    'rel_to_ProductType',
-                    'rel_to_brand',
-                    'rel_to_SizeMaseurment',
-                    'rel_to_Supplier',
-                    'rel_to_Status',
-                    'rel_to_Company',
-                    'rel_to_Department',
-                    'rel_to_Designation'
-                ])->find($issue->store_id);
-            }
+        if ($issue && isset($issue->store_id)) {
+            $store = Store::with([
+                'rel_to_ProductType',
+                'rel_to_brand',
+                'rel_to_SizeMaseurment',
+                'rel_to_Supplier',
+                'rel_to_Status',
+                'rel_to_Company',
+                'rel_to_Department',
+                'rel_to_Designation'
+            ])->find($issue->store_id);
+
+            $maintenances = Maintenance::where('asset_tag', $store->asset_tag)->get();
         }
-
-
-        // ✅ Search filter
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('asset_tag', 'LIKE', "%$search%")
-                    ->orWhere('asset_type', 'LIKE', "%$search%")
-                    ->orWhere('emp_id', 'LIKE', "%$search%")
-                    ->orWhere('emp_name', 'LIKE', "%$search%")
-                    ->orWhere('others', 'LIKE', "%$search%");
-            });
-        }
-
-        // ✅ Pagination
-        $issue_info = $perPage === 'all'
-            ? $query->get()
-            : $query->paginate((int)$perPage)->appends($request->all());
-
-        return view('admin.store.history', [
-            'issue_info' => $issue_info,
-            'search'     => $search,
-            'perPage'    => $perPage,
-            'asset_tag'  => $asset_tag,
-            'stores'     => $stores, // now a single store model (or null)
-        ]);
     }
+
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('asset_tag', 'LIKE', "%$search%")
+              ->orWhere('asset_type', 'LIKE', "%$search%")
+              ->orWhere('emp_id', 'LIKE', "%$search%")
+              ->orWhere('emp_name', 'LIKE', "%$search%")
+              ->orWhere('others', 'LIKE', "%$search%");
+        });
+    }
+
+    $issue_info = $perPage === 'all'
+        ? $query->get()
+        : $query->paginate((int)$perPage)->appends($request->all());
+
+    return view('admin.store.history', [
+        'issue_info'   => $issue_info,
+        'search'       => $search,
+        'perPage'      => $perPage,
+        'asset_tag'    => $asset_tag,
+        'store'        => $store,
+        'maintenances' => $maintenances,
+    ]);
+}
+
+
 
 
 

@@ -252,47 +252,58 @@
     </div>
 
     <div class="row mb-2 bg-white">
-        <ul class="nav nav-tabs mb-3 w-100 d-flex align-items-center" id="employeeTab" role="tablist" style="style=" border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);"">
-            <!-- Left-aligned tabs -->
+        <ul class="nav nav-tabs mb-3 w-100 d-flex align-items-center" id="employeeTab" role="tablist"
+            style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+
+            <!-- Info Tab -->
             <li class="nav-item">
-                <a class="nav-link " id="info-tab" data-bs-toggle="tab" href="" role="tab">Info</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="">History</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Maintenance</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab">Files</a>
+                <a class="nav-link"
+                    href="{{ $store ? route('store_info', $store->id) : '#' }}">
+                    Info
+                </a>
             </li>
 
-            <!-- Uploads tab -->
+            <!-- History Tab (current page) -->
             <li class="nav-item">
-                <a class="nav-link" id="uploads-tab" href="#history" role="tab" data-toggle="modal" data-target="#uploadsModal">
+                <a class="nav-link active"
+                    href="{{ $store ? route('history', $store->asset_tag) : '#' }}">
+                    History
+                </a>
+            </li>
+
+            <!-- Maintenance Tab -->
+            <li class="nav-item">
+                <a class="nav-link"
+                    href="{{ $store ? route('maintenance_list', $store->id) : '#' }}">
+                    Maintenance
+                </a>
+            </li>
+
+            <!-- Files Tab -->
+            <li class="nav-item">
+                <a class="nav-link" href="#files" data-bs-toggle="tab" role="tab">Files</a>
+            </li>
+
+            <!-- Uploads Tab -->
+            <li class="nav-item">
+                <a class="nav-link" href="#uploads" role="button" data-bs-toggle="modal" data-bs-target="#uploadsModal">
                     <i class="fa fa-paperclip"></i> Uploads
                 </a>
             </li>
-
-            <!-- Action dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                    <i class="fa fa-gear"></i> Action
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Action One</a></li>
-                    <li><a class="dropdown-item" href="#">Action Two</a></li>
-                </ul>
-            </li>
         </ul>
     </div>
+
+
 
     <!--Asset Table-->
     <div class="row">
         <div class="col-lg-12">
             <div class="smart-table">
-                @if (session('delete_employee'))
-                <div class="alert alert-success">{{ session('delete_employee') }}</div>
+                @if (session('return_success'))
+                <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
+                    <span>{{ session('return_success') }}</span>
+                    <button type="button" class="border-0 bg-warning text-white fw-bold px-2 rounded" data-bs-dismiss="alert" aria-label="Close">X</button>
+                </div>
                 @endif
                 <div class="card-body">
                     <div class="table-responsive text-nowrap">
@@ -336,7 +347,22 @@
                                     <td></td>
                                     <td>{{ $issue_infos->issue_date }}</td>
                                     <td>{{ $issue_infos->return_date }}</td>
-                                    <td></td>
+                                    <td>
+                                        @if (empty($issue_infos->return_date))
+                                        <a href="{{ route('return.form', [
+                                            'asset_tag' => $issue_infos->asset_tag,
+                                            'asset_type' => $issue_infos->asset_type,
+                                            'model' => $issue_infos->model,
+                                            'emp_id' => $issue_infos->emp_id,
+                                            'emp_name' => $issue_infos->emp_name,
+                                            'issue_date' => $issue_infos->issue_date
+                                            ]) }}"
+                                            class="btn btn-sm btn-success"
+                                            title="Return Asset">
+                                            <i class="fa fa-undo"></i>
+                                        </a>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

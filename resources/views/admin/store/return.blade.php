@@ -10,64 +10,58 @@
                     <p class="mb-0">Enter All information to return Product</p>
                 </div>
                 <div class="card-body">
-                    <form action="{{route("return_update")}}" method="POST" enctype="multipart/form-data"
-                        class="form-card">
+                    <form action="{{ route('return_update') }}" method="POST" enctype="multipart/form-data" class="form-card">
                         @csrf
 
                         <div class="input-group input-group-outline mb-3">
-                            <select id="asset_tag" name="asset_tag" class="form-control select2">
-                                <option value="">Select a Product</option>
-                                @foreach ($return_products as $return_products)
-                                <option value="{{ $return_products->asset_tag }} " data-asset_tag="{{ $return_products->id }}">{{ $return_products->asset_tag }}
-                                </option>
-                                @endforeach
-                            </select>
+                            <input type="text" id="asset_tag" name="asset_tag" class="form-control"
+                                value="{{ $asset_tag ?? '' }}" placeholder="Asset Tag" readonly>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
-                            <input type="hidden" value="" name="asset_type">
-                            <input type="text" id="asset_type" name="asset_type" class="form-control" value=""
-                                placeholder="Asset Type" readonly>
+                            <input type="text" id="asset_type" name="asset_type" class="form-control"
+                                value="{{ $asset_type ?? '' }}" placeholder="Asset Type" readonly>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
-                            <input type="hidden" value="" name="model">
-                            <input type="text" id="model" name="model" class="form-control" value=""
-                                placeholder="Model" readonly>
+                            <input type="text" id="model" name="model" class="form-control"
+                                value="{{ $model ?? '' }}" placeholder="Model" readonly>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
-                            <input type="hidden" value="" name="">
-                            <input type="text" id="emp_id" name="emp_id" class="form-control" value="" placeholder="Employee ID"
-                                readonly>
+                            <input type="text" id="emp_id" name="emp_id" class="form-control"
+                                value="{{ $emp_id ?? '' }}" placeholder="Employee ID" readonly>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
-                            <input type="hidden" value="" name="">
-                            <input type="text" id="emp_name" name="emp_name" class="form-control" value="" placeholder="Employee Name"
-                                readonly>
+                            <input type="text" id="emp_name" name="emp_name" class="form-control"
+                                value="{{ $emp_name ?? '' }}" placeholder="Employee Name" readonly>
                         </div>
 
                         <div class="form-group mb-3">
-                            <input type="hidden" value="" name="return_date">
-                            <input type="date" id="issue_date" name="issue_date" class="form-control" name="return_date" value=""
-                                readonly>
+                            <label class="form-label">Issue Date</label>
+                            <input type="date" id="issue_date" name="issue_date" class="form-control"
+                                value="{{ $issue_date ?? '' }}" readonly>
                         </div>
-
 
                         <div class="form-group mb-3">
                             <label class="form-label">Return Date</label>
-                            <input type="hidden" value="" name="return_date" required>
-                            <input type="date" class="form-control" name="return_date" value=""
-                                placeholder="Return Date" required>
+                            <input type="date" class="form-control" name="return_date" required>
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 mt-4">
-                            <button type="submit" class="btn btn-success btn-lg flex-fill"><span class="fa fa-file-text"> Submit</button>
-                            <button type="reset" class="btn btn-secondary btn-lg "><span class="fa fa-undo"></span> Reset</button>
-                            <a href="{{ route('store') }}" class="btn btn-info btn-lg text-white text-center"><span class="fa fa-step-backward"></span> Back</a>
+                            <button type="submit" class="btn btn-success btn-lg flex-fill">
+                                <span class="fa fa-file-text"></span> Submit
+                            </button>
+                            <button type="reset" class="btn btn-secondary btn-lg">
+                                <span class="fa fa-undo"></span> Reset
+                            </button>
+                            <a href="{{ route('store') }}" class="btn btn-info btn-lg text-white">
+                                <span class="fa fa-step-backward"></span> Back
+                            </a>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

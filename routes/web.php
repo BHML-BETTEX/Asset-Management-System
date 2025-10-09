@@ -122,9 +122,9 @@ Route::get('/color/delete/{color_id}', [CategoryController::class, 'color_delete
 
 //Company
 Route::get('/company', [CategoryController::class, 'company_list'])->name('company.list');
-Route::post('/company/store', [CategoryController::class, 'company_store'])->name('company.store');  
-Route::get('/company/delete/{company_id}', [CategoryController::class, 'company_delete'])->name('company.delete');  
-Route::get('/company/search_by_id/{company_id}', [CategoryController::class, 'search_by_id'])->name('search.company');   
+Route::post('/company/store', [CategoryController::class, 'company_store'])->name('company.store');
+Route::get('/company/delete/{company_id}', [CategoryController::class, 'company_delete'])->name('company.delete');
+Route::get('/company/search_by_id/{company_id}', [CategoryController::class, 'search_by_id'])->name('search.company');
 
 //store
 Route::get('/store', [StoreController::class, 'store'])->name('store');
@@ -137,11 +137,11 @@ Route::get('/store/edit/{stores_id}', [StoreController::class, 'store_edit'])->n
 Route::post('/store/update', [StoreController::class, 'store_update'])->name('store.update');
 Route::get('/store/view/{stores_id}', [StoreController::class, 'store_view'])->name('store.view');
 
-Route::get('/store/issue', [StoreController::class, 'issue'])->name('issue');
+Route::get('/store/issue/{stores_id}', [StoreController::class, 'issue'])->name('issue');
 Route::post('/store/issue/store', [StoreController::class, 'issue_store'])->name('issue.store');
 Route::get('/store/search_by_id/{store_id}', [StoreController::class, 'search_by_id'])->name('search.product');
 
-Route::get('/store/return', [StoreController::class, 'return'])->name('return');
+Route::get('/store/return/form', [StoreController::class, 'return_form'])->name('return.form');
 Route::get('/store/return_search_by_id/{store_id}', [StoreController::class, 'return_search_by_id'])->name('return.search.product');
 Route::post('/store/return/update', [StoreController::class, 'return_update'])->name('return_update');
 
@@ -269,9 +269,6 @@ Route::post('/employee/storeOtherFile/{id}', [EmployeeController::class, 'storeO
 Route::get('/employee/storeOtherFile/delete/{id}', [EmployeeController::class, 'employee_file_delete'])->name('employee_file_delete');
 
 
-
-
-
 //desktop
 Route::get('/desktop', [DesktopController::class, 'desktop'])->name('desktop');
 Route::post('/desktop/store/', [DesktopController::class, 'desktop_store'])->name('desktop.store');
@@ -298,16 +295,3 @@ Route::delete('/backup/delete/{filename}', [App\Http\Controllers\DatabaseBackupC
 Route::get('/backup/detect-path', [App\Http\Controllers\DatabaseBackupController::class, 'detectMysqldumpPath'])->name('backup.detect.path');
 
 //
-
-
-
-
-
-
-
-
-
-
-
-
-
