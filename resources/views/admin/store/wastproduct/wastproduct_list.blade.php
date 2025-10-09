@@ -2,198 +2,260 @@
 @section('content')
 <style>
     .gradient-header {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        background: linear-gradient(to right, #003366 0%, #006666 100%);
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
-    .stats-card {
+
+    /* Filter Panel Styling */
+    .filter-panel {
         background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1rem;
+        align-items: end;
+    }
+
+    .filter-row label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    .filter-actions {
+        display: flex;
+        align-items: end;
+    }
+
+    .filter-actions button {
+        width: 100%;
+    }
+
+    .form-control-sm,
+    .form-select-sm {
+        border-radius: 8px;
+        border: 1px solid #e1e5e9;
         transition: all 0.3s ease;
-        border-left: 4px solid #ff6b6b;
+        height: 36px;
+        line-height: 36px;
     }
-    .stats-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+    .form-control-sm:focus,
+    .form-select-sm:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-    .filter-card {
+
+    .nav-tabs {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        border: none;
     }
-    .table-card {
+
+    /* Table Styling */
+    .smart-table {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        border: none;
         overflow: hidden;
     }
-    .custom-table {
+
+    .smart-table .table {
         margin-bottom: 0;
     }
-    .custom-table thead th {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+
+    .smart-table .table thead th {
+        background-color: #495057;
         color: white;
-        border: none;
         font-weight: 600;
-        padding: 15px 12px;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-    }
-    .custom-table tbody td {
-        padding: 12px;
-        border-color: #f0f0f0;
-        vertical-align: middle;
-    }
-    .custom-table tbody tr:hover {
-        background-color: #fff8f8;
-    }
-    .action-btn {
-        width: 35px;
-        height: 35px;
-        border-radius: 8px;
+        text-transform: uppercase;
         border: none;
+        padding: 1rem 0.75rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .smart-table .table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .smart-table .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .smart-table .table tbody td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+        border: none;
+        font-size: 0.85rem;
+    }
+
+    .table-action-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        margin: 2px;
+        padding: 0.375rem 0.75rem;
+        border: none;
+        background: none;
+        cursor: pointer;
     }
-    .action-btn:hover {
+
+    .table-action-btn:hover {
+        background-color: #f8f9fa;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .btn-edit {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
-    }
-    .btn-delete {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-        color: white;
-    }
-    .badge-waste {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-        color: white;
-    }
-    .form-control:focus {
-        border-color: #ff6b6b;
-        box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
-    }
-    .btn-filter {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #007bff;
         border: none;
         border-radius: 8px;
-        padding: 10px 20px;
-        color: white;
-        font-weight: 600;
+        font-weight: 500;
         transition: all 0.3s ease;
     }
-    .btn-filter:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        color: white;
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
     }
-    .btn-reset {
-        background: #6c757d;
-        border: none;
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
         border-radius: 8px;
-        padding: 10px 20px;
-        color: white;
-        font-weight: 600;
+        transition: all 0.3s ease;
     }
-    .waste-indicator {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-        display: inline-block;
-        margin-right: 8px;
-        box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        transform: translateY(-2px);
+    }
+
+    /* Column Selector Styles */
+    #columnDropdownMenu {
+        min-width: 280px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        pointer-events: auto;
+    }
+
+    .column-checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+        margin-bottom: 0.25rem;
+    }
+
+    .column-checkbox-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .column-checkbox-item label {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        flex: 1;
+    }
+
+    .column-checkbox-item.essential label {
+        font-weight: 600;
+        color: #007bff;
+    }
+
+    .column-checkbox-item.essential {
+        background-color: #f0f8ff;
+        border-left: 3px solid #007bff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
+
+        .smart-table {
+            font-size: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .smart-table .table {
+            min-width: 1200px;
+        }
     }
 </style>
 
-<div class="container-fluid">
-    <!-- Header Section -->
-    <div class="gradient-header mb-4 p-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h3 class="text-white mb-1 fw-bold">
-                    <i class="fas fa-trash-alt me-2"></i>Waste Product Management
-                </h3>
-                <p class="text-white-50 mb-0">Manage and track disposed assets</p>
-            </div>
-            <div class="col-lg-6 text-end">
-                <a href="{{ route('wastproduct') }}" class="btn btn-light btn-sm">
-                    <i class="fas fa-plus me-1"></i>Add Waste Product
-                </a>
-            </div>
+<div class="container">
+    
+    <div class="card mb-2" style="">
+        <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
+            <h6 class="mb-0 text-dark">
+                <span class="">Maintenance List</span>
+            </h6>
         </div>
+        <div class="card-body">
+            <form action="" method="GET" id="filterForm">
+                <!-- Action Buttons -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Search Assets</label>
+                        <input type="search" class="form-control form-control-sm" name="search"
+                            placeholder="Search by asset tag, model, brand..."
+                            value="{{ request('search') }}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Asset Type</label>
+                        <select name="product_search" class="form-control form-control-sm select2-filter">
+                            <option value="">All Types</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Company</label>
+                        <select name="company_filter" class="form-control form-control-sm select2-filter">
+                            <option value="">All Companies</option>
+
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="fa fa-search"></i> Apply Filters
+                        </button>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="button" class="btn btn-warning btn-sm w-100" onclick="clearFilters()">
+                            <i class="fa fa-refresh"></i> Clear All
+                        </button>
+                    </div>
+                   
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="columnDropdown" id="columnDropdownMenu">
+                        <!-- Column checkboxes will be generated by JavaScript -->
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
+
+
+
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">Total Waste Items</h6>
-                        <h4 class="mb-0 text-danger fw-bold">{{ $statistics['total'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-danger">
-                        <i class="fas fa-trash-alt fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">This Month</h6>
-                        <h4 class="mb-0 text-warning fw-bold">{{ $statistics['this_month'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-warning">
-                        <i class="fas fa-calendar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">This Year</h6>
-                        <h4 class="mb-0 text-info fw-bold">{{ $statistics['this_year'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-info">
-                        <i class="fas fa-chart-bar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">Total Value Lost</h6>
-                        <h4 class="mb-0 text-success fw-bold">৳{{ number_format($statistics['total_value'] ?? 0, 2) }}</h4>
-                    </div>
-                    <div class="text-success">
-                        <i class="fas fa-dollar-sign fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <a href="{{ route('wastproduct') }}" class="btn btn-light btn-sm">
+        <i class="fas fa-plus me-1"></i>Add Waste Product
+    </a>
     <!-- Filters Section -->
     <div class="card filter-card mb-4">
         <div class="card-header bg-light">
@@ -207,16 +269,16 @@
                     <div class="col-lg-3 col-md-6">
                         <label class="form-label fw-semibold">Search</label>
                         <input type="text" class="form-control" name="search" value="{{ request('search') }}"
-                               placeholder="Asset tag, model, description...">
+                            placeholder="Asset tag, model, description...">
                     </div>
                     <div class="col-lg-2 col-md-6">
                         <label class="form-label fw-semibold">Asset Type</label>
                         <select class="form-select" name="asset_type">
                             <option value="">All Types</option>
                             @foreach($assetTypes as $type)
-                                <option value="{{ $type }}" {{ request('asset_type') == $type ? 'selected' : '' }}>
-                                    {{ $type }}
-                                </option>
+                            <option value="{{ $type }}" {{ request('asset_type') == $type ? 'selected' : '' }}>
+                                {{ $type }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -225,9 +287,9 @@
                         <select class="form-select" name="company">
                             <option value="">All Companies</option>
                             @foreach($companies as $company)
-                                <option value="{{ $company }}" {{ request('company') == $company ? 'selected' : '' }}>
-                                    {{ $company }}
-                                </option>
+                            <option value="{{ $company }}" {{ request('company') == $company ? 'selected' : '' }}>
+                                {{ $company }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -271,7 +333,7 @@
                         <!-- Export Section -->
                         <form action="{{ route('wastproduct_export') }}" method="GET" class="d-inline-flex align-items-end">
                             @foreach (request()->query() as $key => $value)
-                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                             @endforeach
                             <select name="type" class="form-select me-2" style="width: auto;">
                                 <option value="">Export As...</option>
@@ -286,6 +348,68 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="smart-table">
+                @if (session('delete_employee'))
+                <div class="alert alert-success">{{ session('delete_employee') }}</div>
+                @endif
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Asset Tag</th>
+                                    <th>Asset Type</th>
+                                    <th>Model</th>
+                                    <th>Purchase Date</th>
+                                    <th>Description</th>
+                                    <th>Asset Sl No</th>
+                                    <th>Issue Date</th>
+                                    <th>Company</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="height: 5px !important; overflow: scroll;">
+                                @forelse ($wastproduct as $key => $waste)
+                                <tr>
+                                    <td class="fw-semibold">{{ $wastproduct->firstItem() + $key }}</td>
+                                    <td>{{ $waste->asset_tag }}</td>
+                                    <td>{{ $waste->asset_type }}</td>
+                                    <td>{{ $waste->model }}</td>
+                                    <td>{{ $waste->purchase_date}}</td>
+                                    <td>{{ $waste->description}}</td>
+                                    <td>{{ $waste->asset_sl_no}}</td>
+                                    <td>{{ $waste->date}}</td>
+                                    <td>{{ $waste->others}}</td>
+
+                                    <td>
+                                        <a href="{{ route('wastproduct_edit', $waste->id) }}"
+                                            class="btn btn-primary"
+                                            title="Edit Waste Product">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('wastproduct_delete', $waste->id) }}"
+                                            class="btn btn-danger"
+                                            title="Delete Waste Product"
+                                            onclick="return confirm('Are you sure you want to delete this waste product record?')">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -311,86 +435,9 @@
             <div class="table-responsive">
                 <table class="table custom-table">
                     <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th>Asset Tag</th>
-                            <th>Asset Type</th>
-                            <th>Model</th>
-                            <th>Purchase Date</th>
-                            <th>Description</th>
-                            <th>Serial No</th>
-                            <th>Company</th>
-                            <th>Waste Date</th>
-                            <th>Note</th>
-                            <th style="width: 100px;">Actions</th>
-                        </tr>
+
                     </thead>
-                    <tbody>
-                        @forelse ($wastproduct as $key => $waste)
-                        <tr>
-                            <td class="fw-semibold">{{ $wastproduct->firstItem() + $key }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <span class="waste-indicator"></span>
-                                    <span class="badge bg-light text-dark fw-semibold">{{ $waste->asset_tag }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge badge-waste">{{ $waste->asset_type }}</span>
-                            </td>
-                            <td>{{ $waste->model }}</td>
-                            <td>
-                                <small class="text-muted">
-                                    {{ $waste->purchase_date ? date('M d, Y', strtotime($waste->purchase_date)) : '-' }}
-                                </small>
-                            </td>
-                            <td>
-                                <div style="max-width: 200px;">
-                                    <small class="text-truncate d-block">{{ $waste->description }}</small>
-                                </div>
-                            </td>
-                            <td>
-                                <small class="font-monospace">{{ $waste->asset_sl_no }}</small>
-                            </td>
-                            <td>
-                                <strong class="text-primary">{{ $waste->others }}</strong>
-                            </td>
-                            <td>
-                                <small class="text-danger fw-semibold">
-                                    {{ $waste->date ? date('M d, Y', strtotime($waste->date)) : '-' }}
-                                </small>
-                            </td>
-                            <td>
-                                <div style="max-width: 150px;">
-                                    <small class="text-truncate d-block text-muted">{{ $waste->note }}</small>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="{{ route('wastproduct_edit', $waste->id) }}"
-                                   class="action-btn btn-edit"
-                                   title="Edit Waste Product">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="{{ route('wastproduct_delete', $waste->id) }}"
-                                   class="action-btn btn-delete"
-                                   title="Delete Waste Product"
-                                   onclick="return confirm('Are you sure you want to delete this waste product record?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="11" class="text-center py-5">
-                                <div class="text-muted">
-                                    <i class="fas fa-inbox fa-3x mb-3"></i>
-                                    <h6>No waste product records found</h6>
-                                    <p class="mb-0">Try adjusting your search criteria</p>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
+
                 </table>
             </div>
         </div>
@@ -406,27 +453,27 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('filterForm');
-    const inputs = form.querySelectorAll('input, select');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('filterForm');
+        const inputs = form.querySelectorAll('input, select');
 
-    inputs.forEach(input => {
-        if(input.type === 'text') {
-            let timeout;
-            input.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    if(this.value.length >= 2 || this.value.length === 0) {
-                        form.submit();
-                    }
-                }, 500);
-            });
-        } else {
-            input.addEventListener('change', function() {
-                form.submit();
-            });
-        }
+        inputs.forEach(input => {
+            if (input.type === 'text') {
+                let timeout;
+                input.addEventListener('input', function() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            form.submit();
+                        }
+                    }, 500);
+                });
+            } else {
+                input.addEventListener('change', function() {
+                    form.submit();
+                });
+            }
+        });
     });
-});
 </script>
 @endsection
