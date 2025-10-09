@@ -124,6 +124,4 @@
     });
 </script>
 
-
-@endif
 @endpush

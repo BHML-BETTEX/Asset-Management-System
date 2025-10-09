@@ -40,7 +40,7 @@
             </li>
         </ul>
     </div>
-    
+
     {{-- ✅ Alert Message Section --}}
     @if(session('successs'))
     <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
@@ -184,8 +184,8 @@
                                 </a>
                             </div>
                             <div class="col-lg-12" style="padding-top: 2px;">
-                                <a href="" class="btn btn-block btn-sm btn-primary btn-social hidden-print">
-                                    <i class="fa fa-mail me-1"></i> Email List of All Assigned
+                                <a href="{{route('store.clone', $stores->id)}}" class="btn btn-block btn-sm btn-primary btn-social hidden-print">
+                                    <i class="fa fa-copy me-1"></i> Clone asset
                                 </a>
                             </div>
                             <div class="col-lg-12" style="padding-top: 2px;">
