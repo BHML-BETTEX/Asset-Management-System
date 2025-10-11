@@ -73,9 +73,11 @@
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>List All</a></li>
-                                        <li><a href="{{ route('store_delete_list') }}"><i class="fa fa-close"></i>Delete Asset</a></li>
+                                        <li><a href="{{ route('issue_list') }}"><i class="fa fa-circle "></i>Issued List</a></li>
+                                        <li><a href="{{ route('instock_list') }}"><i class="fa fa-circle "></i>Instock List</a></li>
+                                        <li><a href="{{ route('store_delete_list') }}"><i class="fa fa-close"></i>Delete List</a></li>
 
-                                        <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
+                                        <li><a href="{{ route('maintenance_view') }}"><i class="fa fa-gears"></i>Maintenance
                                                 List</a></li>
                                         <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
                                                 Product</a></li>

@@ -111,9 +111,6 @@ class StoreController extends Controller
         ]);
     }
 
-
-
-
     function add_product()
     {
         $all_product_types = ProductType::all();
@@ -171,6 +168,138 @@ class StoreController extends Controller
 
         return redirect()->back()->with('success', 'Product added...!');
     }
+
+
+    //Store INSTOCK list start
+    function instock_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter');
+        $perPage = $request->input('per_page', 10);
+
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies)
+            ->where('stores.checkstatus', 'INSTOCK'); // Only deleted
+
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
+
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        $query->orderBy('stores.id', 'desc');
+
+        $stores = $perPage === 'all'
+            ? $query->select('stores.*')->get()
+            : $query->select('stores.*')->paginate((int)$perPage)->appends($request->except('page'));
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => true, // ✅ Flag to detect deleted page
+            'all_product_types' => ProductType::all(),
+            'all_brands' => Brand::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
+    }
+    //Store INSTOCK list end
+
+    //store issue_list start
+    function issue_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter');
+        $perPage = $request->input('per_page', 10);
+
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies)
+            ->whereNotIn('stores.checkstatus', ['INSTOCK', 'MAINTENANCE', 'Wast Products', 'DELETE']);
+        // Exclude INSTOCK
+
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
+
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        $query->orderBy('stores.id', 'desc');
+
+        $stores = $perPage === 'all'
+            ? $query->select('stores.*')->get()
+            : $query->select('stores.*')->paginate((int)$perPage)->appends($request->except('page'));
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => true, // ✅ Flag to detect deleted page
+            'all_product_types' => ProductType::all(),
+            'all_brands' => Brand::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
+    }
+    //store issue_list end
 
 
     //delete start
@@ -249,7 +378,7 @@ class StoreController extends Controller
         ]);
     }
     //delete end
-    
+
 
     //Edit start
     function store_edit($stores_id)
@@ -927,6 +1056,73 @@ class StoreController extends Controller
         ]);
         return redirect()->route('maintenance_list');
     }
+
+    // maintenance view show all data start
+    function maintenance_view(Request $request)    {
+        $role = auth()->user()->roles[0];
+
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter');
+        $perPage = $request->input('per_page', 10);
+
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies)
+            ->where('stores.checkstatus', 'Maintenance'); // Only deleted
+
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
+
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        $query->orderBy('stores.id', 'desc');
+
+        $stores = $perPage === 'all'
+            ? $query->select('stores.*')->get()
+            : $query->select('stores.*')->paginate((int)$perPage)->appends($request->except('page'));
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => true, // ✅ Flag to detect deleted page
+            'all_product_types' => ProductType::all(),
+            'all_brands' => Brand::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
+    }
+    // maintenance view show all data end
+
+
+    // maintenance list show only stored_id data
 
     public function maintenance_list(Request $request, $store_id = null)
     {

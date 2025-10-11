@@ -134,6 +134,10 @@ Route::get('/store/clone/{stores_id}', [StoreController::class, 'store_clone'])-
 Route::post('/store/clone/save', [StoreController::class, 'store_clone_save'])->name('store.clone.save');
 Route::get('/store/delete/{stores_id}', [StoreController::class, 'store_delete'])->name('store.delete');
 Route::get('/store/delete', [StoreController::class, 'store_delete_list'])->name('store_delete_list'); //delete_list
+Route::get('/store/instock/list', [StoreController::class, 'instock_list'])->name('instock_list'); //INSTOCK_list
+Route::get('/store/isstued/list', [StoreController::class, 'issue_list'])->name('issue_list'); //ISSUED_list
+
+
 
 Route::get('/store/edit/{stores_id}', [StoreController::class, 'store_edit'])->name('store.edit');
 Route::post('/store/update', [StoreController::class, 'store_update'])->name('store.update');
@@ -187,7 +191,9 @@ Route::post('/transfer/return/update', [StoreController::class, 'transfer_return
 Route::get('/store/maintenance/{stores_id}', [StoreController::class, 'maintenance_form'])->name('maintenance_form');
 Route::get('/maintenance/get', [StoreController::class, 'maintenance_get'])->name('maintenance_get');
 Route::post('/maintenance/store', [StoreController::class, 'maintenance_store'])->name('maintenance_store');
-Route::get('/maintenance/list/{store_id?}', [StoreController::class, 'maintenance_list'])->name('maintenance_list');
+Route::get('/maintenance/list/{store_id?}', [StoreController::class, 'maintenance_list'])->name('maintenance_list'); // maintenance list by id
+Route::get('/maintenance/view', [StoreController::class, 'maintenance_view'])->name('maintenance_view');// all maintenance list
+
 Route::get('/maintenance/return', [StoreController::class, 'maintenance_return'])->name('maintenance_return');
 Route::post('/maintenance/return/update', [StoreController::class, 'ma_return_update'])->name('ma_return_update');
 Route::get('/maintenance/maintenance_search_id/{store_id}', [StoreController::class, 'maintenance_search_id'])->name('maintenance_search_id');
