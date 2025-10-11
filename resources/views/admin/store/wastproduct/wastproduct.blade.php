@@ -18,7 +18,7 @@
                                 <option value="">Select a Product</option>
                                 @foreach ($issued_products as $product)
                                 <option value="{{ $product->products_id }}" data-products_id="{{ $product->id }}">
-                                    {{ $product->products_id }}
+                                    {{ $product->asset_tag }} - {{ $product->asset_type }} - {{ $product->model }}
                                 </option>
                                 @endforeach
                             </select>

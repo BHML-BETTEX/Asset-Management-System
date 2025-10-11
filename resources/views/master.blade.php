@@ -53,7 +53,7 @@
                     <div class="clearfix"></div>
                     <!-- menu profile quick info -->
                     <div class="profile clearfix ">
-                        
+
                         <div class="profile_info">
                             <h6 class="text-white">{{ Auth::user()->name }}</h6>
                         </div>
@@ -68,15 +68,21 @@
                             <h3>General</h3>
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('home') }}"><i class="fa fa-home"></i>Dashboard</a></li>
-                                <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>Assets</a></li>
-                                <li><a href="{{ route('transfer_list') }}"><i class="fa fa-send"></i>Transfer List</a>
+
+                                <li><a><i class="fa fa-tasks"></i>Assets<span
+                                            class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>List All</a></li>
+                                        <li><a href="{{ route('store_delete_list') }}"><i class="fa fa-close"></i>Delete Asset</a></li>
+
+                                        <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
+                                                List</a></li>
+                                        <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
+                                                Product</a></li>
+                                    </ul>
                                 </li>
                                 <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
                                 </li>
-                                <li><a href="{{ route('maintenance_list') }}"><i class="fa fa-gears"></i>Maintenance
-                                        List</a></li>
-                                <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
-                                        Product</a></li>
                                 <li><a><i class="fa fa-tasks"></i>Pasword Managment<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
@@ -92,9 +98,9 @@
                                 <li><a><i class="fa fa-tasks"></i>Employee<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                         <li><a href="{{ route('employee_list') }}"><i class="fa fa-group"></i>Active Employee</a></li>
-                                         <li><a href="{{ route('inactive_list') }}"><i class="fa fa-user-times"></i>Inactive Employee</a></li>
-                                         <li><a href="{{ route('delete_list') }}"><i class="fa fa-trash"></i>Delete Employee</a></li>
+                                        <li><a href="{{ route('employee_list') }}"><i class="fa fa-group"></i>Active Employee</a></li>
+                                        <li><a href="{{ route('inactive_list') }}"><i class="fa fa-user-times"></i>Inactive Employee</a></li>
+                                        <li><a href="{{ route('delete_list') }}"><i class="fa fa-trash"></i>Delete Employee</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('users') }}"><i class="fa fa-user"></i>User List</a></li>
@@ -294,7 +300,11 @@
         });
 
         function initSessionTimeout() {
-            const timeout = {{ config('session.timeout', 30) }}; // minutes
+            const timeout = {
+                {
+                    config('session.timeout', 30)
+                }
+            }; // minutes
             const warningTime = Math.max(5, Math.floor(timeout * 0.1)); // Warn 10% before timeout (min 5 min)
             const checkInterval = 60000; // Check every minute
 

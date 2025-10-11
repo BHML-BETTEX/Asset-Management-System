@@ -133,6 +133,8 @@ Route::post('/store/store', [StoreController::class, 'store_store'])->name('stor
 Route::get('/store/clone/{stores_id}', [StoreController::class, 'store_clone'])->name('store.clone');
 Route::post('/store/clone/save', [StoreController::class, 'store_clone_save'])->name('store.clone.save');
 Route::get('/store/delete/{stores_id}', [StoreController::class, 'store_delete'])->name('store.delete');
+Route::get('/store/delete', [StoreController::class, 'store_delete_list'])->name('store_delete_list'); //delete_list
+
 Route::get('/store/edit/{stores_id}', [StoreController::class, 'store_edit'])->name('store.edit');
 Route::post('/store/update', [StoreController::class, 'store_update'])->name('store.update');
 Route::get('/store/view/{stores_id}', [StoreController::class, 'store_view'])->name('store.view');

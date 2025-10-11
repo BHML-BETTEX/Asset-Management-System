@@ -41,14 +41,6 @@
         </ul>
     </div>
 
-    {{-- ✅ Alert Message Section --}}
-    @if(session('successs'))
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        <strong>Success:</strong> {{ session('successs') }}
-        <button type="button" class="btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
     <!-- Uploads Modal -->
     <div class="modal fade" id="uploadsModal" tabindex="-1" aria-labelledby="uploadsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
@@ -99,12 +91,22 @@
                 <div class="tab-pane fade show active" id="info" role="tabpanel">
                     <div class="card shadow-sm">
                         <div class="card-header">
+                            {{-- Issue Success --}}
                             @if (session('issue_success'))
                             <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
                                 <span>{{ session('issue_success') }}</span>
                                 <button type="button" class="border-0 bg-warning text-white fw-bold px-2 rounded" data-bs-dismiss="alert" aria-label="Close">X</button>
                             </div>
                             @endif
+
+                            {{-- Delete Success --}}
+                            @if(session('delete_success'))
+                            <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
+                                <span>{{ session('delete_success') }}</span>
+                                <button type="button" class="border-0 bg-danger text-white fw-bold px-2 rounded" data-bs-dismiss="alert" aria-label="Close">X</button>
+                            </div>
+                            @endif
+
                             <h5 class="mb-0">{{ $stores->asset_tag }}/{{ $stores->model }}/Profile</h5>
                         </div>
                         <div class="card-body">
@@ -189,28 +191,33 @@
                                 </a>
                             </div>
                             <div class="col-lg-12" style="padding-top: 2px;">
-                                <a href="" class="btn btn-block btn-sm btn-danger btn-social hidden-print" onclick="return confirm('Are you sure you want to delete this user?')">
+                                {{-- Delete Asset --}}
+                                <a href="{{ route('store.delete', $stores->id) }}"
+                                    class="btn btn-block btn-sm btn-danger btn-social hidden-print
+       @if($stores->checkstatus != 'INSTOCK') disabled opacity-50 pointer-events-none @endif"
+                                    onclick="return confirm('Are you sure you want to delete this asset?')">
                                     <i class="fa fa-trash me-1"></i> Delete
                                 </a>
                             </div>
+
+                            <!--Checkin button disable after delete-->
                             <div class="col-lg-12" style="padding-top: 2px;">
                                 @php
-                                // Get the latest issue for this store (if any)
                                 $latestIssue = \App\Models\Issue::where('asset_tag', $stores->asset_tag)
-                                ->whereNull('return_date') // still issued, not returned yet
+                                ->whereNull('return_date')
                                 ->latest('issue_date')
                                 ->first();
                                 @endphp
 
-                                @if ($latestIssue)
-                                {{-- If product already issued and not returned --}}
+                                @if ($latestIssue || $stores->checkstatus == 'DELETE')
+                                {{-- Disabled Checkin All --}}
                                 <button type="button"
                                     class="btn btn-block btn-sm btn-warning btn-social hidden-print"
                                     style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">
                                     <i class="fa fa-edit me-1"></i> Checkin All
                                 </button>
                                 @else
-                                {{-- If not issued or already returned --}}
+                                {{-- Active Checkin All --}}
                                 <a href="{{ route('issue', $stores->id) }}"
                                     class="btn btn-block btn-sm btn-warning btn-social hidden-print">
                                     <i class="fa fa-edit me-1"></i> Checkin All

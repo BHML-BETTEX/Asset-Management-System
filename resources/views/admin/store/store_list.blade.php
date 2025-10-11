@@ -879,14 +879,16 @@
                         </select>
                     </div>
 
-
-
-
                     <div class="col-md-2">
                         <label class="form-label">Company</label>
                         <select name="company_filter" class="form-control form-control-sm select2-filter">
                             <option value="">All Companies</option>
-
+                            @foreach($all_company as $allcompany)
+                            <option value="{{ $allcompany->id }}"
+                                {{ request('company_filter') == $allcompany->id ? 'selected' : '' }}>
+                                {{ $allcompany->company }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -1010,6 +1012,8 @@
                                         <span class="badge bg-success text-white">{{ $store->checkstatus }}</span>
                                         @elseif ($store->checkstatus == "MAINTENANCE")
                                         <span class="badge bg-warning text-white">{{ $store->checkstatus }}</span>
+                                        @elseif ($store->checkstatus == "DELETE")
+                                        <span class="badge bg-danger text-white">{{ $store->checkstatus }}</span>
                                         @else
                                         <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                         @endif

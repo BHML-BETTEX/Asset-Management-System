@@ -33,76 +33,84 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
-function store(Request $request)
-{
-    $role = auth()->user()->roles[0];
+    public function store(Request $request)
+    {
+        $role = auth()->user()->roles[0];
 
-    $search = $request->input('search', '');
-    $productSearch = $request->input('product_search');
-    $perPage = $request->input('per_page', 10); // Default 10 per page
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter'); // Company filter
+        $perPage = $request->input('per_page', 10);
+        $showDeleted = $request->input('show_deleted', false); // Optional: show deleted toggle
 
-    // Determine which companies the user can view
-    $companies = [];
-    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
-    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
-    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
-    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+        // Determine which companies the user can view
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-    // Base query with joins
-    $query = Store::query()
-        ->join('brands', 'brands.id', '=', 'stores.brand_id')
-        ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-        ->whereIn('stores.company_id', $companies);
+        // Base query with joins
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies);
 
-    // Apply search filters
-    if ($search || $productSearch) {
-        $query->where(function ($q) use ($search, $productSearch) {
-            if ($productSearch) {
-                $q->where('product_types.id', '=', $productSearch);
-            }
+        // Apply company filter
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
 
-            if ($search) {
-                $q->where(function ($sq) use ($search) {
-                    $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
-                        ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.company_id', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                        ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
-                        ->orWhere('product_types.product', 'LIKE', "%{$search}%");
-                });
-            }
-        });
+        // Apply search filters
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        // Order by newest first
+        $query->orderBy('stores.id', 'desc');
+
+        // Pagination
+        if ($perPage === 'all') {
+            $stores = $query->select('stores.*')->get();
+        } else {
+            $stores = $query->select('stores.*')
+                ->paginate((int)$perPage)
+                ->appends($request->except('page'));
+        }
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => $showDeleted,
+            'all_product_types' => ProductType::all(),
+            'all_departments' => Department::all(),
+            'all_brands' => Brand::all(),
+            'all_SizeMeasurement' => SizeMaseurment::all(),
+            'all_status' => Status::all(),
+            'all_supplier' => Supplier::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
     }
 
-    // ✅ Always order by newest first
-    $query->orderBy('stores.id', 'desc');
-
-    // Get results
-    if ($perPage === 'all') {
-        $stores = $query->select('stores.*')->get();
-    } else {
-        $stores = $query->select('stores.*')
-            ->paginate((int)$perPage)
-            ->appends($request->except('page'));
-    }
-
-    return view('admin.store.store_list', [
-        'stores' => $stores,
-        'search' => $search,
-        'perPage' => $perPage,
-        'productSearch' => $productSearch,
-        'all_product_types' => ProductType::all(),
-        'all_departments' => Department::all(),
-        'all_brands' => Brand::all(),
-        'all_SizeMeasurement' => SizeMaseurment::all(),
-        'all_status' => Status::all(),
-        'all_supplier' => Supplier::all(),
-        'all_company' => Company::all(),
-        'employee' => Employee::all(),
-        'all_issue' => Issue::all(),
-    ]);
-}
 
 
 
@@ -163,16 +171,87 @@ function store(Request $request)
 
         return redirect()->back()->with('success', 'Product added...!');
     }
+
+
     //delete start
-    function store_delete($stores_id)
+    public function store_delete($stores_id)
     {
-        Store::find($stores_id)->delete();
-        return back();
+        $store = Store::find($stores_id);
+
+        if ($store) {
+            $store->update(['checkstatus' => 'DELETE']);
+            return back()->with('delete_success', 'Store record marked as deleted.');
+        }
+
+        return back()->with('error', 'Store record not found.');
+    }
+
+    public function store_delete_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter');
+        $perPage = $request->input('per_page', 10);
+
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies)
+            ->where('stores.checkstatus', 'DELETE'); // Only deleted
+
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
+
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        $query->orderBy('stores.id', 'desc');
+
+        $stores = $perPage === 'all'
+            ? $query->select('stores.*')->get()
+            : $query->select('stores.*')->paginate((int)$perPage)->appends($request->except('page'));
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => true, // ✅ Flag to detect deleted page
+            'all_product_types' => ProductType::all(),
+            'all_brands' => Brand::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
     }
     //delete end
+    
 
     //Edit start
-
     function store_edit($stores_id)
     {
         $all_product_types = ProductType::all();
@@ -998,7 +1077,7 @@ function store(Request $request)
     //wastproduct start..
     function wastproduct()
     {
-        $issued_products = Store::all();
+        $issued_products = Store::where('checkstatus', 'INSTOCK')->get();
         return view('admin.store.wastproduct.wastproduct', [
             'issued_products' => $issued_products,
         ]);
@@ -1025,7 +1104,7 @@ function store(Request $request)
         //return redirect()->route('admin.store.wastproduct.wastproduct');
     }
 
-    function wastproduct_list(Request $request)
+    public function wastproduct_list(Request $request)
     {
         $search = $request->input('search', '');
         $assetType = $request->input('asset_type', '');
@@ -1038,6 +1117,7 @@ function store(Request $request)
 
         $query = WastProduct::query();
 
+        // Search
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'LIKE', "%$search%")
@@ -1050,37 +1130,24 @@ function store(Request $request)
             });
         }
 
+        // Filters
         if ($assetType) {
             $query->where('asset_type', $assetType);
         }
 
         if ($company) {
-            $query->where('others', $company);
+            $query->where('others', $company); // Assuming 'others' stores company name
         }
 
-        if ($dateFrom) {
-            $query->whereDate('date', '>=', $dateFrom);
-        }
 
-        if ($dateTo) {
-            $query->whereDate('date', '<=', $dateTo);
-        }
-
-        if ($purchaseDateFrom) {
-            $query->whereDate('purchase_date', '>=', $purchaseDateFrom);
-        }
-
-        if ($purchaseDateTo) {
-            $query->whereDate('purchase_date', '<=', $purchaseDateTo);
-        }
-
+        // Paginate
         $wastproduct = $query->orderBy('date', 'desc')->paginate($perPage);
 
-        // Get filter dropdown data
+        // Dropdown data
         $assetTypes = WastProduct::distinct()->pluck('asset_type')->filter()->sort()->values();
         $companies = WastProduct::distinct()->pluck('others')->filter()->sort()->values();
 
-        // Calculate statistics
+        // Statistics
         $statistics = [
             'total' => WastProduct::count(),
             'this_month' => WastProduct::whereMonth('date', now()->month)
@@ -1090,14 +1157,15 @@ function store(Request $request)
             'total_value' => 0
         ];
 
-        return view('admin.store.wastproduct.wastproduct_list', [
-            'wastproduct' => $wastproduct,
-            'search' => $search,
-            'assetTypes' => $assetTypes,
-            'companies' => $companies,
-            'statistics' => $statistics,
-        ]);
+        return view('admin.store.wastproduct.wastproduct_list', compact(
+            'wastproduct',
+            'search',
+            'assetTypes',
+            'companies',
+            'statistics'
+        ));
     }
+
 
 
     function wastproduct_edit($id)
@@ -1117,13 +1185,13 @@ function store(Request $request)
             'note' => $request->note,
         ]);
 
-        return redirect()->route('wastproduct_list');
+        return redirect()->route('wastproduct_list')->with('update_success', 'Wast Product updated successfully!');
     }
 
     function wastproduct_delete($id)
     {
         WastProduct::find($id)->delete();
-        return back();
+        return back()->with('delete_success', 'Wast Product deleted successfully!');
     }
 
     // function wastproduct_export(Request $request){
@@ -1170,8 +1238,9 @@ function store(Request $request)
 
         $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
         $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
+        $showDeleted = false; // ✅ default value
 
-        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances'));
+        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances', 'showDeleted'));
     }
 
     //store Clone - Show edit page with cloned data
