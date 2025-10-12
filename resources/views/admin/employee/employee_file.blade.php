@@ -458,6 +458,57 @@
         </div>
     </div>
 </div>
+
+<!-- Uploads Modal -->
+<!-- <div class="modal fade upload-modal" id="uploadsModal" tabindex="-1" aria-labelledby="uploadsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadsModalLabel">
+                    <i class="fa fa-upload me-2"></i>Upload File for {{ $employee->emp_name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="fileUploadForm" 
+                      action="" 
+                      method="POST" 
+                      enctype="multipart/form-data">
+                    @csrf
+                    <div class="file-upload-area mb-4" id="dropZone">
+                        <i class="fa fa-cloud-upload fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted mb-2">Drag & Drop files here or click to browse</h6>
+                        <input type="file" class="form-control d-none" name="file" id="fileInput" required>
+                        <button type="button" class="btn btn-outline-primary" id="chooseFileBtn">
+                            <i class="fa fa-folder-open me-2"></i>Choose File
+                        </button>
+                        <div class="mt-2">
+                            <small class="text-muted" id="fileNameLabel">No file selected</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notes (Optional)</label>
+                        <textarea class="form-control" name="note" rows="3" placeholder="Add a note about this file..."></textarea>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Allowed file types:</strong>
+                        <small class="d-block mt-1">PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG, GIF, ZIP</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-2"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" form="fileUploadForm">
+                    <i class="fa fa-upload me-2"></i> Upload File
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->
 @endsection
 
 @push('script')

@@ -165,6 +165,9 @@ Route::get('/store/qr_code_view/{stores_id}', [StoreController::class, 'qr_code_
 Route::get('/store/import', [StoreController::class, 'store_import'])->name('store_import');
 Route::post('/store/importexceldata', [StoreController::class, 'store_importexceldata'])->name('store_importexceldata');
 Route::get('/store/info/{stores_id}', [StoreController::class, 'store_info'])->name('store_info');
+Route::get('/store/file/{stores_id}', [StoreController::class, 'store_file'])->name('store_file');
+Route::post('/store/savefile', [StoreController::class, 'store_file_save'])->name('store_file_save');
+Route::get('/store/file/delete/{file_id}', [StoreController::class, 'store_file_delete'])->name('store_file_delete');
 
 
 
@@ -192,7 +195,7 @@ Route::get('/store/maintenance/{stores_id}', [StoreController::class, 'maintenan
 Route::get('/maintenance/get', [StoreController::class, 'maintenance_get'])->name('maintenance_get');
 Route::post('/maintenance/store', [StoreController::class, 'maintenance_store'])->name('maintenance_store');
 Route::get('/maintenance/list/{store_id?}', [StoreController::class, 'maintenance_list'])->name('maintenance_list'); // maintenance list by id
-Route::get('/maintenance/view', [StoreController::class, 'maintenance_view'])->name('maintenance_view');// all maintenance list
+Route::get('/maintenance/view', [StoreController::class, 'maintenance_view'])->name('maintenance_view'); // all maintenance list
 
 Route::get('/maintenance/return', [StoreController::class, 'maintenance_return'])->name('maintenance_return');
 Route::post('/maintenance/return/update', [StoreController::class, 'ma_return_update'])->name('ma_return_update');

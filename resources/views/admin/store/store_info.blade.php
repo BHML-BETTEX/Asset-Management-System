@@ -19,7 +19,7 @@
                 <a class="nav-link" href="{{ route('maintenance_list', $stores->id) }}">Maintenance</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab">Files</a>
+                <a class="nav-link" href="{{route('store_file', $stores->id)}}" role="tab">Files</a>
             </li>
             <!-- Uploads tab -->
             <li class="nav-item">

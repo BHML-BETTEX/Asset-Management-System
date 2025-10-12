@@ -27,6 +27,7 @@ use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
 use App\Models\SizeMeasurement;
+use App\Models\stores_file;
 use App\Exports\WastProductExport;
 use App\Imports\StoreImport;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -586,7 +587,7 @@ class StoreController extends Controller
     {
         $stores_info = Store::find($stores_id);
 
-        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->first();
+        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->asset_tag)->first();
 
         return view('admin.store.invoice', [
             'stores_info' => $stores_info,
@@ -605,7 +606,7 @@ class StoreController extends Controller
     function qr_code_view($stores_id)
     {
         $stores_info = Store::find($stores_id);
-        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->products_id)->orderBy('issue_date', 'desc')->first();
+        $issue_info = DB::table('issues')->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'phone_number', 'email', 'designation_id', 'issue_date')->where('asset_tag', $stores_info->asset_tag)->orderBy('issue_date', 'desc')->first();
         return view('admin.store.qr_code_view', [
             'stores_info' => $stores_info,
             'issue_info' => $issue_info,
@@ -695,8 +696,8 @@ class StoreController extends Controller
         $store_info = [];
         foreach ($issue_info as $issue) {
             $store = DB::table('stores')
-                ->select('products_id', 'asset_type', 'model', 'brand', 'description', 'asset_sl_no', 'qty', 'units', 'picture')
-                ->where('products_id', $issue->asset_tag) // Make sure 'asset_tag' exists in 'issues' table
+                ->select('asset_tag', 'asset_type', 'model', 'brand', 'description', 'asset_sl_no', 'qty', 'units', 'picture')
+                ->where('asset_tag', $issue->asset_tag) // Make sure 'asset_tag' exists in 'issues' table
                 ->first();
 
             $store_info[] = $store; // Store each record
@@ -721,7 +722,7 @@ class StoreController extends Controller
     function store_search(Request $request)
     {
         $data = $request->input('search');
-        $all_product_types = DB::table('stores')->where('products_id', 'LIKE', '%' . $data . '%')
+        $all_product_types = DB::table('stores')->where('asset_tag', 'LIKE', '%' . $data . '%')
             //->orwhere('asset_type', 'LIKE', '%' . $data . '%')
             ->get();
 
@@ -1058,7 +1059,8 @@ class StoreController extends Controller
     }
 
     // maintenance view show all data start
-    function maintenance_view(Request $request)    {
+    function maintenance_view(Request $request)
+    {
         $role = auth()->user()->roles[0];
 
         $search = $request->input('search', '');
@@ -1130,6 +1132,7 @@ class StoreController extends Controller
 
         // Fetch all stores for the dropdown/filter
         $stores_list = Store::all();
+        $stores = Store::with(['rel_to_ProductType', 'rel_to_brand', 'rel_to_SizeMaseurment', 'rel_to_Supplier', 'rel_to_Status', 'rel_to_Company', 'rel_to_Department', 'rel_to_Designation'])->findOrFail($store_id);
 
         $query = Maintenance::query();
         $store = null;
@@ -1154,7 +1157,10 @@ class StoreController extends Controller
         $maintenance_data = $query->orderBy('id', 'desc')->get();
 
         // Pass $stores_list to the view
-        return view('admin.store.maintenance.maintenance_list', compact('maintenance_data', 'search', 'store', 'stores_list'));
+        return view(
+            'admin.store.maintenance.maintenance_list',
+            compact('maintenance_data', 'search', 'store', 'stores_list', 'stores')
+        );
     }
 
 
@@ -1501,5 +1507,53 @@ class StoreController extends Controller
         }
 
         return redirect()->route('store')->with('success', 'Asset cloned and saved successfully!');
+    }
+
+    //store file upload
+    public function store_file($stores_id)
+    {
+        $store = Store::findOrFail($stores_id);
+        $file_info = stores_file::all();
+        return view('admin.store.store_file', compact('store', 'file_info'));
+    }
+
+    public function store_file_save(Request $request)
+    {
+        $request->validate([
+            'store_id' => 'required|exists:stores,id',
+            'file' => 'required|file|max:2048',
+        ]);
+
+        $store = Store::findOrFail($request->store_id);
+
+        if ($request->hasFile('file')) {
+            $fileName = $store->asset_tag . '_' . time() . '.' . $request->file('file')->extension();
+            $request->file('file')->move(public_path('uploads/store_files/'), $fileName);
+
+            stores_file::create([
+                'store_id' => $store->id,
+                'file' => $fileName,
+                'note' => $request->input('note'),
+                'created_by' => auth()->id(),
+            ]);
+        }
+
+        return back()->with('save_success', 'File uploaded successfully!');
+    }
+
+    public function store_file_delete($file_id)
+    {
+        // Find file by its id (fail if not found)
+        $file = stores_file::findOrFail($file_id);
+
+        // Optionally delete the physical file from disk too
+        $filePath = public_path('uploads/store_files/' . $file->file);
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+
+        $file->delete();
+
+        return back()->with('delete_success', 'File deleted successfully!');
     }
 }
