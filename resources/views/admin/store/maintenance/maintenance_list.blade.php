@@ -273,26 +273,9 @@
                 <a class="nav-link active" href="#">Maintenance</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab">Files</a>
+                <a class="nav-link" href="{{route('store_file', $stores->id)}}" role="tab">Files</a>
             </li>
 
-            <!-- Uploads tab -->
-            <li class="nav-item">
-                <a class="nav-link" id="uploads-tab" href="#history" role="tab" data-toggle="modal" data-target="#uploadsModal">
-                    <i class="fa fa-paperclip"></i> Uploads
-                </a>
-            </li>
-
-            <!-- Action dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                    <i class="fa fa-gear"></i> Action
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Action One</a></li>
-                    <li><a class="dropdown-item" href="#">Action Two</a></li>
-                </ul>
-            </li>
         </ul>
     </div>
 

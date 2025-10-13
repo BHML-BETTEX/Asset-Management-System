@@ -752,6 +752,7 @@ class StoreController extends Controller
             $query->where('asset_tag', $asset_tag);
 
             $issue = Issue::where('asset_tag', $asset_tag)->first();
+            $stores = Store::where('asset_tag', $asset_tag)->first();
 
             if ($issue && isset($issue->store_id)) {
                 $store = Store::with([
@@ -789,6 +790,7 @@ class StoreController extends Controller
             'perPage'      => $perPage,
             'asset_tag'    => $asset_tag,
             'store'        => $store,
+            'stores'        => $stores,
             'maintenances' => $maintenances,
         ]);
     }

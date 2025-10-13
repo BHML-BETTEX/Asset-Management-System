@@ -135,7 +135,7 @@ Route::post('/store/clone/save', [StoreController::class, 'store_clone_save'])->
 Route::get('/store/delete/{stores_id}', [StoreController::class, 'store_delete'])->name('store.delete');
 Route::get('/store/delete', [StoreController::class, 'store_delete_list'])->name('store_delete_list'); //delete_list
 Route::get('/store/instock/list', [StoreController::class, 'instock_list'])->name('instock_list'); //INSTOCK_list
-Route::get('/store/isstued/list', [StoreController::class, 'issue_list'])->name('issue_list'); //ISSUED_list
+Route::get('/store/issued/list', [StoreController::class, 'issue_list'])->name('issue_list'); //ISSUED_list
 
 
 

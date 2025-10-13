@@ -258,7 +258,7 @@
             <!-- Info Tab -->
             <li class="nav-item">
                 <a class="nav-link"
-                    href="{{ $store ? route('store_info', $store->id) : '#' }}">
+                    href="">
                     Info
                 </a>
             </li>
@@ -266,7 +266,7 @@
             <!-- History Tab (current page) -->
             <li class="nav-item">
                 <a class="nav-link active"
-                    href="{{ $store ? route('history', $store->asset_tag) : '#' }}">
+                    href="">
                     History
                 </a>
             </li>
@@ -274,26 +274,17 @@
             <!-- Maintenance Tab -->
             <li class="nav-item">
                 <a class="nav-link"
-                    href="{{ $store ? route('maintenance_list', $store->id) : '#' }}">
+                    href="">
                     Maintenance
                 </a>
             </li>
 
             <!-- Files Tab -->
             <li class="nav-item">
-                <a class="nav-link" href="#files" data-bs-toggle="tab" role="tab">Files</a>
-            </li>
-
-            <!-- Uploads Tab -->
-            <li class="nav-item">
-                <a class="nav-link" href="#uploads" role="button" data-bs-toggle="modal" data-bs-target="#uploadsModal">
-                    <i class="fa fa-paperclip"></i> Uploads
-                </a>
+                <a class="nav-link" href="" >Files</a>
             </li>
         </ul>
     </div>
-
-
 
     <!--Asset Table-->
     <div class="row">

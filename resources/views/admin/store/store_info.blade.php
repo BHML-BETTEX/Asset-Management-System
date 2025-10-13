@@ -13,7 +13,7 @@
             </li>
             <li class="nav-item">
 
-                <a class="nav-link" href="{{ route('history', $stores->asset_tag) }}">History</a>
+                <a class="nav-link" href="{{ route('history', $stores->id) }}">History</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('maintenance_list', $stores->id) }}">Maintenance</a>
@@ -21,64 +21,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{route('store_file', $stores->id)}}" role="tab">Files</a>
             </li>
-            <!-- Uploads tab -->
-            <li class="nav-item">
-                <a class="nav-link" id="uploads-tab" href="#history" role="tab" data-toggle="modal" data-target="#uploadsModal">
-                    <i class="fa fa-paperclip"></i> Uploads
-                </a>
-            </li>
-
-            <!-- Action dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                    <i class="fa fa-gear"></i> Action
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Action One</a></li>
-                    <li><a class="dropdown-item" href="#">Action Two</a></li>
-                </ul>
-            </li>
         </ul>
-    </div>
-
-    <!-- Uploads Modal -->
-    <div class="modal fade" id="uploadsModal" tabindex="-1" aria-labelledby="uploadsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(to bottom, #33cccc 0%, #ffffff 52%);">
-                    <h5 class="modal-title" id="uploadsModalLabel">File Upload</h5>
-                    <button type="button" class="close btn border-0 bg-transparent" data-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="fileUploadForm" action="" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <!-- File Upload -->
-                        <div class="mb-3">
-                            <label class="btn btn-outline-secondary w-100">
-                                Select File...
-                                <input type="file" class="js-uploadFile d-none" name="file" multiple required>
-                            </label>
-                        </div>
-                        <p class="help-block" id="uploadFile-status">Allowed filetypes are: .avif, .doc, .doc, .docx, .docx, .gif, .ico, .jpeg, .jpg, .json, .key, .lic, .mov, .mp3, .mp4, .odp, .ods, .odt, .ogg, .pdf, .png, .rar, .rtf, .svg, .txt, .wav, .webm, .webp, .xls, .xlsx, .xml, .zip. Max upload size allowed is 8M.</p>
-
-                        <!-- Note Textarea -->
-                        <div class="mb-3">
-                            <textarea class="form-control" name="note" rows="3" placeholder="Enter a note (optional)"></textarea>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn text-white" style="background-color: #2B7093;" form="fileUploadForm">
-                        upload
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -223,6 +166,11 @@
                                     <i class="fa fa-edit me-1"></i> Checkin All
                                 </a>
                                 @endif
+                            </div>
+                            <div class="col-lg-12" style="padding-top: 2px;">
+                                <a href="{{route('qr_code_view', $stores->id)}}" class="btn btn-block btn-sm btn-secondary btn-social hidden-print">
+                                    <i class="fa fa-eye me-1"></i> QR View 
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -255,17 +255,17 @@
         <ul class="nav nav-tabs mb-3 w-100 d-flex align-items-center" id="employeeTab" role="tablist">
             <!-- Left-aligned tabs -->
             <li class="nav-item">
-                <a class="nav-link active" id="info-tab" data-bs-toggle="tab" href="" role="tab">Info</a>
+                <a class="nav-link " href="{{ route('store_info', $store->id) }}" role="tab">Info</a>
             </li>
             <li class="nav-item">
 
-                <a class="nav-link" href="">History</a>
+                <a class="nav-link" href="{{ route('history', $store->id) }}">History</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Maintenance</a>
+                <a class="nav-link" href="{{ route('maintenance_list', $store->id) }}">Maintenance</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="" role="tab">Files</a>
+                <a class="nav-link active" href="" role="tab">Files</a>
             </li>
             <!-- Uploads tab -->
             <li class="nav-item">
@@ -274,16 +274,7 @@
                 </a>
             </li>
 
-            <!-- Action dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                    <i class="fa fa-gear"></i> Action
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Action One</a></li>
-                    <li><a class="dropdown-item" href="#">Action Two</a></li>
-                </ul>
-            </li>
+
         </ul>
     </div>
 
@@ -376,8 +367,8 @@
                                     <td><a href="{{ asset('uploads/store_files/' . $info->file) }}" class="btn" download>
                                             <i class="fa fa-download text-primary"></i>
                                         </a></td>
-                                    <td>{{$info->created_at}}</td>
                                     <td>{{$info->created_by}}</td>
+                                    <td>{{$info->created_at}}</td>
                                     <td>
                                         <button class="border-0 bg-white">
                                             <a class="text-danger"
