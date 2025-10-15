@@ -183,6 +183,13 @@ Route::get('/transfer/return', [StoreController::class, 'transfer_return'])->nam
 Route::get('/transfer/return/search_by_id/{id}', [StoreController::class, 'transfer_return_search_id'])->name('transfer_return_search_id');
 Route::post('/transfer/return/update', [StoreController::class, 'transfer_return_update'])->name('transfer_return_update');
 
+// Transfer Request Approval Routes
+Route::get('/transfer/requests', [StoreController::class, 'transfer_requests'])->name('transfer_requests');
+Route::get('/transfer/requests/pending', [StoreController::class, 'pending_transfer_requests'])->name('pending_transfer_requests');
+Route::post('/transfer/requests/{id}/approve', [StoreController::class, 'approve_transfer_request'])->name('approve_transfer_request');
+Route::post('/transfer/requests/{id}/reject', [StoreController::class, 'reject_transfer_request'])->name('reject_transfer_request');
+Route::get('/transfer/borrowed-items', [StoreController::class, 'borrowed_items'])->name('borrowed_items');
+
 
 
 

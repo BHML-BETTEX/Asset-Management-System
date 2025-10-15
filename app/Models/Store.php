@@ -41,4 +41,26 @@ class Store extends Model
         return $this->belongsTo(Designation::class, 'designation_id');
     }
 
+    // Check if this asset is currently borrowed
+    public function isBorrowed()
+    {
+        return TransferRequest::where('asset_tag', $this->asset_tag)
+            ->where('status', 'approved')
+            ->where('item_status', 'borrowed')
+            ->exists();
+    }
+
+    // Get the borrowing information if the asset is borrowed
+    public function getBorrowingInfo()
+    {
+        return TransferRequest::where('asset_tag', $this->asset_tag)
+            ->where('status', 'approved')
+            ->where('item_status', 'borrowed')
+            ->first();
+    }
+
+    // Relationship to issue
+    function rel_to_issue(){
+        return $this->hasOne(issue::class, 'asset_tag');
+    }
 }

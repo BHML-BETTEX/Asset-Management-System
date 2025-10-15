@@ -6,8 +6,8 @@
         <div class="col-xl-6 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="font-weight-bolder">Asset Transfer</h4>
-                    <p class="mb-0">Enter All information to Transfer Product</p>
+                    <h4 class="font-weight-bolder">Asset Transfer Request</h4>
+                    <p class="mb-0">Submit a transfer request. The receiving company will be notified to approve this transfer.</p>
                 </div>
                 <div class="card-body">
                     <form action="{{route('transfer.store')}}" method="POST" enctype="multipart/form-data"
@@ -18,7 +18,7 @@
                             <select id="products_id" name="asset_tag" class="form-control select2">
                                 <option value="">Select a Product</option>
                                 @foreach ($issued_products as $issued_products)
-                                <option value="{{ $issued_products->products_id }}" data-products_id="{{ $issued_products->id }}">{{ $issued_products->products_id }}</option>
+                                <option value="{{ $issued_products->asset_tag }}" data-products_id="{{ $issued_products->id }}">{{ $issued_products->asset_tag }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -36,12 +36,24 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label">New Comapny</label>
+                            <label class="form-label">New Company</label>
                             <select id="id" name="company" class="form-control">
                                 @foreach ($companys as $companys)
-                                <option value="{{ $companys->company }}" data-id="{{ $companys->id }}">{{ $companys->company }}</option>
+                                <option value="{{ $companys->id }}" data-id="{{ $companys->id }}">{{ $companys->company }}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Transfer Type</label>
+                            <select name="item_status" class="form-control" id="transferType">
+                                <option value="transfer">Permanent Transfer</option>
+                                <option value="borrowed">Borrowed Item</option>
+                            </select>
+                            <small class="form-text text-muted">
+                                • Permanent Transfer: Asset ownership changes to new company<br>
+                                • Borrowed Item: Asset remains owned by original company but used by new company
+                            </small>
                         </div>
 
                         <div class="input-group input-group-outline mb-3">
@@ -105,7 +117,7 @@
                     //console.log (result.data.products_id);
                     $('#asset_type').val(result.data.asset_type);
                     $('#model').val(result.data.model);
-                    $('#company').val(result.data.company);
+                    $('#company').val(result.data.company_id);
 
                 }
             });

@@ -83,7 +83,25 @@
                                                 Product</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ route('transfer_list') }}"><i class="fa fa-database"></i>Transfer List</a>
+                                <li><a><i class="fa fa-exchange"></i>Transfer Management<span
+                                            class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('transfer') }}"><i class="fa fa-plus"></i>New Transfer Request</a></li>
+                                        <li><a href="{{ route('transfer_requests') }}"><i class="fa fa-list"></i>All Transfer Requests</a></li>
+                                        <li>
+                                            <a href="{{ route('pending_transfer_requests') }}">
+                                                <i class="fa fa-clock-o"></i>Pending Approvals 
+                                                @php
+                                                    $pendingCount = \App\Models\TransferRequest::pending()->count();
+                                                @endphp
+                                                @if($pendingCount > 0)
+                                                    <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">{{ $pendingCount }}</span>
+                                                @endif
+                                            </a>
+                                        </li>
+                                        <li><a href="{{ route('borrowed_items') }}"><i class="fa fa-handshake-o"></i>Borrowed Items</a></li>
+                                        <li><a href="{{ route('transfer_list') }}"><i class="fa fa-history"></i>Transfer History</a></li>
+                                    </ul>
                                 </li>
                                 <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
                                 </li>
