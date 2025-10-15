@@ -280,7 +280,7 @@
             </div>
             <div class="col-md-4 text-md-right">
                 <span class="status-badge status-active">
-                    <i class="fa fa-check-circle"></i> Active Employee
+                    <i class="fa fa-check-circle"></i> {{ $employee->status }}
                 </span>
                 <div class="mt-2">
                     <small class="text-light">Employee ID: <strong>{{ $employee->emp_id }}</strong></small>
@@ -356,6 +356,11 @@
                 </li>
 
                 </ul>
+                <div class="btn-group">
+                    <a href="{{ route('pdf_history', ['search' => request('search')]) }}" class="btn btn-info btn-sm">
+                        <i class="fa fa-file-pdf-o"></i> Export PDF
+                    </a>
+                </div>
             </div>
         </div>
 

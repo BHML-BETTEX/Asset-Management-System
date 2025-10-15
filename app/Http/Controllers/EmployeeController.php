@@ -18,6 +18,8 @@ use App\Models\issue;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -375,45 +377,45 @@ class EmployeeController extends Controller
     }
 
 
-// employee update
-function employee_update(Request $request)
-{
-    $employee = Employee::findOrFail($request->employee_id);
+    // employee update
+    function employee_update(Request $request)
+    {
+        $employee = Employee::findOrFail($request->employee_id);
 
-    // Handle image upload
-    $imageName = $employee->picture;
+        // Handle image upload
+        $imageName = $employee->picture;
 
-    if ($request->hasFile('picture')) {
-        // Delete old image
-        $oldPath = public_path('uploads/employees/' . $employee->picture);
-        if (file_exists($oldPath)) {
-            unlink($oldPath);
+        if ($request->hasFile('picture')) {
+            // Delete old image
+            $oldPath = public_path('uploads/employees/' . $employee->picture);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+
+            // Upload new image
+            $imageName = $request->employee_id . '.' . $request->picture->extension();
+            $request->picture->move(public_path('uploads/employees/'), $imageName);
         }
 
-        // Upload new image
-        $imageName = $request->employee_id . '.' . $request->picture->extension();
-        $request->picture->move(public_path('uploads/employees/'), $imageName);
+        // Update employee data
+        $employee->update([
+            'emp_id' => $request->emp_id,
+            'emp_name' => $request->emp_name,
+            'join_date' => $request->join_date,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'picture' => $imageName ?? 'default.png',
+            'department_id' => $request->department_id,
+            'designation_id' => $request->designation_id,
+            'company' => $request->company,
+            'status' => $request->status,
+        ]);
+
+        // Redirect with SweetAlert
+        return redirect()
+            ->route('employee_list')
+            ->with('employee_update', 'Employee updated successfully!');
     }
-
-    // Update employee data
-    $employee->update([
-        'emp_id' => $request->emp_id,
-        'emp_name' => $request->emp_name,
-        'join_date' => $request->join_date,
-        'phone_number' => $request->phone_number,
-        'email' => $request->email,
-        'picture' => $imageName ?? 'default.png',
-        'department_id' => $request->department_id,
-        'designation_id' => $request->designation_id,
-        'company' => $request->company,
-        'status' => $request->status,
-    ]);
-
-    // Redirect with SweetAlert
-    return redirect()
-        ->route('employee_list')
-        ->with('employee_update', 'Employee updated successfully!');
-}
 
 
 
@@ -530,6 +532,52 @@ function employee_update(Request $request)
         $stores = Store::all();
         return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores', 'search'));
     }
+
+    //employee asset pdf download
+   public function history_generatePDF(Request $request)
+{
+    $search = $request->input('search', '');
+
+    // Search issues based on multiple fields
+    $issue_info = Issue::where(function ($query) use ($search) {
+        $query->where('asset_tag', 'LIKE', "%$search%")
+            ->orWhere('asset_type', 'LIKE', "%$search%")
+            ->orWhere('emp_id', 'LIKE', "%$search%")
+            ->orWhere('emp_name', 'LIKE', "%$search%")
+            ->orWhere('others', 'LIKE', "%$search%");
+    })->get();
+
+    // Fetch related employee info (optional if already included)
+    $employee_info = $issue_info->unique('emp_id')->values();
+
+    // Get store info related to each issue (join for better performance)
+    $store_info = Store::whereIn('asset_tag', $issue_info->pluck('asset_tag'))
+        ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
+        ->get();
+
+    // Prepare data for PDF
+    $data = [
+        'title' => 'Employee Asset History',
+        'company' => 'BETTEX HK Ltd',
+        'date' => now()->format('Y-m-d'),
+        'issue_info' => $issue_info,
+        'store_info' => $store_info,
+        'employee_info' => $employee_info,
+    ];
+
+    // Load view and generate PDF
+    $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
+        ->setPaper('a4', 'portrait');
+
+    // Download or stream PDF
+    return $pdf->download('employee_history.pdf');
+}
+
+    
+
+
+
+
     //Employee Consumable Details
     function employee_consumable(Request $request, $emp_id)
     {

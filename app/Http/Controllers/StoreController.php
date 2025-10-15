@@ -653,8 +653,6 @@ class StoreController extends Controller
         return redirect()->back()->with('error', 'No matching record found for this asset.');
     }
 
-
-
     // Autofill return modal
     public function return_search_by_id($issue_id)
     {
@@ -794,10 +792,6 @@ class StoreController extends Controller
             'maintenances' => $maintenances,
         ]);
     }
-
-
-
-
 
 
     //Transfer Start

@@ -83,6 +83,8 @@
                                                 Product</a></li>
                                     </ul>
                                 </li>
+                                <li><a href="{{ route('transfer_list') }}"><i class="fa fa-database"></i>Transfer List</a>
+                                </li>
                                 <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
                                 </li>
                                 <li><a><i class="fa fa-tasks"></i>Pasword Managment<span
