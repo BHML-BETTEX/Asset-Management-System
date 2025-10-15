@@ -516,7 +516,7 @@ class EmployeeController extends Controller
         $role = auth()->user()->roles[0];
         $search = $request->input('search', '');
         $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
-        $query = Issue::where('emp_id', $employee->emp_id);
+        $query = issue::where('emp_id', $employee->emp_id);
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q
@@ -534,43 +534,94 @@ class EmployeeController extends Controller
     }
 
     //employee asset pdf download
-   public function history_generatePDF(Request $request)
+   public function history_generatePDF(Request $request, $emp_id)
 {
     $search = $request->input('search', '');
 
-    // Search issues based on multiple fields
-    $issue_info = Issue::where(function ($query) use ($search) {
-        $query->where('asset_tag', 'LIKE', "%$search%")
-            ->orWhere('asset_type', 'LIKE', "%$search%")
-            ->orWhere('emp_id', 'LIKE', "%$search%")
-            ->orWhere('emp_name', 'LIKE', "%$search%")
-            ->orWhere('others', 'LIKE', "%$search%");
-    })->get();
+    // Get the specific employee with relationships
+    $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
+        ->where('emp_id', $emp_id)->firstOrFail();
 
-    // Fetch related employee info (optional if already included)
-    $employee_info = $issue_info->unique('emp_id')->values();
+    // Search issues based on multiple fields but only for this specific employee
+    $issue_info = issue::where('emp_id', $emp_id)
+        ->where(function ($query) use ($search) {
+            if (!empty($search)) {
+                $query->where('asset_tag', 'LIKE', "%$search%")
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('others', 'LIKE', "%$search%");
+            }
+        })->get();
 
-    // Get store info related to each issue (join for better performance)
+    // Get store info related to each issue for this employee
     $store_info = Store::whereIn('asset_tag', $issue_info->pluck('asset_tag'))
         ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
         ->get();
 
     // Prepare data for PDF
     $data = [
-        'title' => 'Employee Asset History',
+        'title' => 'Employee Asset History - ' . $employee->emp_name,
         'company' => 'BETTEX HK Ltd',
         'date' => now()->format('Y-m-d'),
         'issue_info' => $issue_info,
         'store_info' => $store_info,
-        'employee_info' => $employee_info,
+        'employee' => $employee,
     ];
 
     // Load view and generate PDF
     $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
         ->setPaper('a4', 'portrait');
 
-    // Download or stream PDF
-    return $pdf->download('employee_history.pdf');
+    // Download or stream PDF with employee-specific filename
+    return $pdf->download('employee_assets_' . $employee->emp_id . '.pdf');
+}
+
+    //employee selected assets pdf download
+   public function history_generatePDF_selected(Request $request, $emp_id)
+{
+    $search = $request->input('search', '');
+    $selected_assets = $request->input('selected_assets', []);
+
+    // Validate that assets are selected
+    if (empty($selected_assets)) {
+        return redirect()->back()->with('error', 'No assets selected for export.');
+    }
+
+    // Get the specific employee with relationships
+    $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
+        ->where('emp_id', $emp_id)->firstOrFail();
+
+    // Get only selected issues for this specific employee
+    $issue_info = issue::where('emp_id', $emp_id)
+        ->whereIn('asset_tag', $selected_assets)
+        ->where(function ($query) use ($search) {
+            if (!empty($search)) {
+                $query->where('asset_tag', 'LIKE', "%$search%")
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('others', 'LIKE', "%$search%");
+            }
+        })->get();
+
+    // Get store info related to selected issues
+    $store_info = Store::whereIn('asset_tag', $selected_assets)
+        ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
+        ->get();
+
+    // Prepare data for PDF
+    $data = [
+        'title' => 'Selected Employee Assets - ' . $employee->emp_name . ' (' . count($selected_assets) . ' items)',
+        'company' => 'BETTEX HK Ltd',
+        'date' => now()->format('Y-m-d'),
+        'issue_info' => $issue_info,
+        'store_info' => $store_info,
+        'employee' => $employee,
+    ];
+
+    // Load view and generate PDF
+    $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
+        ->setPaper('a4', 'portrait');
+
+    // Download or stream PDF with employee-specific filename
+    return $pdf->download('employee_selected_assets_' . $employee->emp_id . '_' . count($selected_assets) . '_items.pdf');
 }
 
     

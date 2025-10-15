@@ -143,26 +143,13 @@
 
 <body>
 
-<?php
-
-    $groupedAssets = $issue_info->groupBy('emp_id');
-
-
-    foreach($groupedAssets as $empId => $assets);
-
-    $emp = $employee_info->firstWhere('emp_id', $empId);
-
-    ?>
-
     <!-- Title and Date Section -->
     <div class="title" style="text-align: center;">
         <img style="margin: auto; height: 100px; width: 600px;" src="uploads/bettex_logo.jpeg" alt="Bettex Logo">
         <p></p>
     </div>
 
-
     <!-- Employee Info Section -->
-    <!-- Employee Info Row -->
     <div class="employee-info">
         <p><b>Employee Information</b></p>
         <table>
@@ -179,13 +166,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ $emp->emp_name }}</td>
-                    <td>{{ $emp->emp_id }}</td>
-                    <td>{{ $emp->designation_id }}</td>
-                    <td>{{ $emp->department_id }}</td>
-                    <td>{{ $emp->phone_number }}</td>
-                    <td>{{ $emp->email }}</td>
-                    <td>{{ $emp->others }}</td>
+                    <td>{{ $employee->emp_name ?? 'N/A' }}</td>
+                    <td>{{ $employee->emp_id ?? 'N/A' }}</td>
+                    <td>{{ $employee->rel_to_designation->designation ?? 'N/A' }}</td>
+                    <td>{{ $employee->rel_to_departmet->department ?? 'N/A' }}</td>
+                    <td>{{ $employee->phone_number ?? 'N/A' }}</td>
+                    <td>{{ $employee->email ?? 'N/A' }}</td>
+                    <td>{{ $employee->rel_to_companies->name ?? 'N/A' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -209,19 +196,26 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($issue_info as $key => $issue_info)
+                @forelse($issue_info as $issue)
+                @php
+                    $store = $store_info->firstWhere('asset_tag', $issue->asset_tag);
+                @endphp
                 <tr>
-                    <td>{{ $issue_info->asset_tag }}</td>
-                    <td>{{ $issue_info->asset_type }}</td>
-                    <td>{{ $issue_info->model }}</td>
-                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->asset_sl_no : 'N/A' }}</td>
-                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->description : 'N/A' }}</td>
-                    <td>{{ $issue_info->issue_date }}</td>
-                    <td>{{ $issue_info->return_date }}</td>
-                    <td>{{ isset($store_info[$key]) ? $store_info[$key]->qty : 'N/A' }}</td>
+                    <td>{{ $issue->asset_tag }}</td>
+                    <td>{{ $issue->asset_type }}</td>
+                    <td>{{ $issue->model }}</td>
+                    <td>{{ $store->asset_sl_no ?? 'N/A' }}</td>
+                    <td>{{ $store->description ?? 'N/A' }}</td>
+                    <td>{{ $issue->issue_date }}</td>
+                    <td>{{ $issue->return_date }}</td>
+                    <td>{{ $store->qty ?? 'N/A' }}</td>
                     <td>pcs</td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="9" style="text-align: center;">No assets found for this employee</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

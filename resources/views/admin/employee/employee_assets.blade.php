@@ -256,6 +256,19 @@
         width: 80px !important;
         margin-right: 0.5rem;
     }
+
+    /* Checkbox styling */
+    #selectAll, .asset-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+
+    #selectAll:indeterminate {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
 </style>
 
 <div class="container">
@@ -357,8 +370,11 @@
 
                 </ul>
                 <div class="btn-group">
-                    <a href="{{ route('pdf_history', ['search' => request('search')]) }}" class="btn btn-info btn-sm">
-                        <i class="fa fa-file-pdf-o"></i> Export PDF
+                    <button id="exportSelectedBtn" class="btn btn-info btn-sm" disabled onclick="exportSelected()">
+                        <i class="fa fa-file-pdf-o"></i> Export Selected (<span id="selectedCount">0</span>)
+                    </button>
+                    <a href="{{ route('pdf_history', ['emp_id' => $employee->emp_id, 'search' => request('search')]) }}" class="btn btn-secondary btn-sm">
+                        <i class="fa fa-file-pdf-o"></i> Export All
                     </a>
                 </div>
             </div>
@@ -380,6 +396,9 @@
                 <table class="table custom-table table-hover mb-0">
                     <thead>
                         <tr>
+                            <th class="text-center" style="width: 50px;">
+                                <input type="checkbox" id="selectAll">
+                            </th>
                             <th>Asset Tag</th>
                             <th>Type & Model</th>
                             <th>Description</th>
@@ -392,6 +411,15 @@
                     <tbody>
                         @foreach ($issues as $issue)
                         <tr>
+                            <td class="text-center">
+                                <input type="checkbox" class="asset-checkbox" 
+                                       value="{{ $issue->asset_tag }}" 
+                                       data-issue-date="{{ $issue->issue_date }}"
+                                       data-return-date="{{ $issue->return_date }}"
+                                       data-asset-type="{{ $issue->asset_type }}"
+                                       data-model="{{ $issue->model }}"
+                                       data-description="{{ $issue->description }}">
+                            </td>
                             <td>
                                 <span class="fw-medium">{{ $issue->asset_tag }}</span>
                             </td>
@@ -587,6 +615,155 @@
         document.getElementById('display_emp_id').value = empId;
         document.getElementById('return_emp_name').value = empName;
         document.getElementById('return_issue_date').value = issueDate;
+    }
+
+    // Checkbox functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing checkboxes...');
+        
+        // Wait a bit to ensure DOM is fully rendered
+        setTimeout(function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const assetCheckboxes = document.querySelectorAll('.asset-checkbox');
+            const exportBtn = document.getElementById('exportSelectedBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+
+            // Debug logging
+            console.log('Select All Checkbox:', selectAllCheckbox);
+            console.log('Asset Checkboxes Count:', assetCheckboxes.length);
+            console.log('Export Button:', exportBtn);
+
+            // Ensure elements exist before adding event listeners
+            if (!selectAllCheckbox) {
+                console.error('Select All checkbox not found');
+                return;
+            }
+            
+            if (!exportBtn) {
+                console.error('Export button not found');
+                return;
+            }
+            
+            if (!selectedCountSpan) {
+                console.error('Selected count span not found');
+                return;
+            }
+
+            if (assetCheckboxes.length === 0) {
+                console.warn('No asset checkboxes found');
+            }
+
+            // Select All functionality - using onclick as fallback
+            selectAllCheckbox.onclick = function() {
+                console.log('Select All clicked, checked:', this.checked);
+                assetCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+                updateExportButton();
+            };
+
+            // Also add change event listener
+            selectAllCheckbox.addEventListener('change', function() {
+                console.log('Select All changed, checked:', this.checked);
+                assetCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = this.checked;
+                });
+                updateExportButton();
+            });
+
+            // Individual checkbox functionality
+            assetCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    console.log('Individual checkbox changed:', this.value, this.checked);
+                    updateSelectAllCheckbox();
+                    updateExportButton();
+                });
+            });
+
+            function updateSelectAllCheckbox() {
+                const checkedBoxes = document.querySelectorAll('.asset-checkbox:checked');
+                console.log('Checked boxes count:', checkedBoxes.length, 'Total:', assetCheckboxes.length);
+                
+                if (checkedBoxes.length === 0) {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = false;
+                } else if (checkedBoxes.length === assetCheckboxes.length) {
+                    selectAllCheckbox.checked = true;
+                    selectAllCheckbox.indeterminate = false;
+                } else {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = true;
+                }
+            }
+
+            function updateExportButton() {
+                const checkedBoxes = document.querySelectorAll('.asset-checkbox:checked');
+                selectedCountSpan.textContent = checkedBoxes.length;
+                exportBtn.disabled = checkedBoxes.length === 0;
+                
+                if (checkedBoxes.length > 0) {
+                    exportBtn.classList.remove('btn-secondary');
+                    exportBtn.classList.add('btn-info');
+                } else {
+                    exportBtn.classList.remove('btn-info');
+                    exportBtn.classList.add('btn-secondary');
+                }
+            }
+
+            // Initialize the export button state
+            updateExportButton();
+            
+            console.log('Checkbox functionality initialized successfully');
+        }, 100);
+    });
+
+    function exportSelected() {
+        const checkedBoxes = document.querySelectorAll('.asset-checkbox:checked');
+        const selectedAssets = Array.from(checkedBoxes).map(checkbox => checkbox.value);
+        
+        if (selectedAssets.length === 0) {
+            Swal.fire({
+                title: 'No Assets Selected',
+                text: 'Please select at least one asset to export.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Create a form to submit selected assets
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("pdf_history_selected", ["emp_id" => $employee->emp_id]) }}';
+        form.style.display = 'none';
+
+        // Add CSRF token
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+
+        // Add selected assets
+        selectedAssets.forEach(assetTag => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_assets[]';
+            input.value = assetTag;
+            form.appendChild(input);
+        });
+
+        // Add search parameter if exists
+        @if(request('search'))
+        const searchInput = document.createElement('input');
+        searchInput.type = 'hidden';
+        searchInput.name = 'search';
+        searchInput.value = '{{ request("search") }}';
+        form.appendChild(searchInput);
+        @endif
+
+        document.body.appendChild(form);
+        form.submit();
     }
 </script>
 @if(session('return_success'))
