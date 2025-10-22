@@ -840,7 +840,7 @@ class StoreController extends Controller
         $dateFrom = $request->input('date_from', '');
         $dateTo = $request->input('date_to', '');
         $status = $request->input('status', '');
-        $perPage = $request->input('per_page', 15);
+        $perPage = $request->input('per_page', 10);
 
         $query = Transfer::query();
 

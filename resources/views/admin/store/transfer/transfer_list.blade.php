@@ -2,323 +2,273 @@
 @section('content')
 <style>
     .gradient-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(to right, #003366 0%, #006666 100%);
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
-    .stats-card {
+
+    /* Filter Panel Styling */
+    .filter-panel {
         background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1rem;
+        align-items: end;
+    }
+
+    .filter-row label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    .filter-actions {
+        display: flex;
+        align-items: end;
+    }
+
+    .filter-actions button {
+        width: 100%;
+    }
+
+    .form-control-sm,
+    .form-select-sm {
+        border-radius: 8px;
+        border: 1px solid #e1e5e9;
         transition: all 0.3s ease;
-        border-left: 4px solid #667eea;
+        height: 36px;
+        line-height: 36px;
     }
-    .stats-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+    .form-control-sm:focus,
+    .form-select-sm:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-    .filter-card {
+
+    .nav-tabs {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        border: none;
     }
-    .table-card {
+
+    /* Table Styling */
+    .smart-table {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        border: none;
         overflow: hidden;
     }
-    .custom-table {
+
+    .smart-table .table {
         margin-bottom: 0;
     }
-    .custom-table thead th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    .smart-table .table thead th {
+        background-color: #495057;
         color: white;
-        border: none;
         font-weight: 600;
-        padding: 15px 12px;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-    }
-    .custom-table tbody td {
-        padding: 12px;
-        border-color: #f0f0f0;
-        vertical-align: middle;
-    }
-    .custom-table tbody tr:hover {
-        background-color: #f8f9ff;
-    }
-    .action-btn {
-        width: 35px;
-        height: 35px;
-        border-radius: 8px;
+        text-transform: uppercase;
         border: none;
+        padding: 1rem 0.75rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .smart-table .table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .smart-table .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .smart-table .table tbody td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+        border: none;
+        font-size: 0.85rem;
+    }
+
+    .table-action-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        margin: 2px;
-    }
-    .action-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .btn-edit {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
-    }
-    .badge-status {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    .status-transferred {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    .status-returned {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-    }
-    .filter-section {
-        background: #f8f9ff;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .form-control:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-    .btn-filter {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 0.375rem 0.75rem;
         border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        color: white;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    .btn-filter:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        color: white;
-    }
-    .btn-reset {
-        background: #6c757d;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        color: white;
-        font-weight: 600;
-    }
-    .export-section {
-        background: white;
-        border-radius: 10px;
-        padding: 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: none;
+        cursor: pointer;
     }
 
-    
+    .table-action-btn:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-1px);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        transform: translateY(-2px);
+    }
+
+    /* Column Selector Styles */
+    #columnDropdownMenu {
+        min-width: 280px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        pointer-events: auto;
+    }
+
+    .column-checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+        margin-bottom: 0.25rem;
+    }
+
+    .column-checkbox-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .column-checkbox-item label {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        flex: 1;
+    }
+
+    .column-checkbox-item.essential label {
+        font-weight: 600;
+        color: #007bff;
+    }
+
+    .column-checkbox-item.essential {
+        background-color: #f0f8ff;
+        border-left: 3px solid #007bff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
+
+        .smart-table {
+            font-size: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .smart-table .table {
+            min-width: 1200px;
+        }
+    }
 </style>
 
-<div class="container-fluid">
-    <!-- Header Section -->
-    <div class="gradient-header mb-4 p-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h3 class="text-white mb-1 fw-bold">
-                    <i class="fas fa-exchange-alt me-2"></i>Transfer Management
-                </h3>
-                <p class="text-white-50 mb-0">Manage and track asset transfers</p>
-            </div>
-            <div class="col-lg-6 text-end">
-                <a href="{{ route('transfer') }}" class="btn btn-light btn-sm me-2">
-                    <i class="fas fa-plus me-1"></i>New Transfer
-                </a>
-                <a href="{{ route('transfer_return') }}" class="btn btn-outline-light btn-sm">
-                    <i class="fas fa-undo me-1"></i>Return Asset
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">Total Transfers</h6>
-                        <h4 class="mb-0 text-primary fw-bold">{{ $statistics['total'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-primary">
-                        <i class="fas fa-exchange-alt fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">Active Transfers</h6>
-                        <h4 class="mb-0 text-success fw-bold">{{ $statistics['transferred'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-success">
-                        <i class="fas fa-arrow-right fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">Returned Assets</h6>
-                        <h4 class="mb-0 text-info fw-bold">{{ $statistics['returned'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-info">
-                        <i class="fas fa-arrow-left fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="text-muted mb-1">This Month</h6>
-                        <h4 class="mb-0 text-warning fw-bold">{{ $statistics['this_month'] ?? 0 }}</h4>
-                    </div>
-                    <div class="text-warning">
-                        <i class="fas fa-calendar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<div class="container">
     <!-- Filters Section -->
-    <div class="card filter-card mb-4">
-        <div class="card-header bg-light">
-            <h6 class="mb-0 fw-bold text-dark">
-                <i class="fas fa-filter me-2"></i>Advanced Filters
+    <div class="card mb-2" style="">
+        <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
+            <h6 class="mb-0 text-dark">
+                <span class="">Transfer List</span>
             </h6>
         </div>
         <div class="card-body">
-            <form method="GET" id="filterForm">
-                <div class="row g-3">
-                    <div class="col-lg-3 col-md-6">
-                        <label class="form-label fw-semibold">Search</label>
-                        <input type="text" class="form-control" name="search" value="{{ request('search') }}"
-                               placeholder="Asset tag, model, description...">
+            <form action="" method="GET" id="filterForm">
+                <!-- Action Buttons -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Search Assets</label>
+                        <input type="search" class="form-control form-control-sm" name="search"
+                            placeholder="Search by asset tag, model, brand..."
+                            value="{{ request('search') }}">
                     </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Asset Type</label>
-                        <select class="form-select" name="asset_type">
+
+                    <div class="col-md-2">
+                        <label class="form-label">Asset Type</label>
+                        <select name="product_search" class="form-control form-control-sm select2-filter">
                             <option value="">All Types</option>
-                            @foreach($assetTypes as $type)
-                                <option value="{{ $type }}" {{ request('asset_type') == $type ? 'selected' : '' }}>
-                                    {{ $type }}
-                                </option>
-                            @endforeach
+                            <!-- @foreach ($assetTypes as $product_type)
+                            <option value="{{ $product_type->id }}"
+                                {{ request('product_search') == $product_type->id ? 'selected' : '' }}>
+                                {{ $product_type->product }}
+                            </option>
+                            @endforeach -->
                         </select>
                     </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Company</label>
-                        <select class="form-select" name="company">
+
+                    <div class="col-md-2">
+                        <label class="form-label">Company</label>
+                        <select name="company_filter" class="form-control form-control-sm select2-filter">
                             <option value="">All Companies</option>
-                            @foreach($companies as $company)
-                                <option value="{{ $company }}" {{ request('company') == $company ? 'selected' : '' }}>
-                                    {{ $company }}
-                                </option>
-                            @endforeach
+
                         </select>
                     </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Date From</label>
-                        <input type="date" class="form-control" name="date_from" value="{{ request('date_from') }}">
-                    </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Date To</label>
-                        <input type="date" class="form-control" name="date_to" value="{{ request('date_to') }}">
-                    </div>
-                    <div class="col-lg-1 col-md-6 d-flex align-items-end">
-                        <button type="submit" class="btn btn-filter w-100">
-                            <i class="fas fa-search"></i>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="fa fa-search"></i> Apply Filters
                         </button>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Status</label>
-                        <select class="form-select" name="status">
-                            <option value="">All Status</option>
-                            <option value="transferred" {{ request('status') == 'transferred' ? 'selected' : '' }}>Transferred</option>
-                            <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label fw-semibold">Per Page</label>
-                        <select class="form-select" name="per_page">
-                            <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15</option>
-                            <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-8 d-flex align-items-end justify-content-end">
-                        <a href="{{ route('transfer_list') }}" class="btn btn-reset me-2">
-                            <i class="fas fa-times me-1"></i>Clear Filters
-                        </a>
 
-                        <!-- Export Section -->
-                        <form action="{{ route('transfer_export') }}" method="GET" class="d-inline-flex align-items-end">
-                            @foreach (request()->query() as $key => $value)
-                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                            @endforeach
-                            <select name="type" class="form-select me-2" style="width: auto;">
-                                <option value="">Export As...</option>
-                                <option value="xlsx">XLSX</option>
-                                <option value="csv">CSV</option>
-                                <option value="xls">XLS</option>
-                            </select>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-download me-1"></i>Export
-                            </button>
-                        </form>
+                    <div class="filter-actions">
+                        <button type="button" class="btn btn-warning btn-sm w-100" onclick="clearFilters()">
+                            <i class="fa fa-refresh"></i> Clear All
+                        </button>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-success btn-sm w-100">
+                            <a href="{{ route('transfer') }}" class="text-white">
+                                <i class="fa fa-plus me-1"></i> New Transfer
+                            </a>
+                        </button>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-info btn-sm w-100">
+                            <a href="{{ route('transfer_return') }}" class="text-white">
+                                <i class="fa fa-plus me-1"></i> Return Asset
+                            </a>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
+
     </div>
 
     <!-- Data Table -->
     <div class="card table-card">
-        <div class="card-header bg-white">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h6 class="mb-0 fw-bold text-dark">
-                        <i class="fas fa-list me-2"></i>Transfer Records
-                        <span class="badge bg-primary ms-2">{{ $transer_data->total() }} Total</span>
-                    </h6>
-                </div>
-                <div class="col-auto">
-                    <small class="text-muted">
-                        Showing {{ $transer_data->firstItem() ?? 0 }} to {{ $transer_data->lastItem() ?? 0 }}
-                        of {{ $transer_data->total() }} entries
-                    </small>
-                </div>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
+        <div class="smart-table">
+            <div class="card-body">
                 <table class="table custom-table">
                     <thead>
                         <tr>
@@ -331,103 +281,107 @@
                             <th>Description</th>
                             <th>Transfer Date</th>
                             <th>Return Date</th>
-                            <th>Status</th>
-                            <th style="width: 80px;">Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="height: 5px !important; overflow: scroll;">
                         @forelse ($transer_data as $key => $transfer)
                         <tr>
-                            <td class="fw-semibold">{{ $transer_data->firstItem() + $key }}</td>
-                            <td>
-                                <span class="badge bg-light text-dark fw-semibold">{{ $transfer->asset_tag }}</span>
-                            </td>
-                            <td>{{ $transfer->asset_type }}</td>
-                            <td>{{ $transfer->model }}</td>
-                            <td>
-                                <small class="text-muted">{{ $transfer->oldcompany }}</small>
-                            </td>
-                            <td>
-                                <strong class="text-primary">{{ $transfer->company }}</strong>
-                            </td>
-                            <td>
-                                <div style="max-width: 200px;">
-                                    <small class="text-truncate d-block">{{ $transfer->description }}</small>
-                                </div>
-                            </td>
-                            <td>
-                                <small class="text-success fw-semibold">
-                                    {{ $transfer->transfer_date ? date('M d, Y', strtotime($transfer->transfer_date)) : '-' }}
-                                </small>
-                            </td>
-                            <td>
-                                <small class="text-info fw-semibold">
-                                    {{ $transfer->return_date ? date('M d, Y', strtotime($transfer->return_date)) : '-' }}
-                                </small>
-                            </td>
-                            <td>
+                            <td data-column="">{{ $transer_data->firstItem() + $key }}</td>
+                            <td data-column="">{{ $transfer->asset_tag }}</td>
+                            <td data-column="">{{ $transfer->asset_type }}</td>
+                            <td data-column="">{{ $transfer->model }}</td>
+                            <td data-column="">{{ $transfer->oldcompany }}</td>
+                            <td data-column="">{{ $transfer->company }}</td>
+                            <td data-column="">{{ $transfer->description }}</td>
+                            <td data-column="">{{ $transfer->transfer_date ? date('M d, Y', strtotime($transfer->transfer_date)) : '-' }}</td>
+                            <td data-column="">
                                 @if($transfer->return_date)
-                                    <span class="badge status-returned">Returned</span>
+                                <span class="badge status-returned">Returned</span>
                                 @else
-                                    <span class="badge status-transferred">Active</span>
+                                <span class="badge status-transferred">Active</span>
                                 @endif
                             </td>
                             <td>
                                 <a href="{{ route('transfer_edit', $transfer->id) }}"
-                                   class="action-btn btn-edit"
-                                   title="Edit Transfer">
-                                    <i class="fas fa-edit"></i>
+                                    class="action-btn btn-edit"
+                                    title="Edit Transfer">
+                                    <i class="fa fa-edit"></i>
                                 </a>
                             </td>
                         </tr>
                         @empty
-                        <tr>
-                            <td colspan="11" class="text-center py-5">
-                                <div class="text-muted">
-                                    <i class="fas fa-inbox fa-3x mb-3"></i>
-                                    <h6>No transfer records found</h6>
-                                    <p class="mb-0">Try adjusting your search criteria</p>
-                                </div>
-                            </td>
-                        </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
+        <!--Pagination Start-->
+        <div class="d-flex justify-content-between align-items-center p-3 border-top">
+            <div class="d-flex align-items-center">
+                @if ($transer_data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <span class="text-muted me-3">
+                    Showing {{ $transer_data->firstItem() }} to {{ $transer_data->lastItem() }} of {{ $transer_data->total() }} assets
+                </span>
+                @else
+                <span class="text-muted me-3">Showing all {{ $transer_data->count() }} assets</span>
+                @endif
 
-        @if($transer_data->hasPages())
-        <div class="card-footer bg-light">
-            <div class="d-flex justify-content-center">
+                <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                    <select name="per_page" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                        @php $options = [10, 25, 50, 100, 'all']; @endphp
+                        @foreach ($options as $option)
+                        <option value="{{ $option }}" {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                            {{ is_numeric($option) ? $option : 'All' }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <span class="text-muted ms-2">per page</span>
+
+                    <!-- Preserve all filters -->
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="product_search" value="{{ request('product_search') }}">
+                    <input type="hidden" name="status_filter" value="{{ request('status_filter') }}">
+                    <input type="hidden" name="company_filter" value="{{ request('company_filter') }}">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <input type="hidden" name="cost_min" value="{{ request('cost_min') }}">
+                    <input type="hidden" name="cost_max" value="{{ request('cost_max') }}">
+                </form>
+            </div>
+
+            @if ($transer_data instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div class="pagination-wrapper">
                 {{ $transer_data->appends(request()->query())->links() }}
             </div>
+            @endif
         </div>
-        @endif
+        <!--Pagination end-->
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('filterForm');
-    const inputs = form.querySelectorAll('input, select');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('filterForm');
+        const inputs = form.querySelectorAll('input, select');
 
-    inputs.forEach(input => {
-        if(input.type === 'text') {
-            let timeout;
-            input.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    if(this.value.length >= 2 || this.value.length === 0) {
-                        form.submit();
-                    }
-                }, 500);
-            });
-        } else {
-            input.addEventListener('change', function() {
-                form.submit();
-            });
-        }
+        inputs.forEach(input => {
+            if (input.type === 'text') {
+                let timeout;
+                input.addEventListener('input', function() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            form.submit();
+                        }
+                    }, 500);
+                });
+            } else {
+                input.addEventListener('change', function() {
+                    form.submit();
+                });
+            }
+        });
     });
-});
 </script>
 @endsection

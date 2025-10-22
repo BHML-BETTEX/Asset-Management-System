@@ -870,10 +870,10 @@
                         <label class="form-label">Asset Type</label>
                         <select name="product_search" class="form-control form-control-sm select2-filter">
                             <option value="">All Types</option>
-                            @foreach ($all_product_types as $product_type)
-                            <option value="{{ $product_type->id }}"
-                                {{ request('product_search') == $product_type->id ? 'selected' : '' }}>
-                                {{ $product_type->product }}
+                            @foreach ($assetType as $Type)
+                            <option value="{{ $Type->id }}"
+                                {{ request('product_search') == $Type->id ? 'selected' : '' }}>
+                                {{ $Type->product }}
                             </option>
                             @endforeach
                         </select>
