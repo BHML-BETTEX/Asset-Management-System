@@ -178,6 +178,28 @@
                                     <i class="fa fa-eye me-1"></i> QR Print
                                 </a>
                             </div>
+
+                            <div>
+                                <div id="print-area">
+                                    <table>
+                                        <tr>
+                                            <td align="center">
+                                                <img
+                                                    src="data:image/png;base64,{{ base64_encode(
+            QrCode::format('png')
+                ->size(180)        // Higher resolution
+                ->margin(0)        // Remove extra padding
+                ->generate('https://asset.bettex.com/public/store/qr_code_view/')
+        ) }}"
+                                                    alt="QR Code"
+                                                    style="display: block; width: 75px; height: 75px; margin: auto;">
+                                                <samp></samp>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
