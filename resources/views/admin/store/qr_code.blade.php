@@ -90,7 +90,7 @@
         ) }}"
                         alt="QR Code"
                         style="display: block; width: 75px; height: 75px; margin: auto;">
-                    <samp>{{ $qrCode->products_id }}</samp>
+                    <samp>{{ $qrCode->asset_tag }}</samp>
                 </td>
 
             </tr>

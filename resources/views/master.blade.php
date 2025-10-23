@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>Asset Managment</title>
+    <title>Asset Management</title>
 
     <!-- Bootstrap -->
     <link href="{{ asset('backend/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -105,7 +105,7 @@
                                 </li>
                                 <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
                                 </li>
-                                <li><a><i class="fa fa-tasks"></i>Pasword Managment<span
+                                <li><a><i class="fa fa-tasks"></i>Pasword Management<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('computer_pass') }}">Computer</a></li>

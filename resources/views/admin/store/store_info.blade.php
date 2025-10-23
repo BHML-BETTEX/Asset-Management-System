@@ -169,7 +169,13 @@
                             </div>
                             <div class="col-lg-12" style="padding-top: 2px;">
                                 <a href="{{route('qr_code_view', $stores->id)}}" class="btn btn-block btn-sm btn-secondary btn-social hidden-print">
-                                    <i class="fa fa-eye me-1"></i> QR View 
+                                    <i class="fa fa-eye me-1"></i> QR View
+                                </a>
+                            </div>
+
+                            <div class="col-lg-12" style="padding-top: 2px;">
+                                <a href="{{route('qr_code', $stores->id)}}" class="btn btn-block btn-sm btn-info btn-social hidden-print">
+                                    <i class="fa fa-eye me-1"></i> QR Print
                                 </a>
                             </div>
                         </div>
