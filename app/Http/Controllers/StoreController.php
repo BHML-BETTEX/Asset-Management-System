@@ -1445,8 +1445,9 @@ class StoreController extends Controller
         $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
         $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
         $showDeleted = false; // ✅ default value
-
-        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances', 'showDeleted'));
+        
+        $qrCode = Store::find($stores_id);
+        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances', 'showDeleted', 'qrCode'));
     }
 
     //store Clone - Show edit page with cloned data
