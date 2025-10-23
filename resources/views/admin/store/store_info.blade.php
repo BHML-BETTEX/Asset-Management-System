@@ -178,6 +178,7 @@
                                     <i class="fa fa-eye me-1"></i> QR Print
                                 </a>
                             </div>
+
                             <div class="col-lg-12" style="padding-top: 10px;">
                                 <div id="print-area">
                                     <table>
@@ -185,14 +186,13 @@
                                             <td align="center">
                                                 <img
                                                     src="data:image/png;base64,{{ base64_encode(
-                QrCode::format('png')
-                    ->size(600)          // High pixel size for print (300 DPI+)
-                    ->margin(0)          // No white borders
-                    ->errorCorrection('H') // Highest error correction for durability
-                    ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
-            ) }}"
-                                                    alt="QR Code">
-                                                style="display: block; width: 75px; height: 75px; margin: auto;">
+            QrCode::format('png')
+                ->size(300)        // Higher resolution
+                ->margin(0)        // Remove extra padding
+                 ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
+        ) }}"
+                                                    alt="QR Code"
+                                                    style="display: block; width: 75px; height: 75px; margin: auto;">
                                                 <samp>{{$qrCode->asset_tag}}</samp>
                                             </td>
 
@@ -225,10 +225,4 @@
     </div>
 
 </div>
-
-<script>
-    function printQRCode() {
-        window.print();
-    }
-</script>
 @endsection
