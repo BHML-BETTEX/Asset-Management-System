@@ -179,7 +179,7 @@
                                 </a>
                             </div>
 
-                            <div>
+                            <div class="col-lg-12" style="padding-top: 10px;">
                                 <div id="print-area">
                                     <table>
                                         <tr>
@@ -189,11 +189,11 @@
             QrCode::format('png')
                 ->size(180)        // Higher resolution
                 ->margin(0)        // Remove extra padding
-                ->generate('https://asset.bettex.com/public/store/qr_code_view/. $qrCode->id')
+                 ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
         ) }}"
                                                     alt="QR Code"
                                                     style="display: block; width: 75px; height: 75px; margin: auto;">
-                                                <samp></samp>
+                                                <samp>{{}}</samp>
                                             </td>
 
                                         </tr>
