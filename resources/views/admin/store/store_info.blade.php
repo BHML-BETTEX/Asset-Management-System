@@ -173,7 +173,7 @@
                                 </a>
                             </div>
 
-                            <div class="col-lg-12" style="padding-top: 2px;">
+                            <div class="col-lg-12" style="padding-top: 2px;" m->
                                 <a href="{{route('qr_code', $stores->id)}}" class="btn btn-block btn-sm btn-info btn-social hidden-print">
                                     <i class="fa fa-eye me-1"></i> QR Print
                                 </a>
@@ -187,7 +187,7 @@
                                                 <img
                                                     src="data:image/png;base64,{{ base64_encode(
             QrCode::format('png')
-                ->size(240)        // Higher resolution
+                ->size(300)        // Higher resolution
                 ->margin(0)        // Remove extra padding
                  ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
         ) }}"
