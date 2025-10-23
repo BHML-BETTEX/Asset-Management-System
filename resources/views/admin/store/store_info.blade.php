@@ -180,6 +180,7 @@
                             </div>
 
                             <div class="col-lg-12" style="padding-top: 10px;">
+                                <button class="print-button" onclick="printQRCode()">🖨️ Print QR Code</button>
                                 <div id="print-area">
                                     <table>
                                         <tr>
