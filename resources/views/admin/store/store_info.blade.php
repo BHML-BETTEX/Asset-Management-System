@@ -178,9 +178,7 @@
                                     <i class="fa fa-eye me-1"></i> QR Print
                                 </a>
                             </div>
-                            <button class="print-button" onclick="printQRCode()">🖨️ Print QR Code</button>
                             <div class="col-lg-12" style="padding-top: 10px;">
-
                                 <div id="print-area">
                                     <table>
                                         <tr>
