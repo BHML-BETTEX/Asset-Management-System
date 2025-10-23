@@ -82,7 +82,7 @@
         <img
             src="data:image/png;base64,{{ base64_encode(
                 QrCode::format('png')
-                    ->size(600)          // High pixel size for print (300 DPI+)
+                    ->size(300)          // High pixel size for print (300 DPI+)
                     ->margin(0)          // No white borders
                     ->errorCorrection('H') // Highest error correction for durability
                     ->generate('https://asset.bettex.com/public/store/qr_code_view/' . $qrCode->id)
