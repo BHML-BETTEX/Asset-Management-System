@@ -12,13 +12,12 @@
                 <div class="card-body">
                     <form action="{{route('transfer.store')}}" method="POST" enctype="multipart/form-data"
                         class="form-card">
-
                         @csrf
                         <div class="input-group input-group-outline mb-3">
                             <select id="products_id" name="asset_tag" class="form-control select2">
                                 <option value="">Select a Product</option>
                                 @foreach ($issued_products as $issued_products)
-                                <option value="{{ $issued_products->asset_tag }}" data-products_id="{{ $issued_products->id }}">{{ $issued_products->asset_tag }}</option>
+                                <option value="{{ $issued_products->asset_tag }}" data-products_id="{{ $issued_products->id }}">{{ $issued_products->asset_tag}} | {{$issued_products->rel_to_ProductType->product}} | {{$issued_products->model}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -77,8 +76,6 @@
                     <a href="{{ route('store') }}" class="btn btn-info btn-lg text-white text-center"><span class="fa fa-step-backward"></span> Back</a>
                 </div>
                 </form>
-
-
 
             </div>
         </div>

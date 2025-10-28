@@ -170,7 +170,6 @@ Route::post('/store/savefile', [StoreController::class, 'store_file_save'])->nam
 Route::get('/store/file/delete/{file_id}', [StoreController::class, 'store_file_delete'])->name('store_file_delete');
 
 
-
 //Transfer start
 Route::get('/store/transfer', [StoreController::class, 'store_transfer'])->name('transfer');
 Route::post('/transfer/store', [StoreController::class, 'transfer_store'])->name('transfer.store');

@@ -44,7 +44,7 @@
                                 <option value="">Select Employee</option>
                                 @foreach ($employee as $emp)
                                     <option value="{{ $emp->emp_id }}" data-emp_id="{{ $emp->id }}">
-                                        {{ $emp->emp_id }}
+                                        {{ $emp->emp_id }} || {{ $emp->emp_name }}
                                     </option>
                                 @endforeach
                             </select>

@@ -13,6 +13,11 @@ class issue extends Model
         return $this->belongsTo(ProductType::class, 'asset_type');
     }
 
+        function rel_to_designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation_id');
+    }
+
     function rel_to_brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');

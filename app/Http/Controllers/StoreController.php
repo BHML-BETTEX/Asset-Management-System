@@ -659,7 +659,7 @@ class StoreController extends Controller
     public function return_search_by_id($issue_id)
     {
         $return_product = DB::table('issues')
-            ->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date','company_id')
+            ->select('asset_tag', 'asset_type', 'model', 'emp_id', 'emp_name', 'designation_id', 'issue_date', 'company_id')
             ->where('id', $issue_id)   // must be issue id
             ->first();
         return response()->json(['data' => $return_product]);
@@ -810,26 +810,27 @@ class StoreController extends Controller
 
     function transfer_store(Request $request)
     {
-        // Find the store record to get additional details
         $store = Store::where('asset_tag', $request->asset_tag)->first();
-        
-        // Create a transfer request instead of direct transfer
+
+        $toCompanyName = Company::where('id', $request->company)->value('id');
+
         TransferRequest::create([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
             'model' => $request->model,
             'from_company' => $request->oldcompany,
-            'to_company' => $request->company,
+            'to_company' => $toCompanyName,
             'description' => $request->description,
             'note' => $request->note,
             'transfer_date' => $request->transfer_date,
             'status' => 'pending',
-            'item_status' => 'transfer', // Default to transfer, can be changed during approval
+            'item_status' => $request->item_status,
             'requested_by' => auth()->user()->name ?? 'System',
             'store_id' => $store ? $store->id : null,
         ]);
 
-        return redirect()->route('transfer_list')->with('success', 'Transfer request submitted successfully! The receiving company will be notified to approve this transfer.');
+        return redirect()->route('transfer_list')
+            ->with('success', 'Transfer request submitted successfully!');
     }
 
     function transfer_list(Request $request)
@@ -1445,7 +1446,7 @@ class StoreController extends Controller
         $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
         $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
         $showDeleted = false; // ✅ default value
-        
+
         $qrCode = Store::find($stores_id);
         return view('admin.store.store_info', compact('stores', 'issues', 'maintenances', 'showDeleted', 'qrCode'));
     }
@@ -1563,24 +1564,23 @@ class StoreController extends Controller
     }
 
     // Transfer Request Management Methods
-    
+
     public function transfer_requests(Request $request)
     {
         $search = $request->input('search', '');
         $status = $request->input('status', '');
         $company = $request->input('company', '');
         $perPage = $request->input('per_page', 15);
-
         $query = TransferRequest::query();
 
         // Search filter
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'like', "%{$search}%")
-                  ->orWhere('asset_type', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%")
-                  ->orWhere('from_company', 'like', "%{$search}%")
-                  ->orWhere('to_company', 'like', "%{$search}%");
+                    ->orWhere('asset_type', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%")
+                    ->orWhere('from_company', 'like', "%{$search}%")
+                    ->orWhere('to_company', 'like', "%{$search}%");
             });
         }
 
@@ -1591,9 +1591,9 @@ class StoreController extends Controller
 
         // Company filter
         if ($company) {
-            $query->where(function($q) use ($company) {
-                $q->where('from_company', $company)
-                  ->orWhere('to_company', $company);
+            $query->where(function ($q) use ($company) {
+                $q->where('from_company_id', $company)
+                    ->orWhere('to_company_id', $company);
             });
         }
 
@@ -1607,23 +1607,22 @@ class StoreController extends Controller
     {
         // Get current user's company or show all if admin
         $userCompany = auth()->user()->company ?? null;
-        
+
         $query = TransferRequest::pending();
-        
         // If user has a specific company, show only requests for their company
         if ($userCompany) {
-            $query->where('to_company', $userCompany);
+            $query->where('to_company_id', $userCompany);
         }
 
         $pendingRequests = $query->orderBy('created_at', 'desc')->get();
-        
+
         return view('admin.store.pending_transfer_requests', compact('pendingRequests'));
     }
 
     public function approve_transfer_request(Request $request, $id)
     {
         $transferRequest = TransferRequest::findOrFail($id);
-        
+
         $transferRequest->update([
             'status' => 'approved',
             'approved_by' => auth()->user()->name ?? 'System',
@@ -1654,13 +1653,13 @@ class StoreController extends Controller
             }
         }
 
-        return back()->with('success', 'Transfer request approved successfully!');
+        return back()->with('transfer_success', 'Transfer request approved successfully!');
     }
 
     public function reject_transfer_request(Request $request, $id)
     {
         $transferRequest = TransferRequest::findOrFail($id);
-        
+
         $transferRequest->update([
             'status' => 'rejected',
             'approved_by' => auth()->user()->name ?? 'System',
@@ -1681,10 +1680,10 @@ class StoreController extends Controller
 
         // Search filter
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('asset_tag', 'like', "%{$search}%")
-                  ->orWhere('asset_type', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%");
+                    ->orWhere('asset_type', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%");
             });
         }
 

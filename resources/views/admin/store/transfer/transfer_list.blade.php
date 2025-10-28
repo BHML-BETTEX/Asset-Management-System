@@ -214,22 +214,13 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Asset Type</label>
-                        <select name="product_search" class="form-control form-control-sm select2-filter">
+                        <select name="asset_type" class="form-control form-control-sm select2-filter">
                             <option value="">All Types</option>
-                            <!-- @foreach ($assetTypes as $product_type)
-                            <option value="{{ $product_type->id }}"
-                                {{ request('product_search') == $product_type->id ? 'selected' : '' }}>
-                                {{ $product_type->product }}
+                            @foreach ($assetTypes as $type)
+                            <option value="{{ $type }}" {{ request('asset_type') == $type ? 'selected' : '' }}>
+                                {{ $type }}
                             </option>
-                            @endforeach -->
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label class="form-label">Company</label>
-                        <select name="company_filter" class="form-control form-control-sm select2-filter">
-                            <option value="">All Companies</option>
-
+                            @endforeach
                         </select>
                     </div>
 

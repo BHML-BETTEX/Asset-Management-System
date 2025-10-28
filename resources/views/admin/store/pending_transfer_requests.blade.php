@@ -28,10 +28,10 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container">
     <!-- Page Header -->
-    <div class="card mb-4" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-        <div class="card-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 12px 12px 0 0;">
+    <div class="card mb-4" style=" background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+        <div class="card-header" style="">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white">
                     <i class="fa fa-clock me-2"></i>Pending Transfer Requests
@@ -41,20 +41,20 @@
                 </h5>
                 <div class="d-flex gap-2">
                     <a href="{{ route('transfer_requests') }}" class="btn btn-light btn-sm">
-                        <i class="fa fa-list me-1"></i>All Requests
+                        <i class="fa fa-list me-1"></i> All Requests
                     </a>
                     <a href="{{ route('borrowed_items') }}" class="btn btn-info btn-sm">
-                        <i class="fa fa-handshake me-1"></i>Borrowed Items
+                        <i class="fa fa-handshake me-1"></i> Borrowed Items
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    @if(session('success'))
+    @if(session('transfer_success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fa fa-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <i class="fa fa-check-circle me-2"></i>{{ session('transfer_success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert">X</button>
         </div>
     @endif
 
@@ -215,7 +215,7 @@
                 <h4 class="text-muted">No Pending Transfer Requests</h4>
                 <p class="text-muted">All transfer requests have been processed or there are no new requests waiting for approval.</p>
                 <a href="{{ route('transfer_requests') }}" class="btn btn-primary">
-                    <i class="fa fa-list me-1"></i>View All Requests
+                    <i class="fa fa-list me-1"></i> View All Requests
                 </a>
             </div>
         </div>

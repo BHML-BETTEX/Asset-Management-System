@@ -78,6 +78,8 @@
                                         <li><a href="{{ route('store_delete_list') }}"><i class="fa fa-close"></i>Delete List</a></li>
 
                                         <li><a href="{{ route('maintenance_view') }}"><i class="fa fa-gears"></i>Maintenance
+                                                View</a></li>
+                                        <li><a href="{{ route('maintenance_view') }}"><i class="fa fa-gears"></i>Maintenance
                                                 List</a></li>
                                         <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
                                                 Product</a></li>
@@ -90,12 +92,12 @@
                                         <li><a href="{{ route('transfer_requests') }}"><i class="fa fa-list"></i>All Transfer Requests</a></li>
                                         <li>
                                             <a href="{{ route('pending_transfer_requests') }}">
-                                                <i class="fa fa-clock-o"></i>Pending Approvals 
+                                                <i class="fa fa-clock-o"></i>Pending Approvals
                                                 @php
-                                                    $pendingCount = \App\Models\TransferRequest::pending()->count();
+                                                $pendingCount = \App\Models\TransferRequest::pending()->count();
                                                 @endphp
                                                 @if($pendingCount > 0)
-                                                    <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">{{ $pendingCount }}</span>
+                                                <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">{{ $pendingCount }}</span>
                                                 @endif
                                             </a>
                                         </li>

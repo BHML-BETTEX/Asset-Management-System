@@ -292,7 +292,7 @@
                             <thead>
                                 <tr>
                                     <th>SL</th>
-                                    <th>ASSET TAG</th>
+                                    <th>ASSET TAGsss</th>
                                     <th>ASSET TYPE</th>
                                     <th>MODEL</th>
                                     <th>Purchase Date</th>
