@@ -82,10 +82,10 @@
                         </div>
                         @endif
                         <div class="mb-2">
-                            <strong>From:</strong> <span class="text-primary">{{ $request->from_company }}</span>
+                            <strong>From:</strong> <span class="text-primary">{{ $request->fromCompany->company }}</span>
                         </div>
                         <div class="mb-2">
-                            <strong>To:</strong> <span class="text-success">{{ $request->to_company }}</span>
+                            <strong>To:</strong> <span class="text-success">{{ $request->toCompany->company }}</span>
                         </div>
                         <div class="mb-2">
                             <strong>Transfer Date:</strong> {{ $request->transfer_date->format('M d, Y') }}

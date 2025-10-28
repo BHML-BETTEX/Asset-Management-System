@@ -797,16 +797,27 @@ class StoreController extends Controller
 
     //Transfer Start
 
-    function store_transfer()
-    {
-        $issued_products = Store::all();
-        $companys = Company::all();
-        return view('admin.store.transfer', [
-            'issued_products' => $issued_products,
-            'companys' => $companys,
+public function store_transfer(Request $request)
+{
+    // Get the selected company or fallback to logged-in user's company
+    $company_id = $request->input('company_id', auth()->user()->company_id ?? null);
 
-        ]);
-    }
+    // Get all companies for dropdown
+    $companies = Company::all();
+
+    // Filter issued products only for the current user's or selected company
+    $issued_products = Store::with('rel_to_ProductType')
+        ->when($company_id, fn($query) => $query->where('company_id', $company_id))
+        ->get();
+
+    return view('admin.store.transfer', [
+        'issued_products'   => $issued_products,
+        'companies'         => $companies,
+        'selected_company'  => $company_id,
+    ]);
+}
+
+
 
     function transfer_store(Request $request)
     {
@@ -835,15 +846,30 @@ class StoreController extends Controller
 
     function transfer_list(Request $request)
     {
-        $search = $request->input('search', '');
-        $assetType = $request->input('asset_type', '');
-        $company = $request->input('company', '');
-        $dateFrom = $request->input('date_from', '');
-        $dateTo = $request->input('date_to', '');
-        $status = $request->input('status', '');
-        $perPage = $request->input('per_page', 10);
+        $search  = $request->input('search', '');
+        $role = auth()->user()->roles[0];
 
-        $query = Transfer::query();
+        // Define companies allowed by role permissions
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        // Filter inputs
+        $assetType   = $request->input('asset_type', '');
+        $company     = $request->input('company', '');
+        $fromCompany = $request->input('from_company', ''); // ✅ new filter
+        $dateFrom    = $request->input('date_from', '');
+        $dateTo      = $request->input('date_to', '');
+        $status      = $request->input('status', '');
+        $perPage     = $request->input('per_page', 10);
+
+        // Base query
+        $query = Transfer::where(function ($q) use ($companies) {
+            $q->whereIn('company', $companies)
+                ->orWhereIn('oldcompany', $companies);
+        });
 
         // Search filter
         if ($search) {
@@ -858,14 +884,19 @@ class StoreController extends Controller
             });
         }
 
-        // Asset type filter
+        // Asset Type filter
         if ($assetType) {
             $query->where('asset_type', 'LIKE', "%$assetType%");
         }
 
-        // Company filter
+        // Company (To Company) filter
         if ($company) {
-            $query->where('company', 'LIKE', "%$company%");
+            $query->where('company', $company);
+        }
+
+        // ✅ From Company filter (oldcompany)
+        if ($fromCompany) {
+            $query->where('oldcompany', $fromCompany);
         }
 
         // Date range filter
@@ -876,14 +907,14 @@ class StoreController extends Controller
             $query->whereDate('transfer_date', '<=', $dateTo);
         }
 
-        // Status filter (returned or not)
+        // Status filter
         if ($status === 'returned') {
             $query->whereNotNull('return_date');
         } elseif ($status === 'active') {
             $query->whereNull('return_date');
         }
 
-        // Get pagination results
+        // Pagination
         if ($perPage === 'all') {
             $transer_data = $query->orderBy('transfer_date', 'desc')->get();
         } else {
@@ -892,11 +923,16 @@ class StoreController extends Controller
                 ->appends($request->except('page'));
         }
 
-        // Get unique values for filter dropdowns
-        $assetTypes = Transfer::distinct()->pluck('asset_type')->filter()->sort()->values();
-        $companies = Transfer::distinct()->pluck('company')->filter()->sort()->values();
+        // Dropdown data
+        $assetTypes   = Transfer::distinct()->pluck('asset_type')->filter()->sort()->values();
+        $companiesTo  = Transfer::distinct()->pluck('company')->filter()->sort()->values();
+        $companiesFrom = Company::whereIn(
+            'id',
+            Transfer::distinct()->pluck('oldcompany')->filter()
+        )->orderBy('company', 'asc')->get();
 
-        // Get statistics
+
+        // Statistics
         $stats = [
             'total' => Transfer::count(),
             'active' => Transfer::whereNull('return_date')->count(),
@@ -906,20 +942,24 @@ class StoreController extends Controller
                 ->count(),
         ];
 
+        // Return to view
         return view('admin.store.transfer.transfer_list', [
-            'transer_data' => $transer_data,
-            'search' => $search,
-            'assetType' => $assetType,
-            'company' => $company,
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
-            'status' => $status,
-            'perPage' => $perPage,
-            'assetTypes' => $assetTypes,
-            'companies' => $companies,
-            'stats' => $stats,
+            'transer_data'   => $transer_data,
+            'search'         => $search,
+            'assetType'      => $assetType,
+            'company'        => $company,
+            'fromCompany'    => $fromCompany, // ✅ keep selected
+            'dateFrom'       => $dateFrom,
+            'dateTo'         => $dateTo,
+            'status'         => $status,
+            'perPage'        => $perPage,
+            'assetTypes'     => $assetTypes,
+            'companies'      => $companiesTo,
+            'fromCompanies'  => $companiesFrom, // ✅ pass list for dropdown
+            'stats'          => $stats,
         ]);
     }
+
 
     function transfer_export(Request $request)
     {

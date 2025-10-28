@@ -13,11 +13,14 @@
                     <form action="{{route('transfer.store')}}" method="POST" enctype="multipart/form-data"
                         class="form-card">
                         @csrf
+                        {{-- Product Dropdown --}}
                         <div class="input-group input-group-outline mb-3">
                             <select id="products_id" name="asset_tag" class="form-control select2">
                                 <option value="">Select a Product</option>
-                                @foreach ($issued_products as $issued_products)
-                                <option value="{{ $issued_products->asset_tag }}" data-products_id="{{ $issued_products->id }}">{{ $issued_products->asset_tag}} | {{$issued_products->rel_to_ProductType->product}} | {{$issued_products->model}}</option>
+                                @foreach ($issued_products as $product)
+                                <option value="{{ $product->asset_tag }}" data-products_id="{{ $product->id }}">
+                                    {{ $product->asset_tag }} | {{ $product->rel_to_ProductType->product }} | {{ $product->model }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -37,7 +40,7 @@
                         <div class="form-group mb-3">
                             <label class="form-label">New Company</label>
                             <select id="id" name="company" class="form-control">
-                                @foreach ($companys as $companys)
+                                @foreach ($companies as $companys)
                                 <option value="{{ $companys->id }}" data-id="{{ $companys->id }}">{{ $companys->company }}</option>
                                 @endforeach
                             </select>

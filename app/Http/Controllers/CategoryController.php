@@ -276,6 +276,7 @@ class CategoryController extends Controller
         Company::find($company_id)->delete();
         return back()->with('comapny_delete', 'Company delete success');
     }
+    
 
 
     function search_by_id($company_id)

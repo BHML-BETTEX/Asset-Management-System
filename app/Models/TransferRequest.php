@@ -41,12 +41,12 @@ class TransferRequest extends Model
     // Relationship to companies
     public function fromCompany()
     {
-        return $this->belongsTo(Company::class, 'from_company', 'company');
+        return $this->belongsTo(Company::class, 'from_company');
     }
 
     public function toCompany()
     {
-        return $this->belongsTo(Company::class, 'to_company', 'company');
+        return $this->belongsTo(Company::class, 'to_company');
     }
 
     // Scopes for filtering

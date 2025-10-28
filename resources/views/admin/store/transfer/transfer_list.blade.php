@@ -224,17 +224,24 @@
                         </select>
                     </div>
 
+                    <div class="col-md-2">
+                        <label class="form-label">From Company</label>
+                        <select class="form-control" name="from_company">
+                            <option value="">All</option>
+                            @foreach($fromCompanies as $from)
+                            <option value="{{ $from->id }}" {{ request('from_company') == $from->id ? 'selected' : '' }}>
+                                {{ $from->company }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-primary btn-sm w-100">
                             <i class="fa fa-search"></i> Apply Filters
                         </button>
                     </div>
 
-                    <div class="filter-actions">
-                        <button type="button" class="btn btn-warning btn-sm w-100" onclick="clearFilters()">
-                            <i class="fa fa-refresh"></i> Clear All
-                        </button>
-                    </div>
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-success btn-sm w-100">
                             <a href="{{ route('transfer') }}" class="text-white">
@@ -244,7 +251,7 @@
                     </div>
 
                     <div class="filter-actions">
-                        <button type="submit" class="btn btn-info btn-sm w-100">
+                        <button type="submit" class="btn btn-warning btn-sm w-100">
                             <a href="{{ route('transfer_return') }}" class="text-white">
                                 <i class="fa fa-plus me-1"></i> Return Asset
                             </a>
@@ -282,15 +289,15 @@
                             <td data-column="">{{ $transfer->asset_tag }}</td>
                             <td data-column="">{{ $transfer->asset_type }}</td>
                             <td data-column="">{{ $transfer->model }}</td>
-                            <td data-column="">{{ $transfer->oldcompany }}</td>
-                            <td data-column="">{{ $transfer->company }}</td>
+                            <td data-column="">{{ $transfer->Fromcompany->company }}</td>
+                            <td data-column="">{{ $transfer->Tocompany->company }}</td>
                             <td data-column="">{{ $transfer->description }}</td>
                             <td data-column="">{{ $transfer->transfer_date ? date('M d, Y', strtotime($transfer->transfer_date)) : '-' }}</td>
                             <td data-column="">
                                 @if($transfer->return_date)
                                 <span class="badge status-returned">Returned</span>
                                 @else
-                                <span class="badge status-transferred">Active</span>
+                                <span class="badge status-transferred bg-success text-white">Active</span>
                                 @endif
                             </td>
                             <td>

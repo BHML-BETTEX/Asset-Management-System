@@ -919,7 +919,6 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col-lg-12">
             <div class="smart-table">
@@ -1017,15 +1016,15 @@
                                         @else
                                         <span class="badge bg-primary text-white">{{ $store->checkstatus }}</span>
                                         @endif
-                                        
+
                                         @if($store->isBorrowed())
-                                            @php
-                                                $borrowInfo = $store->getBorrowingInfo();
-                                            @endphp
-                                            <br><span class="badge bg-warning text-dark mt-1" title="This asset is currently borrowed by {{ $borrowInfo->to_company }}">
-                                                <i class="fa fa-handshake"></i> BORROWED
-                                            </span>
-                                            <br><small class="text-muted">by {{ $borrowInfo->to_company }}</small>
+                                        @php
+                                        $borrowInfo = $store->getBorrowingInfo();
+                                        @endphp
+                                        <br><span class="badge bg-warning text-dark mt-1" title="This asset is currently borrowed by {{ $borrowInfo->to_company }}">
+                                            <i class="fa fa-handshake"></i> BORROWED
+                                        </span>
+                                        <br><small class="text-muted">by {{ $borrowInfo->to_company }}</small>
                                         @endif
                                     </td>
                                     <td data-column="asset_tag">

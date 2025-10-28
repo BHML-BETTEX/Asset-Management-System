@@ -28,10 +28,10 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container">
     <!-- Page Header -->
-    <div class="card mb-4" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-        <div class="card-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 12px 12px 0 0;">
+    <div class="card mb-4" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+        <div class="card-header" style="">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white">
                     <i class="fa fa-handshake me-2"></i>Borrowed Items
@@ -41,10 +41,10 @@
                 </h5>
                 <div class="d-flex gap-2">
                     <a href="{{ route('transfer_requests') }}" class="btn btn-light btn-sm">
-                        <i class="fa fa-list me-1"></i>All Requests
+                        <i class="fa fa-list me-1"></i> All Requests
                     </a>
                     <a href="{{ route('pending_transfer_requests') }}" class="btn btn-warning btn-sm">
-                        <i class="fa fa-clock me-1"></i>Pending Requests
+                        <i class="fa fa-clock me-1"></i> Pending Requests
                     </a>
                 </div>
             </div>
@@ -83,10 +83,10 @@
                     </div>
                     <div class="col-md-3 d-flex align-items-end gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search me-1"></i>Search
+                            <i class="fa fa-search me-1"></i> Search
                         </button>
                         <a href="{{ route('borrowed_items') }}" class="btn btn-secondary">
-                            <i class="fa fa-refresh me-1"></i>Reset
+                            <i class="fa fa-refresh me-1"></i> Reset
                         </a>
                     </div>
                 </div>
@@ -119,11 +119,11 @@
                         @endif
                         <div class="mb-2">
                             <strong>Original Owner:</strong> 
-                            <span class="owner-badge">{{ $item->from_company }}</span>
+                            <span class="owner-badge">{{ $item->fromCompany->company }}</span>
                         </div>
                         <div class="mb-2">
                             <strong>Currently With:</strong> 
-                            <span class="text-success">{{ $item->to_company }}</span>
+                            <span class="text-success">{{ $item->toCompany->company }}</span>
                         </div>
                         <div class="mb-2">
                             <strong>Transfer Date:</strong> {{ $item->transfer_date->format('M d, Y') }}
@@ -195,11 +195,11 @@
                 <div class="mt-3">
                     @if(request('search') || request('company'))
                         <a href="{{ route('borrowed_items') }}" class="btn btn-primary">
-                            <i class="fa fa-refresh me-1"></i>Clear Filters
+                            <i class="fa fa-refresh me-1"></i> Clear Filters
                         </a>
                     @endif
                     <a href="{{ route('transfer_requests') }}" class="btn btn-outline-primary">
-                        <i class="fa fa-list me-1"></i>View All Transfer Requests
+                        <i class="fa fa-list me-1"></i> View All Transfer Requests
                     </a>
                 </div>
             </div>
