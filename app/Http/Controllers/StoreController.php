@@ -797,25 +797,25 @@ class StoreController extends Controller
 
     //Transfer Start
 
-public function store_transfer(Request $request)
-{
-    // Get the selected company or fallback to logged-in user's company
-    $company_id = $request->input('company_id', auth()->user()->company_id ?? null);
+    public function store_transfer(Request $request)
+    {
+        // Get the selected company or fallback to logged-in user's company
+        $company_id = $request->input('company_id', auth()->user()->company_id ?? null);
 
-    // Get all companies for dropdown
-    $companies = Company::all();
+        // Get all companies for dropdown
+        $companies = Company::all();
 
-    // Filter issued products only for the current user's or selected company
-    $issued_products = Store::with('rel_to_ProductType')
-        ->when($company_id, fn($query) => $query->where('company_id', $company_id))
-        ->get();
+        // Filter issued products only for the current user's or selected company
+        $issued_products = Store::with('rel_to_ProductType')
+            ->when($company_id, fn($query) => $query->where('company_id', $company_id))
+            ->get();
 
-    return view('admin.store.transfer', [
-        'issued_products'   => $issued_products,
-        'companies'         => $companies,
-        'selected_company'  => $company_id,
-    ]);
-}
+        return view('admin.store.transfer', [
+            'issued_products'   => $issued_products,
+            'companies'         => $companies,
+            'selected_company'  => $company_id,
+        ]);
+    }
 
 
 
@@ -1645,19 +1645,26 @@ public function store_transfer(Request $request)
 
     public function pending_transfer_requests(Request $request)
     {
-        // Get current user's company or show all if admin
-        $userCompany = auth()->user()->company ?? null;
+        // Get current logged-in user's company ID
+        $userCompany = auth()->user()->company_id; // Make sure your users table has this column
 
-        $query = TransferRequest::pending();
-        // If user has a specific company, show only requests for their company
+        // Base query for pending requests
+        $query = TransferRequest::where('status', 'pending');
+
+        // If user belongs to a specific company, show only related requests
         if ($userCompany) {
-            $query->where('to_company_id', $userCompany);
+            $query->where(function ($q) use ($userCompany) {
+                $q->where('to_company', $userCompany)
+                    ->orWhere('from_company', $userCompany);
+            });
         }
 
         $pendingRequests = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.store.pending_transfer_requests', compact('pendingRequests'));
     }
+
+
 
     public function approve_transfer_request(Request $request, $id)
     {

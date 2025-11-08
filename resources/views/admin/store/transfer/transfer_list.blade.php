@@ -250,13 +250,13 @@
                         </button>
                     </div>
 
-                    <div class="filter-actions">
+                    <!-- <div class="filter-actions">
                         <button type="submit" class="btn btn-warning btn-sm w-100">
                             <a href="{{ route('transfer_return') }}" class="text-white">
                                 <i class="fa fa-plus me-1"></i> Return Asset
                             </a>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>
@@ -295,7 +295,7 @@
                             <td data-column="">{{ $transfer->transfer_date ? date('M d, Y', strtotime($transfer->transfer_date)) : '-' }}</td>
                             <td data-column="">
                                 @if($transfer->return_date)
-                                <span class="badge status-returned">Returned</span>
+                                <span class="badge status-returned bg-warning">Returned</span>
                                 @else
                                 <span class="badge status-transferred bg-success text-white">Active</span>
                                 @endif

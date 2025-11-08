@@ -34,7 +34,7 @@
         <div class="card-header" style="">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white">
-                    <i class="fa fa-clock me-2"></i>Pending Transfer Requests
+                    <i class="fa fa-clock me-2"></i> Pending Transfer Requests
                     @if($pendingRequests->count() > 0)
                         <span class="badge bg-light text-dark ms-2 notification-pulse">{{ $pendingRequests->count() }}</span>
                     @endif
@@ -82,10 +82,10 @@
                         </div>
                         @endif
                         <div class="mb-2">
-                            <strong>From:</strong> <span class="text-primary">{{ $request->fromCompany->company }}</span>
+                            <strong>From:</strong> <span class="text-primary">{{ $request->fromCompany->id }}</span>
                         </div>
                         <div class="mb-2">
-                            <strong>To:</strong> <span class="text-success">{{ $request->toCompany->company }}</span>
+                            <strong>To:</strong> <span class="text-success">{{ $request->toCompany->id }}</span>
                         </div>
                         <div class="mb-2">
                             <strong>Transfer Date:</strong> {{ $request->transfer_date->format('M d, Y') }}

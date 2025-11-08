@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class TransferRequest extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'asset_tag',
-        'asset_type', 
+        'asset_type',
         'model',
         'from_company',
         'to_company',
@@ -41,12 +41,12 @@ class TransferRequest extends Model
     // Relationship to companies
     public function fromCompany()
     {
-        return $this->belongsTo(Company::class, 'from_company');
+        return $this->belongsTo(Company::class, 'from_company', 'id');
     }
 
     public function toCompany()
     {
-        return $this->belongsTo(Company::class, 'to_company');
+        return $this->belongsTo(Company::class, 'to_company', 'id');
     }
 
     // Scopes for filtering
@@ -68,6 +68,7 @@ class TransferRequest extends Model
     public function scopeBorrowedItems($query)
     {
         return $query->where('item_status', 'borrowed')
-                    ->where('status', 'approved');
+            ->where('status', 'approved');
     }
+
 }
