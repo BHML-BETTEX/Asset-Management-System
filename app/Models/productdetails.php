@@ -51,4 +51,6 @@ class productdetails extends Model
     {
         return $this->belongsTo(product::class, 'model');
     }
+
+    
 }

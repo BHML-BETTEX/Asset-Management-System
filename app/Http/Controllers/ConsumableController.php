@@ -51,8 +51,10 @@ class ConsumableController extends Controller
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('model', 'LIKE', "%$search%")
-                    ->orWhere('asset_type', 'LIKE', "%$search%");
+                    ->orWhere('asset_type', 'LIKE', "%$search%")
+                    ->orWhere('asset_sl_no', 'LIKE', "%$search%");
             });
+
         }
 
         // Apply product type filter (dropdown)
