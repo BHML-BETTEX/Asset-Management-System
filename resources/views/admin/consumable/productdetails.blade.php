@@ -818,18 +818,16 @@
             </h6>
         </div>
         <div class="card-body">
-
-
-        <form action="" method="GET" id="filterForm">
-            <!-- Action Buttons -->
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label class="form-label">Search Assets</label>
-                    <input type="search" class="form-control form-control-sm" name="search"
-                        placeholder="Search by asset tag, model, brand..."
-                        value="{{ request('search') }}">
+            <form action="" method="GET" id="filterForm">
+                <!-- Action Buttons -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Search Assets</label>
+                        <input type="search" class="form-control form-control-sm" name="search"
+                            placeholder="Search by asset tag, model, brand..."
+                            value="{{ request('search') }}">
+                    </div>
                 </div>
-
                 <div class="col-md-2">
                     <label class="form-label">Asset Type</label>
                     <select name="product_search" class="form-control form-control-sm select2-filter">
@@ -884,7 +882,7 @@
                         <i class="fa fa-download"></i> Export
                     </button>
                 </div>
-            </div>
+        </div>
         </form>
     </div>
 </div>

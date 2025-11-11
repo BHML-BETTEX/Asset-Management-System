@@ -5,10 +5,11 @@
 <style>
     /* Professional Employee Info Styling */
     .employee-profile-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
+        background:
+            #26A6B1;
+        border-radius: 10px;
         padding: 2rem;
-        margin-bottom: 1rem;
+        margin-bottom: 5px;
         color: white;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
@@ -34,7 +35,7 @@
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         border: none;
         transition: all 0.3s ease;
-        margin-bottom: 1rem;
+        margin-bottom: 5px;
     }
 
     .info-card:hover {
@@ -44,8 +45,8 @@
 
     .info-card .card-header {
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-bottom: 1px solid #dee2e6;
-        border-radius: 15px 15px 0 0;
+        margin-bottom: 2px;
+        border-radius: 10px 10px 0 0;
         padding: 1.25rem 1.5rem;
     }
 
@@ -126,14 +127,14 @@
 
     .action-sidebar {
         background: white;
-        border-radius: 15px;
+        border-radius: 10px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        padding: 1.5rem;
+        padding: 2px;
     }
 
     .action-btn {
         width: 100%;
-        margin-bottom: 0.75rem;
+        margin-bottom: 2px;
         border-radius: 10px;
         font-weight: 500;
         padding: 0.75rem 1rem;
@@ -207,10 +208,10 @@
 
     .nav-tabs-custom {
         background: white;
-        border-radius: 15px;
+        border-radius: 10px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         padding: 1rem 1.5rem 0;
-        margin-bottom: 1rem;
+        margin-bottom: 5px;
     }
 
     .nav-tabs-custom .nav-link {
@@ -416,7 +417,7 @@
                     <div class="info-card">
                         <div class="card-header">
                             <h5 class="mb-0">
-                                <i class="fa fa-briefcase me-2"></i>Work Information
+                                <i class="fa fa-briefcase me-2"></i> Work Information
                             </h5>
                         </div>
                         <div class="card-body">
@@ -426,7 +427,7 @@
                                 </div>
                                 <div class="info-value">
                                     <a href="{{ route('departments_asset', $employee->department_id) }}" class="department-link">
-                                        <i class="fa fa-external-link-square me-1"></i>{{ $employee->rel_to_departmet->department_name }}
+                                        <i class="fa fa-external-link-square me-1"></i>{{ $employee->rel_to_departmet-> department_name }}
                                     </a>
                                 </div>
                             </div>
@@ -434,7 +435,7 @@
                                 <div class="info-label">
                                     <i class="fa fa-user-tie info-icon"></i>Designation
                                 </div>
-                                <div class="info-value">{{ $employee->rel_to_designation->designation_name ?? 'Not assigned' }}</div>
+                                <div class=" info-value">{{ $employee->rel_to_designation-> designation_name ?? 'Not assigned' }}</div>
                             </div>
                             <div class="info-row">
                                 <div class="info-label">
@@ -442,7 +443,7 @@
                                 </div>
                                 <div class="info-value">
                                     <a href="{{ route('store') }}" class="company-link">
-                                        <i class="fa fa-external-link-square me-1"></i>{{ $employee->rel_to_companies->company }}
+                                        <i class="fa fa-external-link-square me-1"></i>{{ $employee->rel_to_companies-> company }}
                                     </a>
                                 </div>
                             </div>
@@ -486,7 +487,7 @@
                     <i class="fa fa-envelope"></i> Email Asset List
                 </button>
 
-                <button class="action-btn btn-print">
+                <button class="action-btn btn-warning">
                     <i class="fa fa-file-pdf-o"></i> Generate Report
                 </button>
 
@@ -499,7 +500,7 @@
             </div>
 
             <!-- Quick Stats Card -->
-            <div class="info-card mt-4">
+            <div class="info-card mt-2">
                 <div class="card-header">
                     <h6 class="mb-0">
                         <i class="fa fa-chart-bar me-2"></i>Quick Stats

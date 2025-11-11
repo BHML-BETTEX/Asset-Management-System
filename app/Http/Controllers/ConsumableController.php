@@ -54,7 +54,6 @@ class ConsumableController extends Controller
                     ->orWhere('asset_type', 'LIKE', "%$search%")
                     ->orWhere('asset_sl_no', 'LIKE', "%$search%");
             });
-
         }
 
         // Apply product type filter (dropdown)
@@ -110,92 +109,92 @@ class ConsumableController extends Controller
         return redirect()->back()->with('add_message', 'Product added...!');
     }
 
-public function Inventory(Request $request)
-{
-    $role = auth()->user()->roles->first();
-    $productSearch = $request->input('product_search');
-    $search = $request->input('search');
-    $perPage = $request->input('per_page', 10); // default to 10
+    public function Inventory(Request $request)
+    {
+        $role = auth()->user()->roles->first();
+        $productSearch = $request->input('product_search');
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // default to 10
 
-    // Map permissions to company IDs
-    $permissionCompanyMap = [
-        'view BHML INDUSTRIES LTD.' => 1,
-        'view BETTEX' => 2,
-        'view BETTEX PREMIUM' => 3,
-        'view BETTEX BRIDGE' => 4,
-    ];
+        // Map permissions to company IDs
+        $permissionCompanyMap = [
+            'view BHML INDUSTRIES LTD.' => 1,
+            'view BETTEX' => 2,
+            'view BETTEX PREMIUM' => 3,
+            'view BETTEX BRIDGE' => 4,
+        ];
 
-    $allowedCompanyIds = [];
-    foreach ($permissionCompanyMap as $permission => $companyId) {
-        if ($role->hasPermissionTo($permission)) {
-            $allowedCompanyIds[] = $companyId;
+        $allowedCompanyIds = [];
+        foreach ($permissionCompanyMap as $permission => $companyId) {
+            if ($role->hasPermissionTo($permission)) {
+                $allowedCompanyIds[] = $companyId;
+            }
         }
-    }
 
-    // Stored procedure result
-    $results = DB::select('CALL sp_consumable_summary()');
+        // Stored procedure result
+        $results = DB::select('CALL sp_consumable_summary()');
 
-    // Map product type and company names
-    $productTypesMap = DB::table('product_types')->pluck('product', 'id');
-    $companiesMap = DB::table('companies')->pluck('company', 'id');
+        // Map product type and company names
+        $productTypesMap = DB::table('product_types')->pluck('product', 'id');
+        $companiesMap = DB::table('companies')->pluck('company', 'id');
 
-    $collection = collect($results)->map(function ($item) use ($productTypesMap, $companiesMap) {
-        $item->product_type_name = $productTypesMap[$item->asset_type] ?? 'N/A';
-        $item->company_name = $companiesMap[$item->company] ?? 'N/A';
-        return $item;
-    });
-
-    // Filter by company
-    if (!empty($allowedCompanyIds)) {
-        $collection = $collection->filter(function ($item) use ($allowedCompanyIds) {
-            return in_array($item->company, $allowedCompanyIds);
+        $collection = collect($results)->map(function ($item) use ($productTypesMap, $companiesMap) {
+            $item->product_type_name = $productTypesMap[$item->asset_type] ?? 'N/A';
+            $item->company_name = $companiesMap[$item->company] ?? 'N/A';
+            return $item;
         });
+
+        // Filter by company
+        if (!empty($allowedCompanyIds)) {
+            $collection = $collection->filter(function ($item) use ($allowedCompanyIds) {
+                return in_array($item->company, $allowedCompanyIds);
+            });
+        }
+
+        // Search filter
+        if ($search) {
+            $collection = $collection->filter(function ($item) use ($search) {
+                return stripos($item->product_type_name, $search) !== false ||
+                    stripos($item->model, $search) !== false ||
+                    stripos($item->company_name, $search) !== false;
+            });
+        }
+
+        // Filter by product type
+        if ($productSearch) {
+            $collection = $collection->filter(function ($item) use ($productSearch) {
+                return $item->asset_type == $productSearch;
+            });
+        }
+
+        // Paginate
+        $currentPage = LengthAwarePaginator::resolveCurrentPage(); // ✅ fixed here
+        $paginated = new LengthAwarePaginator(
+            $collection->forPage($currentPage, $perPage),
+            $collection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => url()->current(), 'query' => $request->query()]
+        );
+
+        return view('admin.consumable.Inventory', [
+            'all_product_types' => \App\Models\ProductType::all(),
+            'all_departments' => \App\Models\Department::all(),
+            'all_brands' => \App\Models\Brand::all(),
+            'SizeMaseurment' => \App\Models\SizeMaseurment::all(),
+            'all_status' => \App\Models\Status::all(),
+            'all_supplier' => \App\Models\Supplier::all(),
+            'all_company' => \App\Models\Company::all(),
+            'productdetails' => \App\Models\productdetails::all(),
+            'products' => \App\Models\product::all(),
+            'product_tem' => [], // You can add this back if needed
+            'employee' => \App\Models\Employee::all(),
+            'company' => \App\Models\Company::all(),
+            'stocks_qty' => $paginated,
+            'search' => $search,
+            'product_search' => $productSearch,
+        ]);
     }
-
-    // Search filter
-    if ($search) {
-        $collection = $collection->filter(function ($item) use ($search) {
-            return stripos($item->product_type_name, $search) !== false ||
-                   stripos($item->model, $search) !== false ||
-                   stripos($item->company_name, $search) !== false;
-        });
-    }
-
-    // Filter by product type
-    if ($productSearch) {
-        $collection = $collection->filter(function ($item) use ($productSearch) {
-            return $item->asset_type == $productSearch;
-        });
-    }
-
-    // Paginate
-    $currentPage = LengthAwarePaginator::resolveCurrentPage(); // ✅ fixed here
-    $paginated = new LengthAwarePaginator(
-        $collection->forPage($currentPage, $perPage),
-        $collection->count(),
-        $perPage,
-        $currentPage,
-        ['path' => url()->current(), 'query' => $request->query()]
-    );
-
-    return view('admin.consumable.Inventory', [
-        'all_product_types' => \App\Models\ProductType::all(),
-        'all_departments' => \App\Models\Department::all(),
-        'all_brands' => \App\Models\Brand::all(),
-        'SizeMaseurment' => \App\Models\SizeMaseurment::all(),
-        'all_status' => \App\Models\Status::all(),
-        'all_supplier' => \App\Models\Supplier::all(),
-        'all_company' => \App\Models\Company::all(),
-        'productdetails' => \App\Models\productdetails::all(),
-        'products' => \App\Models\product::all(),
-        'product_tem' => [], // You can add this back if needed
-        'employee' => \App\Models\Employee::all(),
-        'company' => \App\Models\Company::all(),
-        'stocks_qty' => $paginated,
-        'search' => $search,
-        'product_search' => $productSearch,
-    ]);
-}
 
 
     function getStockQty(Request $request)
@@ -219,65 +218,86 @@ public function Inventory(Request $request)
     }
 
 
-    function consumableIssue(Request $request)
-    {
-        $role = auth()->user()->roles->first();
+public function consumableIssue(Request $request)
+{
+    $role = auth()->user()->roles->first();
 
-        $permissionCompanyMap = [
-            'view BHML INDUSTRIES LTD.' => 1,
-            'view BETTEX' => 2,
-            'view BETTEX PREMIUM' => 3,
-            'view BETTEX BRIDGE' => 4,
+    // Map permissions to company IDs
+    $permissionCompanyMap = [
+        'view BHML INDUSTRIES LTD.' => 1,
+        'view BETTEX' => 2,
+        'view BETTEX PREMIUM' => 3,
+        'view BETTEX BRIDGE' => 4,
+    ];
 
-        ];
+    $companies = [];
 
-        $companies = [];
-
-        foreach ($permissionCompanyMap as $permission => $companyName) {
-            if ($role->hasPermissionTo($permission)) {
-                $companies[] = $companyName;
-            }
+    // Collect companies the user has permission to view
+    foreach ($permissionCompanyMap as $permission => $companyId) {
+        if ($role->hasPermissionTo($permission)) {
+            $companies[] = $companyId;
         }
-
-        $search = $request->input('search', '');
-
-        if (empty($companies)) {
-            $issue_details = collect()->paginate(13);
-        } else {
-            $query = consumable_issue::whereIn('company', $companies);
-
-            if ($search !== '') {
-                $query->where('emp_name', 'LIKE', "%$search%");
-            }
-            $issue_details = $query->paginate(13)->appends($request->only('search'));
-        }
-
-        $all_product_types = ProductType::all();
-        $all_departments = Department::all();
-        $all_brands = Brand::all();
-        $all_SizeMaseurment = SizeMaseurment::all();
-        $all_status = Status::all();
-        $all_supplier = Supplier::all();
-        $all_company = Company::all();
-        $productdetails = productdetails::all();
-        $employee = Employee::all();
-
-        $products = product::all();
-        return view('admin.consumable.consumableIssue', [
-            'all_product_types' => $all_product_types,
-            'all_departments' => $all_departments,
-            'all_brands' => $all_brands,
-            'all_SizeMaseurment' => $all_SizeMaseurment,
-            'all_status' => $all_status,
-            'all_supplier' => $all_supplier,
-            'all_company' => $all_company,
-            'productdetails' => $productdetails,
-            'employee' => $employee,
-            'issue_details' => $issue_details,
-            'products' => $products,
-            'search' => $search,
-        ]);
     }
+
+    // Get filter inputs
+    $search = $request->input('search', '');
+    $filter_company = $request->input('company', ''); // selected company
+
+    if (empty($companies)) {
+        $issue_details = collect()->paginate(13);
+    } else {
+        $query = consumable_issue::whereIn('company', $companies);
+
+        // If a specific company is selected, filter by it
+        if (!empty($filter_company)) {
+            $query->where('company', $filter_company);
+        }
+
+        // Apply search filter
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_name', 'LIKE', "%$search%")
+                  ->orWhere('emp_id', 'LIKE', "%$search%")
+                  ->orWhere('product_type', 'LIKE', "%$search%")
+                  ->orWhere('model_id', 'LIKE', "%$search%")
+                  ->orWhere('others', 'LIKE', "%$search%");
+            });
+        }
+
+        // Paginate and retain filter values
+        $issue_details = $query->paginate(13)->appends($request->only('search', 'company'));
+    }
+
+    // Load dropdown data
+    $all_product_types = ProductType::all();
+    $all_departments = Department::all();
+    $all_brands = Brand::all();
+    $all_SizeMaseurment = SizeMaseurment::all();
+    $all_status = Status::all();
+    $all_supplier = Supplier::all();
+    $all_company = Company::whereIn('id', $companies)->get(); // Only allowed companies
+    $productdetails = productdetails::all();
+    $employee = Employee::all();
+    $products = product::all();
+
+    return view('admin.consumable.consumableIssue', [
+        'all_product_types' => $all_product_types,
+        'all_departments' => $all_departments,
+        'all_brands' => $all_brands,
+        'all_SizeMaseurment' => $all_SizeMaseurment,
+        'all_status' => $all_status,
+        'all_supplier' => $all_supplier,
+        'all_company' => $all_company,
+        'productdetails' => $productdetails,
+        'employee' => $employee,
+        'issue_details' => $issue_details,
+        'products' => $products,
+        'search' => $search,
+        'filter_company' => $filter_company,
+    ]);
+}
+
+
 
 
     function consumableIssue_store(Request $request)

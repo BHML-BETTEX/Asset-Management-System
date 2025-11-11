@@ -4,7 +4,7 @@
 <style>
     /* Professional Employee Info Styling */
     .employee-profile-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #26A6B1;
         border-radius: 15px;
         padding: 2rem;
         margin-bottom: 0.5rem;
