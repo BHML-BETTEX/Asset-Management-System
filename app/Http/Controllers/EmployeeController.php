@@ -698,7 +698,6 @@ class EmployeeController extends Controller
     {
         $employee_show = Employee::find($id);
         return view('admin.employee.employee_view', [
-            dd($employee_show),
             'employee_show' => $employee_show,
         ]);
     }

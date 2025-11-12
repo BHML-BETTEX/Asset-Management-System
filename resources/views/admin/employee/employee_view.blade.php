@@ -56,10 +56,8 @@
                                 <div class="card-body p-4">
                                     <div class="d-flex">
                                         <div class="flex-shrink-0">
-                                            <img
-                                                src="{{ $employee_show->picture ? asset('uploads/employees/' . $employee_show->picture) : asset('uploads/employees/default.png') }}"
-                                                alt="Employee Image"
-                                                class="img-fluid"
+                                            <img src="{{ asset('uploads/employees/' . $employee_show->picture) }}" 
+                                                alt="Generic placeholder image" class="img-fluid"
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
                                         <div class="flex-grow-1 p-5 m-auto">
