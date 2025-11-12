@@ -56,7 +56,7 @@
                                 <div class="card-body p-4">
                                     <div class="d-flex">
                                         <div class="flex-shrink-0">
-                                            <img src="{{ asset('uploads/employees/' . $employee->picture) }}" 
+                                            <img src="{{asset('uploads/employees/')}}/{{$employee_show->picture}}" 
                                                 alt="Generic placeholder image" class="img-fluid"
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
@@ -115,7 +115,7 @@
 
                     <div class="card-header text-white" style="background-color:#337ca6;">
                         <a class="text-white text-center" href="https://bettex.com/">
-                            <h4>BETTEX HK LTD.</h4>
+                            <h4>BETTEX HK LTD</h4>
                         </a>
                     </div>
                 </div>
