@@ -17,7 +17,7 @@
                 <td style="font-size: 12pt; font-family: Arial, sans-serif; padding-left: 10px;"> <span style="text-transform:uppercase; font-size: 12pt; font-family: Arial Black; color:#06A5CC;"> </span><br>
                       <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong> <br>
                       <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong><br>
-                      <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5"><strong> <a href="https://bettex.com.bd/">BHML Industries Ltd.</a></strong><br></span></strong></span></td>
+                      <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5"><strong> <a href="https://bettex.com.bd/">BETTEX</a></strong><br></span></strong></span></td>
               </tr>
              <!-- <tr>
               <td style="vertical-align:top;" valign="top">

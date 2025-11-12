@@ -702,9 +702,9 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function qrcode($id)
+    public function qrcode($employee_id)
     {
-        $employee = Employee::where('emp_id', $id)->firstOrFail();
+        $employee = Employee::where('emp_id', $employee_id)->firstOrFail();
         return view('admin.employee.qrcode', compact('employee'));
     }
 }

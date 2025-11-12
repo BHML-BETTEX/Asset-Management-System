@@ -491,7 +491,7 @@
                     <i class="fa fa-edit"></i> QR View
                 </a>
 
-                <a href="{{ route('employee.qrcode', $employee->id) }}" class="btn btn-primary text-white">
+                <a href="{{ route('employee.qrcode', $employee->emp_id) }}" class="btn btn-primary text-white">
                     <i class="fa fa-file-pdf-o"></i> Generate Mail Signature
                 </a>
 
