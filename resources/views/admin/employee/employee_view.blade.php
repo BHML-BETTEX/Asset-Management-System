@@ -61,8 +61,8 @@
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
                                         <div class="flex-grow-1 p-5 m-auto">
-                                            <h3 class="mb-1"><strong>{{$employee_show->emp_name}}</strong></h3>
-                                            <h5 class="mb-2 pb-1 ">{{$employee_show->designation_id}} || {{$employee_show->department_id}}</h5>
+                                            <h3 class="mb-1"><strong>{{Name}}</strong></h3>
+                                            <h5 class="mb-2 pb-1 ">{{Designation}} || {{Department}}</h5>
                                         </div>
                                     </div>
                                 </div>
