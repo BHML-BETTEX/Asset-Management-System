@@ -694,9 +694,17 @@ class EmployeeController extends Controller
         return back()->with('delete_employee', 'File deleted successfully.');
     }
 
-    public function qrcode($emp_id)
+    function employee_view($id)
     {
-        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+        $employee_show = Employee::find($id);
+        return view('admin.employee.employee_view', [
+            'employee_show' => $employee_show,
+        ]);
+    }
+
+    public function qrcode($id)
+    {
+        $employee = Employee::where('emp_id', $id)->firstOrFail();
         return view('admin.employee.qrcode', compact('employee'));
     }
 }

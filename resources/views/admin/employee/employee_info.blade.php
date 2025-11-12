@@ -487,11 +487,11 @@
                     <i class="fa fa-envelope"></i> Email Asset List
                 </button>
 
-                <button class="action-btn btn-warning">
-                    <i class="fa fa-file-pdf-o"></i> Generate Report
-                </button>
+                <a href="{{ route('employee_view', $employee->id) }}" class="action-btn btn-edit">
+                    <i class="fa fa-edit"></i> QR View
+                </a>
 
-                <a href="{{ route('employee.qrcode', $employee->emp_id) }}" class="btn btn-primary text-white">
+                <a href="{{ route('employee.qrcode', $employee->id) }}" class="btn btn-primary text-white">
                     <i class="fa fa-file-pdf-o"></i> Generate Mail Signature
                 </a>
 
