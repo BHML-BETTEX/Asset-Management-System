@@ -288,6 +288,7 @@ Route::post('/employee/storeOtherFile/{id}', [EmployeeController::class, 'storeO
 Route::get('/employee/storeOtherFile/delete/{id}', [EmployeeController::class, 'employee_file_delete'])->name('employee_file_delete');
 Route::get('/employee/generatePDF/{emp_id}', [EmployeeController::class, 'history_generatePDF'])->name('pdf_history');
 Route::post('/employee/generatePDF/selected/{emp_id}', [EmployeeController::class, 'history_generatePDF_selected'])->name('pdf_history_selected');
+Route::get('/employee/qrcode/{emp_id}', [EmployeeController::class, 'qrcode'])->name('employee.qrcode');
 
 
 

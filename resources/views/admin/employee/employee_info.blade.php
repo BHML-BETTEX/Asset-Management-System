@@ -491,6 +491,10 @@
                     <i class="fa fa-file-pdf-o"></i> Generate Report
                 </button>
 
+                <a href="{{ route('employee.qrcode', $employee->emp_id) }}" class="btn btn-primary text-white">
+                    <i class="fa fa-file-pdf-o"></i> Generate Mail Signature
+                </a>
+
 
                 <div class="dropdown-divider my-3"></div>
 

@@ -534,97 +534,97 @@ class EmployeeController extends Controller
     }
 
     //employee asset pdf download
-   public function history_generatePDF(Request $request, $emp_id)
-{
-    $search = $request->input('search', '');
+    public function history_generatePDF(Request $request, $emp_id)
+    {
+        $search = $request->input('search', '');
 
-    // Get the specific employee with relationships
-    $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
-        ->where('emp_id', $emp_id)->firstOrFail();
+        // Get the specific employee with relationships
+        $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
+            ->where('emp_id', $emp_id)->firstOrFail();
 
-    // Search issues based on multiple fields but only for this specific employee
-    $issue_info = issue::where('emp_id', $emp_id)
-        ->where(function ($query) use ($search) {
-            if (!empty($search)) {
-                $query->where('asset_tag', 'LIKE', "%$search%")
-                    ->orWhere('asset_type', 'LIKE', "%$search%")
-                    ->orWhere('others', 'LIKE', "%$search%");
-            }
-        })->get();
+        // Search issues based on multiple fields but only for this specific employee
+        $issue_info = issue::where('emp_id', $emp_id)
+            ->where(function ($query) use ($search) {
+                if (!empty($search)) {
+                    $query->where('asset_tag', 'LIKE', "%$search%")
+                        ->orWhere('asset_type', 'LIKE', "%$search%")
+                        ->orWhere('others', 'LIKE', "%$search%");
+                }
+            })->get();
 
-    // Get store info related to each issue for this employee
-    $store_info = Store::whereIn('asset_tag', $issue_info->pluck('asset_tag'))
-        ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
-        ->get();
+        // Get store info related to each issue for this employee
+        $store_info = Store::whereIn('asset_tag', $issue_info->pluck('asset_tag'))
+            ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
+            ->get();
 
-    // Prepare data for PDF
-    $data = [
-        'title' => 'Employee Asset History - ' . $employee->emp_name,
-        'company' => 'BETTEX HK Ltd',
-        'date' => now()->format('Y-m-d'),
-        'issue_info' => $issue_info,
-        'store_info' => $store_info,
-        'employee' => $employee,
-    ];
+        // Prepare data for PDF
+        $data = [
+            'title' => 'Employee Asset History - ' . $employee->emp_name,
+            'company' => 'BETTEX HK Ltd',
+            'date' => now()->format('Y-m-d'),
+            'issue_info' => $issue_info,
+            'store_info' => $store_info,
+            'employee' => $employee,
+        ];
 
-    // Load view and generate PDF
-    $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
-        ->setPaper('a4', 'portrait');
+        // Load view and generate PDF
+        $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
+            ->setPaper('a4', 'portrait');
 
-    // Download or stream PDF with employee-specific filename
-    return $pdf->download('employee_assets_' . $employee->emp_id . '.pdf');
-}
-
-    //employee selected assets pdf download
-   public function history_generatePDF_selected(Request $request, $emp_id)
-{
-    $search = $request->input('search', '');
-    $selected_assets = $request->input('selected_assets', []);
-
-    // Validate that assets are selected
-    if (empty($selected_assets)) {
-        return redirect()->back()->with('error', 'No assets selected for export.');
+        // Download or stream PDF with employee-specific filename
+        return $pdf->download('employee_assets_' . $employee->emp_id . '.pdf');
     }
 
-    // Get the specific employee with relationships
-    $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
-        ->where('emp_id', $emp_id)->firstOrFail();
+    //employee selected assets pdf download
+    public function history_generatePDF_selected(Request $request, $emp_id)
+    {
+        $search = $request->input('search', '');
+        $selected_assets = $request->input('selected_assets', []);
 
-    // Get only selected issues for this specific employee
-    $issue_info = issue::where('emp_id', $emp_id)
-        ->whereIn('asset_tag', $selected_assets)
-        ->where(function ($query) use ($search) {
-            if (!empty($search)) {
-                $query->where('asset_tag', 'LIKE', "%$search%")
-                    ->orWhere('asset_type', 'LIKE', "%$search%")
-                    ->orWhere('others', 'LIKE', "%$search%");
-            }
-        })->get();
+        // Validate that assets are selected
+        if (empty($selected_assets)) {
+            return redirect()->back()->with('error', 'No assets selected for export.');
+        }
 
-    // Get store info related to selected issues
-    $store_info = Store::whereIn('asset_tag', $selected_assets)
-        ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
-        ->get();
+        // Get the specific employee with relationships
+        $employee = Employee::with(['rel_to_departmet', 'rel_to_designation', 'rel_to_companies'])
+            ->where('emp_id', $emp_id)->firstOrFail();
 
-    // Prepare data for PDF
-    $data = [
-        'title' => 'Selected Employee Assets - ' . $employee->emp_name . ' (' . count($selected_assets) . ' items)',
-        'company' => 'BETTEX HK Ltd',
-        'date' => now()->format('Y-m-d'),
-        'issue_info' => $issue_info,
-        'store_info' => $store_info,
-        'employee' => $employee,
-    ];
+        // Get only selected issues for this specific employee
+        $issue_info = issue::where('emp_id', $emp_id)
+            ->whereIn('asset_tag', $selected_assets)
+            ->where(function ($query) use ($search) {
+                if (!empty($search)) {
+                    $query->where('asset_tag', 'LIKE', "%$search%")
+                        ->orWhere('asset_type', 'LIKE', "%$search%")
+                        ->orWhere('others', 'LIKE', "%$search%");
+                }
+            })->get();
 
-    // Load view and generate PDF
-    $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
-        ->setPaper('a4', 'portrait');
+        // Get store info related to selected issues
+        $store_info = Store::whereIn('asset_tag', $selected_assets)
+            ->select('asset_tag', 'asset_type', 'model', 'brand_id', 'description', 'asset_sl_no', 'qty', 'units_id', 'picture')
+            ->get();
 
-    // Download or stream PDF with employee-specific filename
-    return $pdf->download('employee_selected_assets_' . $employee->emp_id . '_' . count($selected_assets) . '_items.pdf');
-}
+        // Prepare data for PDF
+        $data = [
+            'title' => 'Selected Employee Assets - ' . $employee->emp_name . ' (' . count($selected_assets) . ' items)',
+            'company' => 'BETTEX HK Ltd',
+            'date' => now()->format('Y-m-d'),
+            'issue_info' => $issue_info,
+            'store_info' => $store_info,
+            'employee' => $employee,
+        ];
 
-    
+        // Load view and generate PDF
+        $pdf = Pdf::loadView('admin.employee.pdf_history', $data)
+            ->setPaper('a4', 'portrait');
+
+        // Download or stream PDF with employee-specific filename
+        return $pdf->download('employee_selected_assets_' . $employee->emp_id . '_' . count($selected_assets) . '_items.pdf');
+    }
+
+
 
 
 
@@ -692,5 +692,11 @@ class EmployeeController extends Controller
     {
         EmployeeOtherFile::findOrFail($id)->delete();
         return back()->with('delete_employee', 'File deleted successfully.');
+    }
+
+    public function qrcode($emp_id)
+    {
+        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
+        return view('admin.employee.qrcode', compact('employee'));
     }
 }
