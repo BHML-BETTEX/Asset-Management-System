@@ -19,7 +19,7 @@
                     <tbody>
                         <tr>
                             <td style="font-size: 12pt; font-family: Arial, sans-serif; padding-left: 10px;"> <span style="text-transform:uppercase; font-size: 12pt; font-family: Arial Black; color:#06A5CC;"> {{$employee->emp_name}}</span><br>
-                                <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong> {{$employee->designation_id}} || {{$employee->department_id}}<br>
+                                <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong> {{$employee->rel_to_designation->designation_name}} || {{$employee->rel_to_departmet->department_name}}<br>
                                         <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong> {{$employee->phone_number}}<br>
                                                 <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5"><strong> <a href="https://bettex.com/">BETTEX HK Ltd</a></strong><br></span></strong></span>
                             </td>
