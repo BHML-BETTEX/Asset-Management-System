@@ -8,7 +8,7 @@
 <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0" cellspacing="0">
     <tr>
         <td>
-        <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(80)->generate("https://https://asset.bettex.com/employee/view->id")) !!} ">        
+        <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(80)->generate("https://https://asset.bettex.com/employee/view->emp_id")) !!} ">        
         </td>
         <td>
             <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0" cellspacing="0">
