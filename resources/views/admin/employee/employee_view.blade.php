@@ -61,8 +61,8 @@
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
                                         <div class="flex-grow-1 p-5 m-auto">
-                                            <h3 class="mb-1"><strong>{{Name}}</strong></h3>
-                                            <h5 class="mb-2 pb-1 ">{{Designation}} || {{Department}}</h5>
+                                            <h3 class="mb-1"><strong></strong></h3>
+                                            <h5 class="mb-2 pb-1 "></h5>
                                         </div>
                                     </div>
                                 </div>
