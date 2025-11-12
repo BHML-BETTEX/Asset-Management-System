@@ -705,6 +705,9 @@ class EmployeeController extends Controller
     public function qrcode($employee_id)
     {
         $employee = Employee::where('emp_id', $employee_id)->firstOrFail();
-        return view('admin.employee.qrcode', compact('employee'));
+        
+        return view('admin.employee.qrcode', [
+            'employee' => $employee,
+        ]);
     }
 }
