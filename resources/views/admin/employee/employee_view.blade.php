@@ -1,1 +1,1 @@
-hi
+<h4>{{$employee_show->emp_name}}</h4>
