@@ -56,13 +56,13 @@
                                 <div class="card-body p-4">
                                     <div class="d-flex">
                                         <div class="flex-shrink-0">
-                                            <img src="" 
+                                            <img src="{{asset('uploads/image/')}}/{{$employee_show->picture}}" 
                                                 alt="Generic placeholder image" class="img-fluid"
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
                                         <div class="flex-grow-1 p-5 m-auto">
-                                            <h3 class="mb-1"><strong></strong></h3>
-                                            <h5 class="mb-2 pb-1 "></h5>
+                                            <h3 class="mb-1"><strong>{{$employee_show->emp_name}}</strong></h3>
+                                            <h5 class="mb-2 pb-1 ">{{$employee_show->designation_id}} || {{$employee_show->department_id}}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -114,8 +114,8 @@
                     </div>
 
                     <div class="card-header text-white" style="background-color:#337ca6;">
-                        <a class="text-white text-center" href="https://bettex.com/">
-                            <h4>BETTEX HK LTD</h4>
+                        <a class="text-white text-center" href="https://bettex.com.bd/">
+                            <h4>BHML INDUSTRIES LTD.</h4>
                         </a>
                     </div>
                 </div>
