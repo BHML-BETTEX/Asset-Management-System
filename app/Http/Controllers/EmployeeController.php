@@ -694,9 +694,14 @@ class EmployeeController extends Controller
         return back()->with('delete_employee', 'File deleted successfully.');
     }
 
-    function employee_view($id)
+    function employee_view($employee_id)
     {
-        $employee_show = Employee::find($id);
+        $employee_show = Employee::where('emp_id', $employee_id)->first();
+
+        if (!$employee_show) {
+            abort(404, 'Employee not found');
+        }
+
         return view('admin.employee.employee_view', [
             'employee_show' => $employee_show,
         ]);
