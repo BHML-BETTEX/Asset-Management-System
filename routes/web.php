@@ -292,6 +292,7 @@ Route::post('/employee/generatePDF/selected/{emp_id}', [EmployeeController::clas
 //Employee Mail signature QR Code
 Route::get('/employee/view/{employee_id}', [EmployeeController::class, 'employee_view'])->name('employee_view');
 Route::get('/employee/qrcode/{employee_id}', [EmployeeController::class, 'qrcode'])->name('employee.qrcode');
+Route::get('/e/{slug}', [EmployeeController::class, 'viewBySlug']);
 
 
 

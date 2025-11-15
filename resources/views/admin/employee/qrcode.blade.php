@@ -10,9 +10,11 @@
     <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0" cellspacing="0">
         <tr>
             <td>
-                <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(80)->generate('https://asset.bettex.com/employee/view/' . $employee->emp_id)
-                    ) !!}"
-                    alt="QR Code">
+                <img src="data:image/png;base64, {!! base64_encode(
+        QrCode::format('png')->size(80)->generate(
+            url('/e/' . $employee->slug)
+        )
+    ) !!}" alt="QR Code">
             </td>
             <td>
                 <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0" cellspacing="0">
