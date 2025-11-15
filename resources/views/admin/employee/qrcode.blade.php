@@ -24,11 +24,11 @@
                                                 <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5">
                                                     <strong>
                                                         @if($employee->company == 1)
-                                                        <a href="https://bettex.com/">BHML INDUSTRIES LTD.</a>
+                                                        <a href="https://bettex.com/">BETTEX INDUSTRIES LTD.</a>
                                                         @elseif($employee->company == 2)
                                                         <a href="https://bettex.com/">BETTEX HK LTD</a>
                                                         @elseif($employee->company == 3)
-                                                        <a href="https://bettex.com/">BETTEX PREMIUM</a>
+                                                        <a href="https://bettex.com/">BETTEX INDUSTRIES LTD.</a>
                                                         @elseif($employee->company == 4)
                                                         <a href="https://bettex.com/">UNIONTEX INDIA</a>
                                                         @else

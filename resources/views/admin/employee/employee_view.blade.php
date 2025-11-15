@@ -104,6 +104,29 @@
                                     <h3 class="mt-0 mb-0"><span class="mr-3 icon-circle rounded"><i class="m-0 bi bi-house"></i></span>Kamarjuri, Natun Bazar, National University, Gazipur</h3>
                                 </a>
                             </li>
+
+                            <li class="list-group-item">
+                                <a href="https://bitly.cx/rFr8o" target="_blank" class="media contact-details-item">
+                                    <h3 class="mt-0 mb-0">
+                                        <span class="mr-3 icon-circle rounded">
+                                            <i class="m-0 bi bi-house"></i>
+                                        </span>
+
+                                        @if($employee_show->company == 1)
+                                        Kamarjuri, Natun Bazar, National University, Gazipur.
+                                        @if($employee_show->company == 2)
+                                        BGMEA Bhaban, Uttara, Dhaka, BD.
+                                        @elseif($employee_show->company == 3)
+                                        Dilan Complex, Chowrasta, Gazipur.
+                                        @elseif($employee_show->company == 4)
+                                        INDEA.
+                                        @else
+                                        Uttara, Dhaka
+                                        @endif
+
+                                    </h3>
+                                </a>
+                            </li>
                     </div>
 
                     <div class="mb-3">
