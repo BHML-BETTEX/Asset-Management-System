@@ -25,14 +25,11 @@
                                                     <strong>
                                                         @if($employee->company == 1)
                                                         <a href="https://bettex.com/">BHML INDUSTRIES LTD.</a>
-                                                        @else
-                                                        @if($employee->company == 2)
+                                                        @elseif($employee->company == 2)
                                                         <a href="https://bettex.com/">BETTEX HK LTD</a>
-                                                        @else
-                                                        @if($employee->company == 3)
+                                                        @elseif($employee->company == 3)
                                                         <a href="https://bettex.com/">BETTEX PREMIUM</a>
-                                                        @else
-                                                        @if($employee->company == 4)
+                                                        @elseif($employee->company == 4)
                                                         <a href="https://bettex.com/">UNIONTEX INDIA</a>
                                                         @else
                                                         <a href="https://bettex.com/">BETTEX HK LTD</a>
