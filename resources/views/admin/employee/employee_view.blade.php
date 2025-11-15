@@ -100,13 +100,22 @@
                             </li>
 
                             <li class="list-group-item">
-                                <a href="https://bitly.cx/rFr8o" target="_blank" class="media contact-details-item">
-                                    <h3 class="mt-0 mb-0"><span class="mr-3 icon-circle rounded"><i class="m-0 bi bi-house"></i></span>Kamarjuri, Natun Bazar, National University, Gazipur</h3>
-                                </a>
-                            </li>
-
-                            <li class="list-group-item">
-                                <a href="https://bitly.cx/rFr8o" target="_blank" class="media contact-details-item">
+                                <a
+                                    href="
+            @if($employee_show->company == 1)
+                https://bitly.cx/rFr8o
+            @elseif($employee_show->company == 2)
+                https://maps.app.goo.gl/S7hENHQBgtqS8Ry1A
+            @elseif($employee_show->company == 3)
+                https://bitly.cx/dilan-complex
+            @elseif($employee_show->company == 4)
+                https://bitly.cx/india-office
+            @else
+                https://bitly.cx/uttara-default
+            @endif
+        "
+                                    target="_blank"
+                                    class="media contact-details-item">
                                     <h3 class="mt-0 mb-0">
                                         <span class="mr-3 icon-circle rounded">
                                             <i class="m-0 bi bi-house"></i>
@@ -119,14 +128,15 @@
                                         @elseif($employee_show->company == 3)
                                         Dilan Complex, Chowrasta, Gazipur.
                                         @elseif($employee_show->company == 4)
-                                        INDEA.
+                                        India.
                                         @else
-                                        Uttara, Dhaka
+                                        Uttara, Dhaka.
                                         @endif
 
                                     </h3>
                                 </a>
                             </li>
+
                     </div>
 
                     <div class="mb-3">
