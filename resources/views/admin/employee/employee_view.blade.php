@@ -56,13 +56,13 @@
                                 <div class="card-body p-4">
                                     <div class="d-flex">
                                         <div class="flex-shrink-0">
-                                            <img src=""
+                                            <img src="{{ $employee_show->picture ? asset('uploads/employees/' . $employee_show->picture) : asset('images/no_image.png') }}"
                                                 alt="Employee image" class="img-fluid"
                                                 style="width: 180px; border-radius: 10px;" />
                                         </div>
                                         <div class="flex-grow-1 p-5 m-auto">
                                             <h3 class="mb-1"><strong></strong></h3>
-                                            <h5>{{$employee_show->designation_id}} || {{$employee_show->department_id}}</h5>
+                                            <h5>{{$employee_show->rel_to_designation->designation_name}} || {{$employee_show->rel_to_departmet->department_name}}</h5>
                                         </div>
                                     </div>
                                 </div>
