@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Employee extends Model
 {
@@ -25,4 +26,15 @@ class Employee extends Model
     {
         return $this->belongsTo(Company::class, 'company');
     }
+
+    protected static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($employee) {
+        if (empty($employee->slug)) {
+            $employee->slug = Str::slug($employee->name . '-' . $employee->emp_id);
+        }
+    });
+}
 }
