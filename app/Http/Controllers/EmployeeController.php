@@ -715,12 +715,5 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function viewBySlug($slug)
-    {
-        $employee_show = Employee::where('slug', $slug)->firstOrFail();
-
-        return view('admin.employee.employee_view', [
-            'employee_show' => $employee_show,
-        ]);
-    }
+    
 }

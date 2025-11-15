@@ -26,15 +26,4 @@ class Employee extends Model
     {
         return $this->belongsTo(Company::class, 'company');
     }
-
-    protected static function boot()
-{
-    parent::boot();
-
-    static::creating(function ($employee) {
-        if (empty($employee->slug)) {
-            $employee->slug = Str::slug($employee->name . '-' . $employee->emp_id);
-        }
-    });
-}
 }
