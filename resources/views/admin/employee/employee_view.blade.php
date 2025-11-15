@@ -114,7 +114,7 @@
 
                                         @if($employee_show->company == 1)
                                         Kamarjuri, Natun Bazar, National University, Gazipur.
-                                        @if($employee_show->company == 2)
+                                        @elseif($employee_show->company == 2)
                                         BGMEA Bhaban, Uttara, Dhaka, BD.
                                         @elseif($employee_show->company == 3)
                                         Dilan Complex, Chowrasta, Gazipur.
