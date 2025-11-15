@@ -78,7 +78,50 @@
 
 
         <!--Contact end-->
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 mx-auto">
+                <div class="card">
+                    <div class="card-header text-white" style="background-color:#337ca6 ;">
+                        <h3>Contact</h3>
+                    </div>
+                    <div class="card-body" style="background-color:#DDEAFC ;">
+                        <ul class="list-group">
 
+                            <li class="list-group-item">
+                                <a href="tel:<?php echo $employee_show["phone_number"]; ?>" class="media contact-details-item">
+                                    <h3 class="mt-0 mb-0"><span class="mr-3 icon-circle rounded"><i class="m-0 bi bi-phone"></i></span><?php echo $employee_show["phone_number"]; ?></h3>
+                                </a>
+                            </li>
+
+                            <li class="list-group-item">
+                                <a href="mailto:<?php echo $employee_show["email"]; ?>" class="media contact-details-item">
+                                    <h3 class="mt-0 mb-0"><span class="mr-3 icon-circle rounded"><i class="m-0 bi bi-envelope-arrow-down-fill"></i></span><?php echo $employee_show["email"]; ?></h3>
+                                </a>
+                            </li>
+
+                            <li class="list-group-item">
+                                <a href="https://bitly.cx/rFr8o" target="_blank" class="media contact-details-item">
+                                    <h3 class="mt-0 mb-0"><span class="mr-3 icon-circle rounded"><i class="m-0 bi bi-house"></i></span>Kamarjuri, Natun Bazar, National University, Gazipur</h3>
+                                </a>
+                            </li>
+                    </div>
+
+                    <div class="mb-3">
+                        <li class="list-group-item">
+                            <a href="https://wa.me/<?php echo $employee_show["phone_number"]; ?>" target="_blank" class="media contact-details-item">
+                                <span class="mr-3 icon-circle rounded"></span>
+                                <button class="text-white btn btn-lg" style="background-color:#337ca6; border:none;">WhatsApp Now</button></a>
+                        </li>
+                    </div>
+
+                    <div class="card-header text-white" style="background-color:#337ca6;">
+                        <a class="text-white text-center" href="https://bettex.com/">
+                            <h4>BETTEX HK LTD.</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!--QR Code Start-->
         <!--QR Code end-->
