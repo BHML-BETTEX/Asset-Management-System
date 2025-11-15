@@ -23,10 +23,19 @@
                                         <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#5D6D7E;"><strong> {{$employee->phone_number}}<br>
                                                 <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5">
                                                     <strong>
+                                                        @if($employee->company == 1)
+                                                        <a href="https://bettex.com/">BHML INDUSTRIES LTD.</a>
+                                                        @else
+                                                        @if($employee->company == 2)
+                                                        <a href="https://bettex.com/">BETTEX HK LTD</a>
+                                                        @else
                                                         @if($employee->company == 3)
                                                         <a href="https://bettex.com/">BETTEX PREMIUM</a>
                                                         @else
-                                                        <a href="https://bettex.com/">BETTEX HK Ltdsss</a>
+                                                        @if($employee->company == 4)
+                                                        <a href="https://bettex.com/">UNIONTEX INDIA</a>
+                                                        @else
+                                                        <a href="https://bettex.com/">BETTEX HK LTD</a>
                                                         @endif
                                                     </strong>
                                                     <br>
