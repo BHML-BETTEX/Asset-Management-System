@@ -26,7 +26,7 @@
                                                         @if($employee->company == 3)
                                                         <a href="https://bettex.com/">BETTEX PREMIUM</a>
                                                         @else
-                                                        <a href="https://bettex.com/">BETTEX HK Ltd</a>
+                                                        <a href="https://bettex.com/">BETTEX HK Ltdsss</a>
                                                         @endif
                                                     </strong>
                                                     <br>
