@@ -266,7 +266,7 @@
             <!-- History Tab (current page) -->
             <li class="nav-item">
                 <a class="nav-link active"
-                    href="">
+                    href="#">
                     History
                 </a>
             </li>
@@ -274,15 +274,15 @@
             <!-- Maintenance Tab -->
             <li class="nav-item">
                 <a class="nav-link"
-                    href="">
+                    href="{{ route('maintenance_list', $stores->id) }}">
                     Maintenance
                 </a>
             </li>
 
             <!-- Files Tab -->
-            <li class="nav-item">
-                <a class="nav-link" href="" >Files</a>
-            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="{{route('store_file', $stores->id)}}" >Files</a>
+            </li> -->
         </ul>
     </div>
 

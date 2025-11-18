@@ -51,7 +51,7 @@ class StoreController extends Controller
         if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
         if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
         if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
-
+        
         // Base query with joins
         $query = Store::query()
             ->join('brands', 'brands.id', '=', 'stores.brand_id')

@@ -13,7 +13,7 @@
             </li>
             <li class="nav-item">
 
-                <a class="nav-link" href="{{ route('history', $stores->id) }}">History</a>
+                <a class="nav-link" href="{{ route('history', $stores->asset_tag) }}">History</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('maintenance_list', $stores->id) }}">Maintenance</a>
