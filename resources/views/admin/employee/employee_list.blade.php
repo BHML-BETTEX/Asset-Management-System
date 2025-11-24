@@ -785,7 +785,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <span class="department-badge">{{ $employee->rel_to_departmet->department_name }}</span>
+                                        <a href="{{ route('departments_asset', $employee->department_id) }}"><span class="department-badge">{{ $employee->rel_to_departmet->department_name }}</span></a>
                                     </td>
                                     <td>
                                         <span class="designation-badge">{{ $employee->rel_to_designation->designation_name }}</span>

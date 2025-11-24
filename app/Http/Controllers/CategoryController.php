@@ -324,7 +324,7 @@ class CategoryController extends Controller
         if ($showAll) {
             $employees = $query->get(); // all results
         } else {
-            $employees = $query->paginate(13); // paginated
+            $employees = $query->paginate(25); // paginated
         }
 
         return view('admin.department_asset', [
@@ -333,4 +333,5 @@ class CategoryController extends Controller
             'search' => $search
         ]);
     }
+
 }

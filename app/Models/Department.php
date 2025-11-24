@@ -15,5 +15,9 @@ class Department extends Model
         return $this->belongsTo(User::class, 'added_by');
     }
 
+    function rel_to_Company(){
+        return $this->belongsTo(Company::class, 'company');
+    }
+
    
 }
