@@ -526,7 +526,7 @@ class EmployeeController extends Controller
         }
 
         // Paginate or show all (optional)
-        $issues = $query->paginate(10); // Or use ->get() for all
+        $issues = $query->paginate(20); // Or use ->get() for all
 
         // Send data to view
         $stores = Store::all();
