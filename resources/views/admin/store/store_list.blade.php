@@ -812,6 +812,13 @@
 
 
 <div class="container">
+    {{-- Issue Success --}}
+    @if (session('issue_success'))
+    <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
+        <span>{{ session('issue_success') }}</span>
+        <button type="button" class="border-0 bg-warning text-white fw-bold px-2 rounded" data-bs-dismiss="alert" aria-label="Close">X</button>
+    </div>
+    @endif
     <!-- Page Header -->
     <div class="card mb-2" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
         <div class="card-header" style="background-color: #f8f9fa; border-radius: 12px 12px 0 0;">
