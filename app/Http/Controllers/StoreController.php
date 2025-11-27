@@ -519,7 +519,7 @@ class StoreController extends Controller
         ]);
 
         // Redirect to the specific store info page
-        return redirect()->route('store_info', $request->store_id)
+        return redirect()->route('issue_list')
             ->with('issue_success', 'Product issued successfully!');
     }
     //issue end
