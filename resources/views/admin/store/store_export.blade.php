@@ -48,7 +48,7 @@
             <td>{{ $store->challan_no }}</td>
             <td>{{ $store->rel_to_Status->status_name }}</td>
             <td>{{ $store->location }}</td>
-            <td>{{ $store->rel_to_Company->company }}</td>
+            <td>{{ $store->company_id }}</td>
             <td>{{ $store->others }}</td>
             <td>{{ $store->checkstatus }}</td>
 

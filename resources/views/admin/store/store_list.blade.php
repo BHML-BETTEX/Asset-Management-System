@@ -844,7 +844,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ route('export', ['type' => 'xlsx']) }}">
+                                <a class="dropdown-item" href="{{ route('store_export', ['type' => 'xlsx']) }}">
                                     <i class="fa fa-file-excel-o text-success me-2"></i> Excel (XLSX)
                                 </a>
                             </li>
