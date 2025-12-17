@@ -1604,6 +1604,10 @@
 @endsection
 
 @push('script')
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- JsBarcode Library for Barcodes -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize Select2
@@ -1871,8 +1875,13 @@
     });
 
     // Label size change handler
-    $('#label_size').on('change', function() { // updated
-        updateLabelPreview(); // your existing function
+    $('#labelSize').on('change', function() {
+        updateLabelPreview();
+    });
+
+    // QR and Barcode checkbox handlers
+    $('#includeQR, #includeBarcode').on('change', function() {
+        updateLabelPreview();
     });
 
     // Other setting change handlers
@@ -2178,12 +2187,12 @@
         $('.asset-checkbox:checked').each(function() {
             const checkbox = $(this);
             selectedAssets.push({
-                id: checkbox.data('asset_tag'),
-                tag: checkbox.data('tag'),
-                type: checkbox.data('type'),
-                model: checkbox.data('model_name'),
-                brand: checkbox.data('brand_name'),
-                company: checkbox.data('company_name')
+                id: checkbox.data('asset-id'),
+                tag: checkbox.data('asset-tag'),
+                type: checkbox.data('asset-type'),
+                model: checkbox.data('model'),
+                brand: checkbox.data('brand'),
+                company: checkbox.data('company')
             });
         });
 
@@ -2229,14 +2238,14 @@
 
     function removeSelectedAsset(index) {
         const asset = selectedAssets[index];
-        $(`.asset-checkbox[data-asset_id="${asset.id}"]`).prop('checked', false);
+        $(`.asset-checkbox[data-asset-id="${asset.id}"]`).prop('checked', false);
         updateSelectedAssets();
     }
 
     function updateLabelPreview() {
-        const labelSize = $('#label_size').val();
-        const includeQR = $('#show_qr').is(':checked');
-        const includeBarcode = $('#show_barcode').is(':checked');
+        const labelSize = $('#labelSize').val();
+        const includeQR = $('#includeQR').is(':checked');
+        const includeBarcode = $('#includeBarcode').is(':checked');
 
         const previewLabel = $('#labelPreview .preview-label');
         previewLabel.removeClass('small-label medium-label large-label');
@@ -2255,10 +2264,10 @@
             return;
         }
 
-        const labelSize = $('#label_size').val();
-        const includeQR = $('#show_qr').is(':checked');
-        const includeBarcode = $('#show_barcode').is(':checked');
-        const additionalText = $('#label_text').val();
+        const labelSize = $('#labelSize').val();
+        const includeQR = $('#includeQR').is(':checked');
+        const includeBarcode = $('#includeBarcode').is(':checked');
+        const additionalText = $('#additionalText').val();
 
         const previewWindow = window.open('', '_blank', 'width=800,height=600');
         let previewHtml = `
@@ -2266,6 +2275,8 @@
         <html>
         <head>
             <title>Label Preview</title>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+            <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
             <style>
                 body { font-family: Arial, sans-serif; padding: 20px; }
                 .preview-container { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -2274,12 +2285,13 @@
                 .label-medium { width: 240px; height: 120px; font-size: 10px; }
                 .label-large { width: 320px; height: 160px; font-size: 12px; }
                 .label-header { text-align: center; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-                .label-content { flex: 1; }
-                .asset-tag { font-weight: bold; margin: 4px 0; }
-                .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ccc; padding-top: 2px; }
-                .qr-code, .barcode { border: 1px solid #ccc; background: #f5f5f5; display: flex; align-items: center; justify-content: center; }
-                .qr-code { width: 30px; height: 30px; }
-                .barcode { height: 20px; flex: 1; margin-left: 5px; }
+                .label-content { flex: 1; padding: 5px 0; }
+                .asset-tag { font-weight: bold; margin: 4px 0; font-size: 1.2em; }
+                .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ccc; padding-top: 4px; min-height: 50px; }
+                .qr-code { width: 50px; height: 50px; }
+                .qr-code img, .qr-code canvas { width: 100% !important; height: 100% !important; }
+                .barcode-container { flex: 1; margin-left: 5px; height: 40px; display: flex; align-items: center; }
+                .barcode-container svg { max-width: 100%; max-height: 100%; }
             </style>
         </head>
         <body>
@@ -2287,19 +2299,19 @@
             <div class="preview-container">
     `;
 
-        selectedAssets.forEach(asset => {
+        selectedAssets.forEach((asset, index) => {
             previewHtml += `
             <div class="preview-label label-${labelSize}">
                 <div class="label-header">${asset.company || 'COMPANY'}</div>
                 <div class="label-content">
                     <div class="asset-tag">${asset.tag}</div>
-                    <div>${asset.type}</div>
-                    <div>${asset.brand}</div>
+                    <div><small>${asset.type || ''}</small></div>
+                    <div><small>${asset.brand || ''}</small></div>
                     ${additionalText ? `<div><small>${additionalText}</small></div>` : ''}
                 </div>
                 <div class="label-footer">
-                    ${includeQR ? '<div class="qr-code">QR</div>' : ''}
-                    ${includeBarcode ? '<div class="barcode">|||||||||||</div>' : ''}
+                    ${includeQR ? `<div class="qr-code" id="preview-qr-${index}"></div>` : ''}
+                    ${includeBarcode ? `<div class="barcode-container"><svg id="preview-barcode-${index}"></svg></div>` : ''}
                 </div>
             </div>
         `;
@@ -2310,6 +2322,44 @@
             <br>
             <button onclick="window.print()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Labels</button>
             <button onclick="window.close()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
+            <script>
+                window.onload = function() {
+                    const assets = ${JSON.stringify(selectedAssets)};
+                    const includeQR = ${includeQR};
+                    const includeBarcode = ${includeBarcode};
+
+                    assets.forEach((asset, index) => {
+                        // Generate QR Code
+                        if (includeQR) {
+                            const qrElement = document.getElementById('preview-qr-' + index);
+                            if (qrElement && typeof QRCode !== 'undefined') {
+                                new QRCode(qrElement, {
+                                    text: asset.tag || '',
+                                    width: 100,
+                                    height: 100
+                                });
+                            }
+                        }
+
+                        // Generate Barcode
+                        if (includeBarcode) {
+                            const barcodeElement = document.getElementById('preview-barcode-' + index);
+                            if (barcodeElement && typeof JsBarcode !== 'undefined') {
+                                try {
+                                    JsBarcode(barcodeElement, asset.tag || '', {
+                                        format: 'CODE128',
+                                        width: 2,
+                                        height: 40,
+                                        displayValue: false
+                                    });
+                                } catch (e) {
+                                    console.error('Barcode generation error:', e);
+                                }
+                            }
+                        }
+                    });
+                };
+            <\/script>
         </body>
         </html>
     `;
@@ -2325,11 +2375,11 @@
             return;
         }
 
-        const labelSize = $('#label_size').val();
+        const labelSize = $('#labelSize').val();
         const copies = parseInt($('#copiesCount').val()) || 1;
-        const includeQR = $('#show_qr').is(':checked');
-        const includeBarcode = $('#show_barcode').is(':checked');
-        const additionalText = $('#label_text').val();
+        const includeQR = $('#includeQR').is(':checked');
+        const includeBarcode = $('#includeBarcode').is(':checked');
+        const additionalText = $('#additionalText').val();
 
         const printWindow = window.open('', '_blank', 'width=800,height=600');
         let printHtml = `
@@ -2337,12 +2387,15 @@
     <html>
     <head>
         <title>Asset Labels</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
         <style>
             @media print {
                 body { margin: 0; }
                 .print-label { page-break-inside: avoid; }
+                .no-print { display: none; }
             }
-            body { font-family: Arial, sans-serif; }
+            body { font-family: Arial, sans-serif; padding: 10px; }
             .print-container { display: flex; flex-wrap: wrap; }
             .print-label {
                 border: 2px solid #000;
@@ -2358,36 +2411,93 @@
             .label-large { width: 100mm; height: 50mm; font-size: 10px; }
             .label-header { text-align: center; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 1px; margin-bottom: 2px; }
             .label-content { flex: 1; }
-            .asset-tag { font-weight: bold; margin: 1px 0; }
-            .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; padding-top: 1px; margin-top: 2px; }
-            .qr-code { width: 15px; height: 15px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
-            .barcode { height: 10px; flex: 1; margin-left: 2px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 4px; }
+            .asset-tag { font-weight: bold; margin: 1px 0; font-size: 1.2em; }
+            .label-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000; padding-top: 2px; margin-top: 2px; min-height: 30px; }
+            .qr-code { width: 25mm; height: 25mm; }
+            .qr-code img, .qr-code canvas { width: 100% !important; height: 100% !important; }
+            .barcode-container { flex: 1; margin-left: 2px; height: 20mm; display: flex; align-items: center; }
+            .barcode-container svg { max-width: 100%; max-height: 100%; }
+            .no-print { margin: 20px; text-align: center; }
         </style>
     </head>
     <body>
+        <div class="no-print">
+            <h3>Generating labels...</h3>
+            <button onclick="window.print()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Print Labels</button>
+            <button onclick="window.close()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
         <div class="print-container">
 `;
 
-        selectedAssets.forEach(asset => {
+        let labelIndex = 0;
+        selectedAssets.forEach((asset, assetIndex) => {
             for (let copy = 0; copy < copies; copy++) {
-                printHtml += '<div class="print-label label-' + labelSize + '">' +
-                    '<div class="label-header">' + (asset.company || 'COMPANY').substring(0, 20) + '</div>' +
-                    '<div class="label-content">' +
-                    '<div class="asset-tag">' + asset.tag + '</div>' +
-                    '<div>' + asset.type + '</div>' +
-                    '<div>' + asset.brand + '</div>' +
-                    (additionalText ? '<div><small>' + additionalText.substring(0, 30) + '</small></div>' : '') +
-                    '</div>' +
-                    '<div class="label-footer">' +
-                    (includeQR ? '<div class="qr-code">QR</div>' : '') +
-                    (includeBarcode ? '<div class="barcode">||||||||</div>' : '') +
-                    '</div>' +
-                    '</div>';
+                const currentIndex = labelIndex++;
+                printHtml += `<div class="print-label label-${labelSize}">
+                    <div class="label-header">${(asset.company || 'COMPANY').substring(0, 20)}</div>
+                    <div class="label-content">
+                        <div class="asset-tag">${asset.tag}</div>
+                        <div><small>${asset.type || ''}</small></div>
+                        <div><small>${asset.brand || ''}</small></div>
+                        ${additionalText ? '<div><small>' + additionalText.substring(0, 30) + '</small></div>' : ''}
+                    </div>
+                    <div class="label-footer">
+                        ${includeQR ? `<div class="qr-code" id="qr-${currentIndex}"></div>` : ''}
+                        ${includeBarcode ? `<div class="barcode-container"><svg id="barcode-${currentIndex}"></svg></div>` : ''}
+                    </div>
+                </div>`;
             }
         });
 
         printHtml += `
         </div>
+        <script>
+            window.onload = function() {
+                const assets = ${JSON.stringify(selectedAssets)};
+                const copies = ${copies};
+                const includeQR = ${includeQR};
+                const includeBarcode = ${includeBarcode};
+
+                let labelIndex = 0;
+                assets.forEach((asset, assetIndex) => {
+                    for (let copy = 0; copy < copies; copy++) {
+                        const currentIndex = labelIndex++;
+
+                        // Generate QR Code
+                        if (includeQR) {
+                            const qrElement = document.getElementById('qr-' + currentIndex);
+                            if (qrElement && typeof QRCode !== 'undefined') {
+                                new QRCode(qrElement, {
+                                    text: asset.tag || '',
+                                    width: 100,
+                                    height: 100
+                                });
+                            }
+                        }
+
+                        // Generate Barcode
+                        if (includeBarcode) {
+                            const barcodeElement = document.getElementById('barcode-' + currentIndex);
+                            if (barcodeElement && typeof JsBarcode !== 'undefined') {
+                                try {
+                                    JsBarcode(barcodeElement, asset.tag || '', {
+                                        format: 'CODE128',
+                                        width: 1,
+                                        height: 30,
+                                        displayValue: false
+                                    });
+                                } catch (e) {
+                                    console.error('Barcode generation error:', e);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Update message
+                document.querySelector('.no-print h3').textContent = 'Labels ready! Click Print Labels button or use Ctrl+P';
+            };
+        <\/script>
     </body>
     </html>
     `;
@@ -2396,10 +2506,6 @@
         printWindow.document.close();
 
         $('#bulkLabelModal').modal('hide');
-
-        setTimeout(() => {
-            alert('Successfully sent ' + (selectedAssets.length * copies) + ' labels to printer!');
-        }, 500);
     }
 
     // Column Selector Functionality
@@ -2407,6 +2513,28 @@
         initializeColumnSelector();
         loadColumnPreferences();
         showAllColumns();
+
+        // Initialize print button state
+        updateSelectedAssets();
+
+        // Asset checkbox event listeners for print labels
+        $('.asset-checkbox').on('change', function() {
+            updateSelectedAssets();
+
+            // Update select all checkbox state
+            const totalCheckboxes = $('.asset-checkbox').length;
+            const checkedCheckboxes = $('.asset-checkbox:checked').length;
+
+            $('#selectAll').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+            $('#selectAll').prop('checked', checkedCheckboxes === totalCheckboxes);
+        });
+
+        // Select all checkbox functionality
+        $('#selectAll').on('change', function() {
+            const isChecked = $(this).is(':checked');
+            $('.asset-checkbox').prop('checked', isChecked);
+            updateSelectedAssets();
+        });
     });
 
     function initializeColumnSelector() {
