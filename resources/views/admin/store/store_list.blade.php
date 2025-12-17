@@ -2364,65 +2364,72 @@
             }
         });
 
-        previewHtml += `
-            </div>
-            <br>
-            <button onclick="window.print()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Labels</button>
-            <button onclick="window.close()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
-            <script>
-                window.onload = function() {
-                    const assets = ${JSON.stringify(selectedAssets)};
-                    const labelSize = '${labelSize}';
-                    const includeQR = ${includeQR};
-                    const includeBarcode = ${includeBarcode};
+previewHtml += `
+</div>
+<br>
+<button onclick="window.print()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Labels</button>
+<button onclick="window.close()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
 
-                    assets.forEach((asset, index) => {
-                        if (labelSize === 'simple') {
-                            // Generate QR Code for simple label (always included)
-                            const qrElement = document.getElementById('preview-qr-' + index);
-                            if (qrElement && typeof QRCode !== 'undefined') {
-                                new QRCode(qrElement, {
-                                    text: asset.tag || '',
-                                    width: 150,
-                                    height: 150
-                                });
-                            }
-                        } else {
-                            // Generate QR Code for detailed label
-                            if (includeQR) {
-                                const qrElement = document.getElementById('preview-qr-' + index);
-                                if (qrElement && typeof QRCode !== 'undefined') {
-                                    new QRCode(qrElement, {
-                                        text: asset.tag || '',
-                                        width: 100,
-                                        height: 100
-                                    });
-                                }
-                            }
+<script>
+window.onload = function () {
+    const assets = ${JSON.stringify(selectedAssets)};
+    const labelSize = '${labelSize}';
+    const includeQR = ${includeQR};
+    const includeBarcode = ${includeBarcode};
 
-                            // Generate Barcode
-                            if (includeBarcode) {
-                                const barcodeElement = document.getElementById('preview-barcode-' + index);
-                                if (barcodeElement && typeof JsBarcode !== 'undefined') {
-                                    try {
-                                        JsBarcode(barcodeElement, asset.tag || '', {
-                                            format: 'CODE128',
-                                            width: 2,
-                                            height: 40,
-                                            displayValue: false
-                                        });
-                                    } catch (e) {
-                                        console.error('Barcode generation error:', e);
-                                    }
-                                }
-                            }
-                        }
+    assets.forEach((asset, index) => {
+
+        // ✅ QR URL
+        const qrText = 'https://asset.bettex.com/public/store/qr_code_view/' + asset.id;
+
+        if (labelSize === 'simple') {
+            // SIMPLE LABEL QR
+            const qrElement = document.getElementById('preview-qr-' + index);
+            if (qrElement && typeof QRCode !== 'undefined') {
+                new QRCode(qrElement, {
+                    text: qrText,
+                    width: 130,
+                    height: 130
+                });
+            }
+
+        } else {
+
+            // DETAILED LABEL QR
+            if (includeQR) {
+                const qrElement = document.getElementById('preview-qr-' + index);
+                if (qrElement && typeof QRCode !== 'undefined') {
+                    new QRCode(qrElement, {
+                        text: qrText,
+                        width: 100,
+                        height: 100
                     });
-                };
-            <\/script>
-        </body>
-        </html>
-    `;
+                }
+            }
+
+            // BARCODE (optional)
+            if (includeBarcode) {
+                const barcodeElement = document.getElementById('preview-barcode-' + index);
+                if (barcodeElement && typeof JsBarcode !== 'undefined') {
+                    try {
+                        JsBarcode(barcodeElement, asset.tag || asset.id, {
+                            format: 'CODE128',
+                            width: 2,
+                            height: 40,
+                            displayValue: false
+                        });
+                    } catch (e) {
+                        console.error('Barcode generation error:', e);
+                    }
+                }
+            }
+        }
+    });
+};
+<\/script>
+</body>
+</html>
+`;
 
         previewWindow.document.write(previewHtml);
         previewWindow.document.close();
@@ -2515,7 +2522,6 @@
         </div>
         <div class="print-container">
 `;
-
         let labelIndex = 0;
         selectedAssets.forEach((asset, assetIndex) => {
             for (let copy = 0; copy < copies; copy++) {
@@ -2539,7 +2545,7 @@
                         </div>
                         <div class="label-footer">
                             ${includeQR ? `<div class="qr-code" id="qr-${currentIndex}"></div>` : ''}
-                            ${includeBarcode ? `<div class="barcode-container"><svg id="barcode-${currentIndex}"></svg></div>` : ''}
+                            ${includeBarcode ? `<div class="barcode-container"><svg id="barcode-Hi"></svg></div>` : ''}
                         </div>
                     </div>`;
                 }
