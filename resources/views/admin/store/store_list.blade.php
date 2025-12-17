@@ -1499,8 +1499,9 @@
                                 <div class="mb-3">
                                     <label class="form-label">Label Size</label>
                                     <select class="form-control" id="labelSize">
+                                        <option value="simple" selected>Simple QR (2" x 2") - Just QR + Asset Tag</option>
                                         <option value="small">Small (2" x 1")</option>
-                                        <option value="medium" selected>Medium (3" x 2")</option>
+                                        <option value="medium">Medium (3" x 2")</option>
                                         <option value="large">Large (4" x 3")</option>
                                     </select>
                                 </div>
@@ -1539,23 +1540,9 @@
                             </div>
                             <div class="card-body text-center">
                                 <div class="label-preview" id="labelPreview">
-                                    <div class="preview-label medium-label">
-                                        <div class="label-header">
-                                            <strong>SAMPLE ASSET</strong>
-                                        </div>
-                                        <div class="label-content">
-                                            <div class="asset-tag" id="previewAssetTag">BETTEX-0001</div>
-                                            <div class="asset-info">
-                                                <small id="previewAssetType">Type: Laptop</small><br>
-                                                <small id="previewAssetBrand">Brand: Dell</small><br>
-                                                <small id="previewAssetModel">Model: XPS 13</small><br>
-                                                <small id="previewAssetCompany">Company: BETTEX</small>
-                                            </div>
-                                        </div>
-                                        <div class="label-codes">
-                                            <div class="qr-placeholder">QR</div>
-                                            <div class="barcode-placeholder">|||||||||||</div>
-                                        </div>
+                                    <div class="preview-label simple-label">
+                                        <div class="simple-qr-placeholder" style="width: 120px; height: 120px; border: 2px dashed #ccc; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #999;">QR</div>
+                                        <div class="simple-asset-tag" style="text-align: center; font-weight: bold; font-size: 16px; margin-top: 10px;" id="previewAssetTag">BETTEX-0001</div>
                                     </div>
                                 </div>
                                 <p class="text-muted mt-2">
@@ -2247,15 +2234,39 @@
         const includeQR = $('#includeQR').is(':checked');
         const includeBarcode = $('#includeBarcode').is(':checked');
 
-        const previewLabel = $('#labelPreview .preview-label');
-        previewLabel.removeClass('small-label medium-label large-label');
-        previewLabel.addClass(`${labelSize}-label`);
+        const labelPreview = $('#labelPreview');
 
-        const qrPlaceholder = previewLabel.find('.qr-placeholder');
-        const barcodePlaceholder = previewLabel.find('.barcode-placeholder');
-
-        qrPlaceholder.toggle(includeQR);
-        barcodePlaceholder.toggle(includeBarcode);
+        if (labelSize === 'simple') {
+            // Show simple label preview (just QR + asset tag)
+            labelPreview.html(`
+                <div class="preview-label simple-label">
+                    <div class="simple-qr-placeholder" style="width: 120px; height: 120px; border: 2px dashed #ccc; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #999;">QR</div>
+                    <div class="simple-asset-tag" style="text-align: center; font-weight: bold; font-size: 16px; margin-top: 10px;">BETTEX-0001</div>
+                </div>
+            `);
+        } else {
+            // Show detailed label preview
+            labelPreview.html(`
+                <div class="preview-label ${labelSize}-label">
+                    <div class="label-header">
+                        <strong>SAMPLE ASSET</strong>
+                    </div>
+                    <div class="label-content">
+                        <div class="asset-tag">BETTEX-0001</div>
+                        <div class="asset-info">
+                            <small>Type: Laptop</small><br>
+                            <small>Brand: Dell</small><br>
+                            <small>Model: XPS 13</small><br>
+                            <small>Company: BETTEX</small>
+                        </div>
+                    </div>
+                    <div class="label-codes">
+                        ${includeQR ? '<div class="qr-placeholder">QR</div>' : ''}
+                        ${includeBarcode ? '<div class="barcode-placeholder">|||||||||||</div>' : ''}
+                    </div>
+                </div>
+            `);
+        }
     }
 
     function previewLabels() {
@@ -2281,6 +2292,31 @@
                 body { font-family: Arial, sans-serif; padding: 20px; }
                 .preview-container { display: flex; flex-wrap: wrap; gap: 10px; }
                 .preview-label { border: 2px solid #000; padding: 8px; background: white; display: flex; flex-direction: column; justify-content: space-between; }
+                /* Simple Label Styles */
+                .label-simple {
+                    width: 200px;
+                    height: 200px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }
+                .simple-qr-code {
+                    width: 130px;
+                    height: 130px;
+                    margin-bottom: 10px;
+                }
+                .simple-qr-code img, .simple-qr-code canvas {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+                .simple-asset-tag {
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 14px;
+                }
+                /* Detailed Label Styles */
                 .label-small { width: 160px; height: 80px; font-size: 8px; }
                 .label-medium { width: 240px; height: 120px; font-size: 10px; }
                 .label-large { width: 320px; height: 160px; font-size: 12px; }
@@ -2300,21 +2336,32 @@
     `;
 
         selectedAssets.forEach((asset, index) => {
-            previewHtml += `
-            <div class="preview-label label-${labelSize}">
-                <div class="label-header">${asset.company || 'COMPANY'}</div>
-                <div class="label-content">
-                    <div class="asset-tag">${asset.tag}</div>
-                    <div><small>${asset.type || ''}</small></div>
-                    <div><small>${asset.brand || ''}</small></div>
-                    ${additionalText ? `<div><small>${additionalText}</small></div>` : ''}
+            if (labelSize === 'simple') {
+                // Simple label preview
+                previewHtml += `
+                <div class="preview-label label-simple">
+                    <div class="simple-qr-code" id="preview-qr-${index}"></div>
+                    <div class="simple-asset-tag">${asset.tag}</div>
                 </div>
-                <div class="label-footer">
-                    ${includeQR ? `<div class="qr-code" id="preview-qr-${index}"></div>` : ''}
-                    ${includeBarcode ? `<div class="barcode-container"><svg id="preview-barcode-${index}"></svg></div>` : ''}
+                `;
+            } else {
+                // Detailed label preview
+                previewHtml += `
+                <div class="preview-label label-${labelSize}">
+                    <div class="label-header">${asset.company || 'COMPANY'}</div>
+                    <div class="label-content">
+                        <div class="asset-tag">${asset.tag}</div>
+                        <div><small>${asset.type || ''}</small></div>
+                        <div><small>${asset.brand || ''}</small></div>
+                        ${additionalText ? `<div><small>${additionalText}</small></div>` : ''}
+                    </div>
+                    <div class="label-footer">
+                        ${includeQR ? `<div class="qr-code" id="preview-qr-${index}"></div>` : ''}
+                        ${includeBarcode ? `<div class="barcode-container"><svg id="preview-barcode-${index}"></svg></div>` : ''}
+                    </div>
                 </div>
-            </div>
-        `;
+                `;
+            }
         });
 
         previewHtml += `
@@ -2325,35 +2372,48 @@
             <script>
                 window.onload = function() {
                     const assets = ${JSON.stringify(selectedAssets)};
+                    const labelSize = '${labelSize}';
                     const includeQR = ${includeQR};
                     const includeBarcode = ${includeBarcode};
 
                     assets.forEach((asset, index) => {
-                        // Generate QR Code
-                        if (includeQR) {
+                        if (labelSize === 'simple') {
+                            // Generate QR Code for simple label (always included)
                             const qrElement = document.getElementById('preview-qr-' + index);
                             if (qrElement && typeof QRCode !== 'undefined') {
                                 new QRCode(qrElement, {
                                     text: asset.tag || '',
-                                    width: 100,
-                                    height: 100
+                                    width: 150,
+                                    height: 150
                                 });
                             }
-                        }
-
-                        // Generate Barcode
-                        if (includeBarcode) {
-                            const barcodeElement = document.getElementById('preview-barcode-' + index);
-                            if (barcodeElement && typeof JsBarcode !== 'undefined') {
-                                try {
-                                    JsBarcode(barcodeElement, asset.tag || '', {
-                                        format: 'CODE128',
-                                        width: 2,
-                                        height: 40,
-                                        displayValue: false
+                        } else {
+                            // Generate QR Code for detailed label
+                            if (includeQR) {
+                                const qrElement = document.getElementById('preview-qr-' + index);
+                                if (qrElement && typeof QRCode !== 'undefined') {
+                                    new QRCode(qrElement, {
+                                        text: asset.tag || '',
+                                        width: 100,
+                                        height: 100
                                     });
-                                } catch (e) {
-                                    console.error('Barcode generation error:', e);
+                                }
+                            }
+
+                            // Generate Barcode
+                            if (includeBarcode) {
+                                const barcodeElement = document.getElementById('preview-barcode-' + index);
+                                if (barcodeElement && typeof JsBarcode !== 'undefined') {
+                                    try {
+                                        JsBarcode(barcodeElement, asset.tag || '', {
+                                            format: 'CODE128',
+                                            width: 2,
+                                            height: 40,
+                                            displayValue: false
+                                        });
+                                    } catch (e) {
+                                        console.error('Barcode generation error:', e);
+                                    }
                                 }
                             }
                         }
@@ -2406,6 +2466,33 @@
                 flex-direction: column;
                 justify-content: space-between;
             }
+            /* Simple Label Styles */
+            .label-simple {
+                width: 50mm;
+                height: 50mm;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 5mm;
+                border: 2px solid #000;
+            }
+            .simple-qr-code {
+                width: 35mm;
+                height: 35mm;
+                margin-bottom: 3mm;
+            }
+            .simple-qr-code img, .simple-qr-code canvas {
+                width: 100% !important;
+                height: 100% !important;
+            }
+            .simple-asset-tag {
+                text-align: center;
+                font-weight: bold;
+                font-size: 12pt;
+                word-wrap: break-word;
+            }
+            /* Detailed Label Styles */
             .label-small { width: 50mm; height: 25mm; font-size: 6px; }
             .label-medium { width: 76mm; height: 38mm; font-size: 8px; }
             .label-large { width: 100mm; height: 50mm; font-size: 10px; }
@@ -2433,19 +2520,29 @@
         selectedAssets.forEach((asset, assetIndex) => {
             for (let copy = 0; copy < copies; copy++) {
                 const currentIndex = labelIndex++;
-                printHtml += `<div class="print-label label-${labelSize}">
-                    <div class="label-header">${(asset.company || 'COMPANY').substring(0, 20)}</div>
-                    <div class="label-content">
-                        <div class="asset-tag">${asset.tag}</div>
-                        <div><small>${asset.type || ''}</small></div>
-                        <div><small>${asset.brand || ''}</small></div>
-                        ${additionalText ? '<div><small>' + additionalText.substring(0, 30) + '</small></div>' : ''}
-                    </div>
-                    <div class="label-footer">
-                        ${includeQR ? `<div class="qr-code" id="qr-${currentIndex}"></div>` : ''}
-                        ${includeBarcode ? `<div class="barcode-container"><svg id="barcode-${currentIndex}"></svg></div>` : ''}
-                    </div>
-                </div>`;
+
+                if (labelSize === 'simple') {
+                    // Simple label: Just QR code + asset tag
+                    printHtml += `<div class="print-label label-simple">
+                        <div class="simple-qr-code" id="qr-${currentIndex}"></div>
+                        <div class="simple-asset-tag">${asset.tag}</div>
+                    </div>`;
+                } else {
+                    // Detailed label with all information
+                    printHtml += `<div class="print-label label-${labelSize}">
+                        <div class="label-header">${(asset.company || 'COMPANY').substring(0, 20)}</div>
+                        <div class="label-content">
+                            <div class="asset-tag">${asset.tag}</div>
+                            <div><small>${asset.type || ''}</small></div>
+                            <div><small>${asset.brand || ''}</small></div>
+                            ${additionalText ? '<div><small>' + additionalText.substring(0, 30) + '</small></div>' : ''}
+                        </div>
+                        <div class="label-footer">
+                            ${includeQR ? `<div class="qr-code" id="qr-${currentIndex}"></div>` : ''}
+                            ${includeBarcode ? `<div class="barcode-container"><svg id="barcode-${currentIndex}"></svg></div>` : ''}
+                        </div>
+                    </div>`;
+                }
             }
         });
 
@@ -2455,6 +2552,7 @@
             window.onload = function() {
                 const assets = ${JSON.stringify(selectedAssets)};
                 const copies = ${copies};
+                const labelSize = '${labelSize}';
                 const includeQR = ${includeQR};
                 const includeBarcode = ${includeBarcode};
 
@@ -2463,31 +2561,43 @@
                     for (let copy = 0; copy < copies; copy++) {
                         const currentIndex = labelIndex++;
 
-                        // Generate QR Code
-                        if (includeQR) {
+                        if (labelSize === 'simple') {
+                            // Generate QR Code for simple label (always included)
                             const qrElement = document.getElementById('qr-' + currentIndex);
                             if (qrElement && typeof QRCode !== 'undefined') {
                                 new QRCode(qrElement, {
                                     text: asset.tag || '',
-                                    width: 100,
-                                    height: 100
+                                    width: 200,
+                                    height: 200
                                 });
                             }
-                        }
-
-                        // Generate Barcode
-                        if (includeBarcode) {
-                            const barcodeElement = document.getElementById('barcode-' + currentIndex);
-                            if (barcodeElement && typeof JsBarcode !== 'undefined') {
-                                try {
-                                    JsBarcode(barcodeElement, asset.tag || '', {
-                                        format: 'CODE128',
-                                        width: 1,
-                                        height: 30,
-                                        displayValue: false
+                        } else {
+                            // Generate QR Code for detailed label
+                            if (includeQR) {
+                                const qrElement = document.getElementById('qr-' + currentIndex);
+                                if (qrElement && typeof QRCode !== 'undefined') {
+                                    new QRCode(qrElement, {
+                                        text: asset.tag || '',
+                                        width: 100,
+                                        height: 100
                                     });
-                                } catch (e) {
-                                    console.error('Barcode generation error:', e);
+                                }
+                            }
+
+                            // Generate Barcode
+                            if (includeBarcode) {
+                                const barcodeElement = document.getElementById('barcode-' + currentIndex);
+                                if (barcodeElement && typeof JsBarcode !== 'undefined') {
+                                    try {
+                                        JsBarcode(barcodeElement, asset.tag || '', {
+                                            format: 'CODE128',
+                                            width: 1,
+                                            height: 30,
+                                            displayValue: false
+                                        });
+                                    } catch (e) {
+                                        console.error('Barcode generation error:', e);
+                                    }
                                 }
                             }
                         }
