@@ -2314,7 +2314,7 @@
                 .simple-asset-tag {
                     text-align: center;
                     font-weight: bold;
-                    font-size: 14px;
+                    font-size: 20px;
                 }
                 /* Detailed Label Styles */
                 .label-small { width: 160px; height: 80px; font-size: 8px; }
@@ -2465,7 +2465,7 @@ window.onload = function () {
             body { font-family: Arial, sans-serif; padding: 10px; }
             .print-container { display: flex; flex-wrap: wrap; }
             .print-label {
-                border: 2px solid #000;
+                
                 padding: 4px;
                 margin: 2mm;
                 background: white;
@@ -2482,7 +2482,7 @@ window.onload = function () {
                 align-items: center;
                 justify-content: center;
                 padding: 5mm;
-                border: 2px solid #000;
+                
             }
             .simple-qr-code {
                 width: 35mm;
@@ -2567,14 +2567,18 @@ window.onload = function () {
                     for (let copy = 0; copy < copies; copy++) {
                         const currentIndex = labelIndex++;
 
+                         // 🔗 Build QR URL
+            const qrUrl = 'https://asset.bettex.com/public/store/qr_code_view/' + asset.id;
+
                         if (labelSize === 'simple') {
                             // Generate QR Code for simple label (always included)
                             const qrElement = document.getElementById('qr-' + currentIndex);
                             if (qrElement && typeof QRCode !== 'undefined') {
                                 new QRCode(qrElement, {
-                                    text: asset.tag || '',
+                                    text: qrUrl,
                                     width: 200,
-                                    height: 200
+                                    height: 200, 
+                                    margin: 0,
                                 });
                             }
                         } else {
@@ -2583,9 +2587,11 @@ window.onload = function () {
                                 const qrElement = document.getElementById('qr-' + currentIndex);
                                 if (qrElement && typeof QRCode !== 'undefined') {
                                     new QRCode(qrElement, {
-                                        text: asset.tag || '',
+                                        text: qrUrl,
                                         width: 100,
-                                        height: 100
+                                        height: 100,
+                                    margin: 0,
+
                                     });
                                 }
                             }
