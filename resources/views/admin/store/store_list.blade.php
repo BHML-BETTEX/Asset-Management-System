@@ -2496,7 +2496,7 @@ window.onload = function () {
             .simple-asset-tag {
                 text-align: center;
                 font-weight: bold;
-                font-size: 12pt;
+                font-size: 14pt;
                 word-wrap: break-word;
             }
             /* Detailed Label Styles */
