@@ -2461,17 +2461,18 @@ window.onload = function () {
                 body { margin: 0; }
                 .print-label { page-break-inside: avoid; }
                 .no-print { display: none; }
+                
             }
             body { font-family: Arial, sans-serif; padding: 10px; }
             .print-container { display: flex; flex-wrap: wrap; }
             .print-label {
-                
                 padding: 4px;
                 margin: 2mm;
                 background: white;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
+                justify-content: left;
+                align-items: left;
             }
             /* Simple Label Styles */
             .label-simple {
@@ -2482,12 +2483,11 @@ window.onload = function () {
                 align-items: center;
                 justify-content: center;
                 padding: 5mm;
-                
             }
             .simple-qr-code {
                 width: 35mm;
                 height: 35mm;
-                margin-bottom: 3mm;
+                margin-right: 23mm;
             }
             .simple-qr-code img, .simple-qr-code canvas {
                 width: 100% !important;
@@ -2495,9 +2495,9 @@ window.onload = function () {
             }
             .simple-asset-tag {
                 text-align: center;
-                font-weight: bold;
-                font-size: 14pt;
-                word-wrap: break-word;
+                font-size: 12pt;
+                margin-right: 22mm;
+                margin-bottom: 2mm;
             }
             /* Detailed Label Styles */
             .label-small { width: 50mm; height: 25mm; font-size: 6px; }
