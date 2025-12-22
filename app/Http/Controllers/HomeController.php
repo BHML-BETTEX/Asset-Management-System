@@ -26,8 +26,16 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+    // Store list with optional filter
+    $query = Store::query();
+
+    if ($request->filled('asset_type')) {
+        $query->where('asset_type', $request->asset_type);
+    }
+
+    $stores = $query->get();
         $stores = Store::all();
         $desktops = DB::select("SELECT * FROM stores WHERE asset_type = 2");
         $laptops = DB::select("SELECT * FROM stores WHERE asset_type = 1");
