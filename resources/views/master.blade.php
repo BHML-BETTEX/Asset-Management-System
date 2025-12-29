@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -39,7 +41,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-</head>
+    <style>
+.navbar-profile-photo {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+    </style>
+    
+    
+    </head>
 
 <body class="nav-md">
     <div class="container body">
@@ -69,17 +82,22 @@
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('home') }}"><i class="fa fa-home"></i>Dashboard</a></li>
 
-                                <li><a><i class="fa fa-tasks"></i>Assets<span
-                                            class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-tasks"></i>Assets<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>List All</a></li>
-                                        <li><a href="{{ route('issue_list') }}"><i class="fa fa-circle "></i>Issued List</a></li>
-                                        <li><a href="{{ route('instock_list') }}"><i class="fa fa-circle "></i>Instock List</a></li>
-                                        <li><a href="{{ route('store_delete_list') }}"><i class="fa fa-close"></i>Delete List</a></li>
+                                        <li><a href="{{ route('store') }}"><i class="fa fa-laptop"></i>List All</a>
+                                        </li>
+                                        <li><a href="{{ route('issue_list') }}"><i class="fa fa-circle "></i>Issued
+                                                List</a></li>
+                                        <li><a href="{{ route('instock_list') }}"><i class="fa fa-circle "></i>Instock
+                                                List</a></li>
+                                        <li><a href="{{ route('store_delete_list') }}"><i
+                                                    class="fa fa-close"></i>Delete List</a></li>
 
-                                        <li><a href="{{ route('maintenance_view') }}"><i class="fa fa-gears"></i>Maintenance
+                                        <li><a href="{{ route('maintenance_view') }}"><i
+                                                    class="fa fa-gears"></i>Maintenance
                                                 View</a></li>
-                                        <li><a href="{{ route('maintenance_view') }}"><i class="fa fa-gears"></i>Maintenance
+                                        <li><a href="{{ route('maintenance_view') }}"><i
+                                                    class="fa fa-gears"></i>Maintenance
                                                 List</a></li>
                                         <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
                                                 Product</a></li>
@@ -88,24 +106,30 @@
                                 <li><a><i class="fa fa-exchange"></i>Transfer Management<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{ route('transfer') }}"><i class="fa fa-plus"></i>New Transfer Request</a></li>
-                                        <li><a href="{{ route('transfer_requests') }}"><i class="fa fa-list"></i>All Transfer Requests</a></li>
+                                        <li><a href="{{ route('transfer') }}"><i class="fa fa-plus"></i>New Transfer
+                                                Request</a></li>
+                                        <li><a href="{{ route('transfer_requests') }}"><i class="fa fa-list"></i>All
+                                                Transfer Requests</a></li>
                                         <li>
                                             <a href="{{ route('pending_transfer_requests') }}">
                                                 <i class="fa fa-clock-o"></i>Pending Approvals
                                                 @php
-                                                $pendingCount = \App\Models\TransferRequest::pending()->count();
+                                                    $pendingCount = \App\Models\TransferRequest::pending()->count();
                                                 @endphp
-                                                @if($pendingCount > 0)
-                                                <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">{{ $pendingCount }}</span>
+                                                @if ($pendingCount > 0)
+                                                    <span class="badge badge-danger"
+                                                        style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">{{ $pendingCount }}</span>
                                                 @endif
                                             </a>
                                         </li>
-                                        <li><a href="{{ route('borrowed_items') }}"><i class="fa fa-handshake-o"></i>Borrowed Items</a></li>
-                                        <li><a href="{{ route('transfer_list') }}"><i class="fa fa-history"></i>Transfer History</a></li>
+                                        <li><a href="{{ route('borrowed_items') }}"><i
+                                                    class="fa fa-handshake-o"></i>Borrowed Items</a></li>
+                                        <li><a href="{{ route('transfer_list') }}"><i
+                                                    class="fa fa-history"></i>Transfer History</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database Backup</a>
+                                <li><a href="{{ route('backup.index') }}"><i class="fa fa-database"></i>Database
+                                        Backup</a>
                                 </li>
                                 <li><a><i class="fa fa-tasks"></i>Pasword Management<span
                                             class="fa fa-chevron-down"></span></a>
@@ -119,28 +143,31 @@
                                     </ul>
                                 </li>
 
-                                <li><a><i class="fa fa-tasks"></i>Employee<span
-                                            class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-tasks"></i>Employee<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{ route('employee_list') }}"><i class="fa fa-group"></i>Active Employee</a></li>
-                                        <li><a href="{{ route('inactive_list') }}"><i class="fa fa-user-times"></i>Inactive Employee</a></li>
-                                        <li><a href="{{ route('delete_list') }}"><i class="fa fa-trash"></i>Delete Employee</a></li>
+                                        <li><a href="{{ route('employee_list') }}"><i class="fa fa-group"></i>Active
+                                                Employee</a></li>
+                                        <li><a href="{{ route('inactive_list') }}"><i
+                                                    class="fa fa-user-times"></i>Inactive Employee</a></li>
+                                        <li><a href="{{ route('delete_list') }}"><i class="fa fa-trash"></i>Delete
+                                                Employee</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('users') }}"><i class="fa fa-user"></i>User List</a></li>
-                                <li><a><i class="fa fa-table"></i> Import Data <span class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-table"></i> Import Data <span
+                                            class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{route('employee_import')}}">Employee Data</a></li>
-                                        <li><a href="{{route('store_import')}}">Assets data</a></li>
+                                        <li><a href="{{ route('employee_import') }}">Employee Data</a></li>
+                                        <li><a href="{{ route('store_import') }}">Assets data</a></li>
                                     </ul>
                                 </li>
 
                                 <li><a><i class="fa fa-institution (alias)"></i> Consumable<span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{route('productdetails')}}">Product Details</a></li>
-                                        <li><a href="{{route('consumableIssue')}}">Issue Details</a></li>
-                                        <li><a href="{{route('Inventory')}}">Inventory</a></li>
+                                        <li><a href="{{ route('productdetails') }}">Product Details</a></li>
+                                        <li><a href="{{ route('consumableIssue') }}">Issue Details</a></li>
+                                        <li><a href="{{ route('Inventory') }}">Inventory</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-bar-chart-o"></i> References <span
@@ -158,12 +185,20 @@
                                     </ul>
                                 </li>
 
-                                <li><a><i class="fa fa-clone"></i>Permision<span class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-clone"></i>Permision<span
+                                            class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         @can('role-list')
-                                        <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
+                                            <li><a href="{{ route('roles.index') }}">Manage Role</a></li>
                                         @endcan
                                         <li><a href="fixed_footer.html">Manage Employee</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a><i class="fa fa-gear"></i>Settings<span
+                                            class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('profile') }}">Profile</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -175,7 +210,8 @@
                     <div class="sidebar-footer hidden-small">
                         <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top"
                             onclick="event.preventDefault();
-              document.getElementById('logout-form').submit();" class="dropdown-item ai-icon">
+              document.getElementById('logout-form').submit();"
+                            class="dropdown-item ai-icon">
                             <span class="glyphicon glyphicon-off text-white" aria-hidden="true"></span>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -194,20 +230,33 @@
                     <div class="nav toggle">
                         <a id="menu_toggle"><i class="fa fa-bars"></i></a>
                     </div>
-                    <nav class="nav navbar-nav ">
+                    <nav class="nav navbar-nav">
                         <ul class="navbar-right">
-                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                            <li class="nav-item dropdown" style="padding-left: 15px;">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true"
                                     id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="uploads/employees/default.png" alt="">
+
+                                    @if (Auth::user()->picture && file_exists(public_path('uploads/profile_photos/' . Auth::user()->picture)))
+                                        <img src="{{ asset('uploads/profile_photos/' . Auth::user()->picture) }}"
+                                            alt="Profile Photo" class="navbar-profile-photo">
+                                    @else
+                                        <img src="{{ asset('uploads/profile_photos/default.png') }}"
+                                            alt="Default Profile Photo" class="navbar-profile-photo">
+                                    @endif
                                 </a>
+
                                 <div class="dropdown-menu dropdown-usermenu pull-right"
                                     aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="javascript:;">{{ Auth::user()->name }}
+
+                                    <a class="dropdown-item" href="javascript:;">
+                                        {{ Auth::user()->name }}
                                     </a>
+
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();" class="dropdown-item ai-icon">
+                   document.getElementById('logout-form').submit();"
+                                        class="dropdown-item ai-icon">
+
                                         <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger"
                                             width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -217,8 +266,10 @@
                                             <line x1="21" y1="12" x2="9" y2="12">
                                             </line>
                                         </svg>
+
                                         <span class="ml-2">Logout</span>
                                     </a>
+
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                         class="d-none">
                                         @csrf
@@ -226,34 +277,34 @@
                                 </div>
                             </li>
                         </ul>
-
                     </nav>
+
 
                 </div>
                 @yield('content')
             </div>
 
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <strong>Whoops! Something went wrong.</strong>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+                <div class="alert alert-danger">
+                    <strong>Whoops! Something went wrong.</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
             @endif
 
             <!-- /top navigation -->
@@ -318,118 +369,118 @@
 
     <!-- Session Timeout Handler -->
     @auth
-    <script>
-        $(document).ready(function() {
-            initSessionTimeout();
-        });
-
-        function initSessionTimeout() {
-            const timeout = {
-                {
-                    config('session.timeout', 30)
-                }
-            }; // minutes
-            const warningTime = Math.max(5, Math.floor(timeout * 0.1)); // Warn 10% before timeout (min 5 min)
-            const checkInterval = 60000; // Check every minute
-
-            let lastActivity = Date.now();
-            let warningShown = false;
-            let warningModal = null;
-
-            // Track user activity
-            $(document).on('mousedown keydown scroll touchstart', function() {
-                lastActivity = Date.now();
-                warningShown = false;
-                if (warningModal) {
-                    warningModal.close();
-                    warningModal = null;
-                }
+        <script>
+            $(document).ready(function() {
+                initSessionTimeout();
             });
 
-            // Check session status periodically
-            setInterval(function() {
-                const now = Date.now();
-                const minutesInactive = Math.floor((now - lastActivity) / 60000);
-                const timeoutMinutes = timeout;
-                const timeUntilTimeout = timeoutMinutes - minutesInactive;
+            function initSessionTimeout() {
+                const timeout = {
+                    {
+                        config('session.timeout', 30)
+                    }
+                }; // minutes
+                const warningTime = Math.max(5, Math.floor(timeout * 0.1)); // Warn 10% before timeout (min 5 min)
+                const checkInterval = 60000; // Check every minute
 
-                // Show warning if approaching timeout
-                if (!warningShown && timeUntilTimeout <= warningTime && timeUntilTimeout > 0) {
-                    showSessionWarning(timeUntilTimeout);
-                    warningShown = true;
-                }
+                let lastActivity = Date.now();
+                let warningShown = false;
+                let warningModal = null;
 
-                // Check if session is expired (with small buffer for network delays)
-                if (timeUntilTimeout <= -1) {
-                    handleSessionExpired();
-                }
-            }, checkInterval);
-
-            // Handle AJAX errors (session expired)
-            $(document).ajaxError(function(event, xhr, settings, thrownError) {
-                if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.redirect) {
-                    handleSessionExpired(xhr.responseJSON.message);
-                }
-            });
-        }
-
-        function showSessionWarning(minutesLeft) {
-            warningModal = Swal.fire({
-                title: 'Session Timeout Warning',
-                html: `Your session will expire in <strong>${minutesLeft}</strong> minute(s) due to inactivity.<br><br>Move your mouse or press any key to stay logged in.`,
-                icon: 'warning',
-                timer: (minutesLeft * 60000) - 10000, // Close 10 seconds before actual timeout
-                timerProgressBar: true,
-                showCancelButton: true,
-                confirmButtonText: 'Stay Logged In',
-                cancelButtonText: 'Logout Now',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-            }).then((result) => {
-                if (result.dismiss === Swal.DismissReason.cancel) {
-                    // User chose to logout
-                    window.location.href = '{{ route("logout") }}';
-                } else if (result.isConfirmed) {
-                    // User chose to stay logged in
-                    updateActivity();
-                }
-            });
-        }
-
-        function handleSessionExpired(message = 'Your session has expired due to inactivity.') {
-            Swal.fire({
-                title: 'Session Expired',
-                text: message,
-                icon: 'error',
-                confirmButtonText: 'Login Again',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-            }).then(() => {
-                window.location.href = '{{ route("login") }}';
-            });
-        }
-
-        function updateActivity() {
-            // Send a heartbeat to the server to refresh session
-            $.ajax({
-                url: '{{ route("home") }}',
-                type: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function() {
-                    // Session refreshed successfully
+                // Track user activity
+                $(document).on('mousedown keydown scroll touchstart', function() {
                     lastActivity = Date.now();
                     warningShown = false;
-                },
-                error: function(xhr) {
-                    if (xhr.status === 401) {
+                    if (warningModal) {
+                        warningModal.close();
+                        warningModal = null;
+                    }
+                });
+
+                // Check session status periodically
+                setInterval(function() {
+                    const now = Date.now();
+                    const minutesInactive = Math.floor((now - lastActivity) / 60000);
+                    const timeoutMinutes = timeout;
+                    const timeUntilTimeout = timeoutMinutes - minutesInactive;
+
+                    // Show warning if approaching timeout
+                    if (!warningShown && timeUntilTimeout <= warningTime && timeUntilTimeout > 0) {
+                        showSessionWarning(timeUntilTimeout);
+                        warningShown = true;
+                    }
+
+                    // Check if session is expired (with small buffer for network delays)
+                    if (timeUntilTimeout <= -1) {
                         handleSessionExpired();
                     }
-                }
-            });
-        }
-    </script>
+                }, checkInterval);
+
+                // Handle AJAX errors (session expired)
+                $(document).ajaxError(function(event, xhr, settings, thrownError) {
+                    if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.redirect) {
+                        handleSessionExpired(xhr.responseJSON.message);
+                    }
+                });
+            }
+
+            function showSessionWarning(minutesLeft) {
+                warningModal = Swal.fire({
+                    title: 'Session Timeout Warning',
+                    html: `Your session will expire in <strong>${minutesLeft}</strong> minute(s) due to inactivity.<br><br>Move your mouse or press any key to stay logged in.`,
+                    icon: 'warning',
+                    timer: (minutesLeft * 60000) - 10000, // Close 10 seconds before actual timeout
+                    timerProgressBar: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Stay Logged In',
+                    cancelButtonText: 'Logout Now',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        // User chose to logout
+                        window.location.href = '{{ route('logout') }}';
+                    } else if (result.isConfirmed) {
+                        // User chose to stay logged in
+                        updateActivity();
+                    }
+                });
+            }
+
+            function handleSessionExpired(message = 'Your session has expired due to inactivity.') {
+                Swal.fire({
+                    title: 'Session Expired',
+                    text: message,
+                    icon: 'error',
+                    confirmButtonText: 'Login Again',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then(() => {
+                    window.location.href = '{{ route('login') }}';
+                });
+            }
+
+            function updateActivity() {
+                // Send a heartbeat to the server to refresh session
+                $.ajax({
+                    url: '{{ route('home') }}',
+                    type: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function() {
+                        // Session refreshed successfully
+                        lastActivity = Date.now();
+                        warningShown = false;
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 401) {
+                            handleSessionExpired();
+                        }
+                    }
+                });
+            }
+        </script>
     @endauth
 
     @stack('script')

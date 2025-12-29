@@ -3,484 +3,251 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 use Spatie\Permission\Models\Role;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UserExport;
 
-
-
-
 class UserController extends Controller
 {
-    function users(Request $request)
+    /* ===================== USERS LIST ===================== */
+    public function users(Request $request)
     {
         $query = User::query();
 
-        // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('email', 'like', "%{$request->search}%");
             });
         }
 
         $users = $query->latest()->get();
         $total_user = User::count();
+
         return view('admin.users.users_list', compact('users', 'total_user'));
     }
 
-    function create()
+    /* ===================== CREATE USER ===================== */
+    public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('admin.users.create', [
-            'roles' => $roles,
+        $roles = Role::pluck('name', 'name')->all();
+        return view('admin.users.create', compact('roles'));
+    }
+
+    public function users_store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'role'     => 'required'
         ]);
+
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $user->syncRoles($request->role);
+        });
+
+        return redirect()->route('users');
     }
 
-    function users_store(Request $request)
+    /* ===================== DELETE USER ===================== */
+    public function users_delete($user_id)
     {
-        
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8', // Ensure password confirmation is checked
-            'role' => 'required'
+        $user = User::findOrFail($user_id);
+
+        if ($user->picture && file_exists(public_path('uploads/profile_photos/' . $user->picture))) {
+            unlink(public_path('uploads/profile_photos/' . $user->picture));
+        }
+
+        $user->delete();
+
+        return response()->json(['success' => true, 'message' => 'User deleted successfully']);
+    }
+
+    /* ===================== EDIT USER ===================== */
+    public function users_edit($user_id)
+    {
+        $user  = User::with('roles')->findOrFail($user_id);
+        $roles = Role::pluck('name', 'name')->all();
+
+        $html = view('admin.users.partials.user_edit', compact('user', 'roles'))->render();
+        return response()->json(['success' => true, 'html' => $html]);
+    }
+
+    public function users_update(Request $request, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $user_id,
+            'password' => 'nullable|min:8',
+            'role'     => 'required',
         ]);
-    
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
+
+        $data = [
+            'name'  => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
-        
-        try {
-            DB::transaction(function () use($request) {
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                ]);
-                // dd($request->role);
-                $user->syncRoles($request->role); 
-            });
-            return redirect()->route("users");
-            //code...
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+
+        DB::transaction(function () use ($user, $data, $request) {
+            $user->update($data);
+            $user->syncRoles($request->role);
+        });
+
+        return response()->json(['success' => true, 'message' => 'User updated successfully']);
     }
 
-    function users_delete($user_id)
-    {
-        try {
-            $user = User::find($user_id);
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            // Delete profile photo if exists
-            if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
-                unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
-            }
-
-            $user->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User deleted successfully!'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error deleting user: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    function users_view($user_id)
-    {
-        try {
-            $user = User::with('roles')->find($user_id);
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $html = view('admin.users.partials.user_view', compact('user'))->render();
-
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error loading user details.'
-            ], 500);
-        }
-    }
-
-    function users_edit($user_id)
-    {
-        try {
-            $user = User::with('roles')->find($user_id);
-            $roles = Role::pluck('name','name')->all();
-
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $html = view('admin.users.partials.user_edit', compact('user', 'roles'))->render();
-
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error loading edit form.'
-            ], 500);
-        }
-    }
-
-    function users_update(Request $request, $user_id)
-    {
-        try {
-            $user = User::find($user_id);
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email,' . $user_id,
-                'password' => 'nullable|min:8',
-                'role' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            DB::transaction(function () use($request, $user) {
-                $updateData = [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                ];
-
-                // Only update password if provided
-                if ($request->filled('password')) {
-                    $updateData['password'] = Hash::make($request->password);
-                }
-
-                $user->update($updateData);
-                $user->syncRoles($request->role);
-            });
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User updated successfully!'
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating user: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    function users_profile_edit($user_id)
-    {
-        try {
-            $user = User::with('roles')->find($user_id);
-
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $html = view('admin.users.partials.profile_edit', compact('user'))->render();
-
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error loading profile edit form.'
-            ], 500);
-        }
-    }
-
-    function users_profile_update(Request $request, $user_id)
-    {
-        try {
-            $user = User::find($user_id);
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|min:2',
-                'email' => 'required|email|unique:users,email,' . $user_id,
-                'phone' => 'nullable|string|max:20',
-                'department' => 'nullable|string|max:100',
-                'position' => 'nullable|string|max:100',
-                'location' => 'nullable|string|max:100',
-                'bio' => 'nullable|string|max:500',
-                'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            $updateData = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'department' => $request->department,
-                'position' => $request->position,
-                'location' => $request->location,
-                'bio' => $request->bio,
-            ];
-
-            // Handle profile photo upload
-            if ($request->hasFile('profile_photo')) {
-                // Delete old profile photo if exists
-                if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
-                    unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
-                }
-
-                $file = $request->file('profile_photo');
-                $filename = 'profile_' . $user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-                // Create directory if not exists
-                $uploadPath = public_path('uploads/profile_photos');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-
-                $file->move($uploadPath, $filename);
-                $updateData['profile_photo'] = $filename;
-            }
-
-            $user->update($updateData);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Profile updated successfully!'
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating profile: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    function users_password_edit($user_id)
-    {
-        try {
-            $user = User::find($user_id);
-
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $html = view('admin.users.partials.password_change', compact('user'))->render();
-
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error loading password change form.'
-            ], 500);
-        }
-    }
-
-    function users_password_update(Request $request, $user_id)
-    {
-        try {
-            $user = User::find($user_id);
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found.'
-                ], 404);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'current_password' => 'required',
-                'new_password' => ['required', 'min:8', 'different:current_password'],
-                'new_password_confirmation' => 'required|same:new_password',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            // Verify current password
-            if (!Hash::check($request->current_password, $user->password)) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => ['current_password' => ['Current password is incorrect']]
-                ], 422);
-            }
-
-            // Update password
-            $user->update([
-                'password' => Hash::make($request->new_password),
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Password changed successfully!'
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error changing password: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    function profile()
+    /* ===================== PROFILE VIEW ===================== */
+    public function profile()
     {
         return view('admin.users.profile');
     }
 
-    function name_change(Request $request)
+    /* ===================== PROFILE UPDATE (AJAX) ===================== */
+    public function users_profile_update(Request $request, $user_id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|min:2',
+        $user = User::findOrFail($user_id);
+
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|string|min:2|max:255',
+            'email'         => 'nullable|email|unique:users,email,' . $user_id,
+            'phone'         => 'nullable|string|max:20',
+            'department'    => 'nullable|string|max:100',
+            'position'      => 'nullable|string|max:100',
+            'location'      => 'nullable|string|max:100',
+            'bio'           => 'nullable|string|max:500',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        User::find(Auth::id())->update([
-            'name' => $request->name,
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $data = [
+            'name'       => $request->name,
+            'phone'      => $request->phone,
+            'department' => $request->department,
+            'position'   => $request->position,
+            'location'   => $request->location,
+            'bio'        => $request->bio,
+        ];
+
+        if ($request->filled('email')) {
+            $data['email'] = $request->email;
+        }
+
+        /* === PHOTO UPLOAD === */
+        if ($request->hasFile('profile_photo')) {
+
+            if ($user->picture && file_exists(public_path('uploads/profile_photos/' . $user->picture))) {
+                unlink(public_path('uploads/profile_photos/' . $user->picture));
+            }
+
+            $file = $request->file('profile_photo');
+            $filename = 'profile_' . $user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('uploads/profile_photos'), $filename);
+            $data['picture'] = $filename;
+        }
+
+        $user->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully'
         ]);
-        return back()->with('name', 'User Name Updated Successfully');
     }
 
-    function password_change(Request $request)
+    /* ===================== NAME CHANGE (NORMAL FORM) ===================== */
+    public function name_change(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|min:2|max:255'
+        ]);
+
+        Auth::user()->update([
+            'name' => $request->name
+        ]);
+
+        return back()->with('success', 'Name updated successfully');
+    }
+
+    /* ===================== PASSWORD CHANGE ===================== */
+    public function password_change(Request $request)
     {
         $request->validate([
             'old_password' => 'required',
-            'new_password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
-            'confirm_password' => 'required|same:new_password',
+            'new_password' => [
+                'required',
+                Password::min(8)->letters()->mixedCase()->numbers()->symbols()
+            ],
+            'confirm_password' => 'required|same:new_password'
         ]);
 
         if (!Hash::check($request->old_password, Auth::user()->password)) {
-            return back()->with('wrong', 'Current password is incorrect!');
+            return back()->with('wrong', 'Current password is incorrect');
         }
 
-        User::find(Auth::id())->update([
-            'password' => bcrypt($request->new_password),
+        Auth::user()->update([
+            'password' => Hash::make($request->new_password)
         ]);
 
-        return back()->with('success', 'Password has been updated successfully!');
+        return back()->with('success', 'Password updated successfully');
     }
 
-    function profile_photo_change(Request $request)
+    /* ===================== PHOTO CHANGE ONLY ===================== */
+    public function profile_photo_change(Request $request)
     {
         $request->validate([
-            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $user = User::find(Auth::id());
+        $user = Auth::user();
 
-        // Delete old profile photo if exists
-        if ($user->profile_photo && file_exists(public_path('uploads/profile_photos/' . $user->profile_photo))) {
-            unlink(public_path('uploads/profile_photos/' . $user->profile_photo));
+        if ($user->picture && file_exists(public_path('uploads/profile_photos/' . $user->picture))) {
+            unlink(public_path('uploads/profile_photos/' . $user->picture));
         }
 
-        // Upload new profile photo
-        if ($request->hasFile('profile_photo')) {
-            $file = $request->file('profile_photo');
-            $filename = 'profile_' . Auth::id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file = $request->file('profile_photo');
+        $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/profile_photos'), $filename);
 
-            // Create directory if not exists
-            $uploadPath = public_path('uploads/profile_photos');
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
+        $user->update(['picture' => $filename]);
 
-            $file->move($uploadPath, $filename);
-
-            $user->update([
-                'profile_photo' => $filename,
-            ]);
-        }
-
-        return back()->with('photo_success', 'Profile photo updated successfully!');
+        return back()->with('photo_success', 'Profile photo updated');
     }
 
-    public function export(Request $request) 
+    /* ===================== EXPORT USERS ===================== */
+    public function export(Request $request)
     {
-        if($request->type == "xlsx"){
-            $extension = "xlsx";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
-        }
-        elseif($request->type == "csv"){
-            $extension = "csv";
-            $exportFormat = \Maatwebsite\Excel\Excel::CSV;
-        }
-        elseif($request->type == "xls"){
-            $extension = "xls";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLS;
-        }
-        else{
-            $extension = "xlsx";
-            $exportFormat = \Maatwebsite\Excel\Excel::XLSX;
+        $type = $request->type ?? 'xlsx';
 
-        }
-        
+        $format = match ($type) {
+            'csv'  => \Maatwebsite\Excel\Excel::CSV,
+            'xls'  => \Maatwebsite\Excel\Excel::XLS,
+            default => \Maatwebsite\Excel\Excel::XLSX,
+        };
 
-        $Filename = "users.$extension";
-        return Excel::download(new UserExport, $Filename, $exportFormat);
+        return Excel::download(new UserExport, "users.$type", $format);
     }
 }

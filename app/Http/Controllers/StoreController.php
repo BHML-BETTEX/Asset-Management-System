@@ -1322,17 +1322,20 @@ class StoreController extends Controller
 
 
     //wastproduct start..
-    function wastproduct()
-    {
-        $issued_products = Store::where('checkstatus', 'INSTOCK')->get();
-        return view('admin.store.wastproduct.wastproduct', [
-            'issued_products' => $issued_products,
-        ]);
-    }
+        public function wastproduct()
+        {
+            $issued_products = Store::where('checkstatus', 'INSTOCK')->get();
+
+            $companies = Company::pluck('company', 'id');
+
+            return view('admin.store.wastproduct.wastproduct', compact(
+                'issued_products',
+                'companies'
+            ));
+        }
 
     function wastproduct_store(Request $request)
     {
-
         WastProduct::insertGetId([
             'asset_tag' => $request->asset_tag,
             'asset_type' => $request->asset_type,
@@ -1345,10 +1348,8 @@ class StoreController extends Controller
             'others' => $request->others,
             'others1' => $request->others1,
             'created_at' => Carbon::now(),
-
         ]);
-        return back();
-        //return redirect()->route('admin.store.wastproduct.wastproduct');
+        return redirect()->back()->with('success_wast', 'Waste product saved successfully.');
     }
 
     public function wastproduct_list(Request $request)

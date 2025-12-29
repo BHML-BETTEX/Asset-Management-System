@@ -47,6 +47,7 @@ Route::post('/name/change', [UserController::class, 'name_change'])->name('name.
 Route::post('/password/change', [UserController::class, 'password_change'])->name('password.change');
 Route::post('/profile/photo/change', [UserController::class, 'profile_photo_change'])->name('profile.photo.change');
 
+
 // AJAX User Management Routes
 Route::get('/users/{user_id}/view', [UserController::class, 'users_view'])->name('users.view');
 Route::get('/users/{user_id}/edit', [UserController::class, 'users_edit'])->name('users.edit');
