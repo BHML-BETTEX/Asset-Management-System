@@ -1100,7 +1100,7 @@ class StoreController extends Controller
             'created_at' => Carbon::now(),
 
         ]);
-        return redirect()->route('maintenance_list');
+        return back()->with('maintenance_success', 'Maintenance record added successfully!');
     }
 
     // maintenance view show all data start

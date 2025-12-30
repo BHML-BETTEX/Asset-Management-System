@@ -95,9 +95,6 @@
 
                                         <li><a href="{{ route('maintenance_view') }}"><i
                                                     class="fa fa-gears"></i>Maintenance
-                                                View</a></li>
-                                        <li><a href="{{ route('maintenance_view') }}"><i
-                                                    class="fa fa-gears"></i>Maintenance
                                                 List</a></li>
                                         <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
                                                 Product</a></li>
