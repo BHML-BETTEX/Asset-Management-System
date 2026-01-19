@@ -13,6 +13,11 @@ class Store extends Model
         return $this->belongsTo(ProductType::class, 'asset_type');
     }
 
+    public function employee()
+{
+    return $this->belongsTo(Employee::class, 'employee_id', 'id');
+}
+
     function rel_to_brand(){
         return $this->belongsTo(Brand::class, 'brand_id');
     }

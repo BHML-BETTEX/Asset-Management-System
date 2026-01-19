@@ -1646,6 +1646,7 @@ class StoreController extends Controller
 
     public function pending_transfer_requests(Request $request)
     {
+        
         // Get current logged-in user's company ID
         $userCompany = auth()->user()->company_id; // Make sure your users table has this column
 
@@ -1685,6 +1686,7 @@ class StoreController extends Controller
             Transfer::create([
                 'asset_tag' => $transferRequest->asset_tag,
                 'asset_type' => $transferRequest->asset_type,
+                'asset_sl_no' => $transferRequest->asset_sl_no,
                 'model' => $transferRequest->model,
                 'company' => $transferRequest->to_company,
                 'description' => $transferRequest->description,

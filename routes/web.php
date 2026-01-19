@@ -165,7 +165,7 @@ Route::get('/store/QrCode/{stores_id}', [StoreController::class, 'qr_code'])->na
 Route::get('/store/qr_code_view/{stores_id}', [StoreController::class, 'qr_code_view'])->name('qr_code_view');
 Route::get('/store/import', [StoreController::class, 'store_import'])->name('store_import');
 Route::post('/store/importexceldata', [StoreController::class, 'store_importexceldata'])->name('store_importexceldata');
-Route::get('/store/info/{stores_id}', [StoreController::class, 'store_info'])->name('store_info');
+Route::get('/store/info/{store_id}', [StoreController::class, 'store_info'])->name('store_info');
 Route::get('/store/file/{stores_id}', [StoreController::class, 'store_file'])->name('store_file');
 Route::post('/store/savefile', [StoreController::class, 'store_file_save'])->name('store_file_save');
 Route::get('/store/file/delete/{file_id}', [StoreController::class, 'store_file_delete'])->name('store_file_delete');
@@ -189,11 +189,6 @@ Route::get('/transfer/requests/pending', [StoreController::class, 'pending_trans
 Route::post('/transfer/requests/{id}/approve', [StoreController::class, 'approve_transfer_request'])->name('approve_transfer_request');
 Route::post('/transfer/requests/{id}/reject', [StoreController::class, 'reject_transfer_request'])->name('reject_transfer_request');
 Route::get('/transfer/borrowed-items', [StoreController::class, 'borrowed_items'])->name('borrowed_items');
-
-
-
-
-
 
 
 
@@ -224,7 +219,7 @@ Route::post('/wastproduct/update', [StoreController::class, 'wastproduct_update'
 Route::get('/wastproduct/delete/{id}', [StoreController::class, 'wastproduct_delete'])->name('wastproduct_delete');
 Route::get('/wastproduct/export', [StoreController::class, 'wastproduct_export'])->name('wastproduct_export');
 //wastproductend
-
+    
 
 //password
 Route::get('/computer_pass', [PasswordController::class, 'computer_pass'])->name('computer_pass');

@@ -625,11 +625,7 @@ class EmployeeController extends Controller
     }
 
 
-
-
-
-
-    //Employee Consumable Details
+//Employee Consumable Details
     function employee_consumable(Request $request, $emp_id)
     {
         $search = $request->input('search', '');

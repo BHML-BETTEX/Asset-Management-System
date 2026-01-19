@@ -31,7 +31,7 @@
 
         @media print {
             @page {
-                size: 1in 1.5in;
+                size: 1.5in 2rem;
                 margin: 0;
             }
 
@@ -45,11 +45,11 @@
             }
 
             #print-area {
-                width: 1in;
-                height: 1.5in;
+                width: 1.5in;
+                height: 2in;
                 margin: auto;
                 display: flex;
-                margin-bottom: 2px;
+                margin-bottom: 1px;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;

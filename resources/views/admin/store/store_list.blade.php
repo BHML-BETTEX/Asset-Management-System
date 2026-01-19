@@ -2427,16 +2427,17 @@ window.onload = function () {
     assets.forEach((asset, index) => {
 
         // ✅ QR URL
-        const qrText = 'https://asset.bettex.com/public/store/qr_code_view/' + asset.id;
+        const qrText = '' + asset.id;
 
         if (labelSize === 'simple') {
             // SIMPLE LABEL QR
             const qrElement = document.getElementById('preview-qr-' + index);
             if (qrElement && typeof QRCode !== 'undefined') {
-                new QRCode(qrElement, {
-                    text: qrText,
-                    width: 130,
-                    height: 130
+                        new QRCode(qrElement, {
+            text: qrText,
+            width: 220,
+            height: 220,
+            correctLevel: QRCode.CorrectLevel.H
                 });
             }
 
@@ -2623,8 +2624,8 @@ window.onload = function () {
                             if (qrElement && typeof QRCode !== 'undefined') {
                                 new QRCode(qrElement, {
                                     text: qrUrl,
-                                    width: 200,
-                                    height: 200, 
+                                    width: 260,
+                                    height: 260, 
                                     margin: 0,
                                 });
                             }
