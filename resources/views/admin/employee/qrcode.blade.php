@@ -15,11 +15,11 @@
                 ) !!}" alt="QR Code">
             </td>
             <td>
-                <table style="width: 350px; font-size: 10pt; font-family: Arial, sans-serif;" cellpadding="0"
+                <table style="width: 350px; font-size: 10pt; font-family: Calibri, sans-serif;" cellpadding="0"
                     cellspacing="0">
                     <tbody>
                         <tr>
-                            <td style="font-size: 12pt; font-family: Arial, sans-serif; padding-left: 10px;"> <strong>
+                            <td style="font-size: 12pt; font-family: Calibri, sans-serif; padding-left: 10px;"> <strong>
                                     <span
                                         style="text-transform:uppercase; font-size: 12pt; font-family: Arial Black; color:#06A5CC;">
                                         {{ $employee->emp_name }}</span><br>
@@ -32,7 +32,7 @@
                                     <span style="font-family: Calibri, sans-serif; font-size: 10pt; color: #5D6D7E;">
                                         {{ $employee->phone_number }}
                                     </span><br>
-                                    <span style="font-size: 10pt; font-family: Arial, sans-serif; color:#16b0e5">
+                                    <span style="font-size: 10pt; font-family: Calibri, sans-serif; color:#16b0e5">
                                         <strong>
                                             @if ($employee->company == 1)
                                                 <a href="https://bettex.com/">BETTEX INDUSTRIES LTD.</a>
