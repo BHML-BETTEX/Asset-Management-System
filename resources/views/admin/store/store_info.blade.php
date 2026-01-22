@@ -101,7 +101,7 @@
                                     <tr>
                                         <th>CheckStatus</th>
                                         <td class="text-info">
-                                            <a href="{{ route('employee_list') }}"
+                                            <a href="{{ $employee ? route('employee_list', ['emp_id' => $employee['emp_id']]) : '#' }}"
                                                 class="text-info text-decoration-none">
                                                 <b>{{ $stores->checkstatus }}</b>
                                             </a>

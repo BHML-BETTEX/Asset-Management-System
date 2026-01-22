@@ -35,83 +35,87 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
-    public function store(Request $request)
-    {
-        $role = auth()->user()->roles[0];
+public function store(Request $request)
+{
+    $role = auth()->user()->roles[0];
 
-        $search = $request->input('search', '');
-        $productSearch = $request->input('product_search');
-        $companyFilter = $request->input('company_filter'); // Company filter
-        $perPage = $request->input('per_page', 10);
-        $showDeleted = $request->input('show_deleted', false); // Optional: show deleted toggle
+    $search         = $request->input('search');
+    $productSearch  = $request->input('product_search');
+    $assetTag       = $request->input('asset_tag'); // from employee asset click
+    $companyFilter  = $request->input('company_filter');
+    $perPage        = $request->input('per_page', 10);
+    $showDeleted    = $request->input('show_deleted', false);
 
-        // Determine which companies the user can view
-        $companies = [];
-        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
-        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
-        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
-        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
-        
-        // Base query with joins
-        $query = Store::query()
-            ->join('brands', 'brands.id', '=', 'stores.brand_id')
-            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-            ->whereIn('stores.company_id', $companies);
+    // Determine which companies the user can view
+    $companies = [];
+    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-        // Apply company filter
-        if ($companyFilter) {
-            $query->where('stores.company_id', $companyFilter);
-        }
+    // Base query
+    $query = Store::query()
+        ->join('brands', 'brands.id', '=', 'stores.brand_id')
+        ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+        ->whereIn('stores.company_id', $companies);
 
-        // Apply search filters
-        if ($search || $productSearch) {
-            $query->where(function ($q) use ($search, $productSearch) {
-                if ($productSearch) {
-                    $q->where('product_types.id', '=', $productSearch);
-                }
-
-                if ($search) {
-                    $q->where(function ($sq) use ($search) {
-                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
-                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
-                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%");
-                    });
-                }
-            });
-        }
-
-        // Order by newest first
-        $query->orderBy('stores.id', 'desc');
-
-        // Pagination
-        if ($perPage === 'all') {
-            $stores = $query->select('stores.*')->get();
-        } else {
-            $stores = $query->select('stores.*')
-                ->paginate((int)$perPage)
-                ->appends($request->except('page'));
-        }
-
-        return view('admin.store.store_list', [
-            'stores' => $stores,
-            'search' => $search,
-            'perPage' => $perPage,
-            'productSearch' => $productSearch,
-            'companyFilter' => $companyFilter,
-            'showDeleted' => $showDeleted,
-            'all_product_types' => ProductType::all(),
-            'all_departments' => Department::all(),
-            'all_brands' => Brand::all(),
-            'all_SizeMeasurement' => SizeMaseurment::all(),
-            'all_status' => Status::all(),
-            'all_supplier' => Supplier::all(),
-            'all_company' => Company::all(),
-            'employee' => Employee::all(),
-            'all_issue' => Issue::all(),
-        ]);
+    // Company filter
+    if ($companyFilter) {
+        $query->where('stores.company_id', $companyFilter);
     }
+
+    // Product type filter
+    if ($productSearch) {
+        $query->where('product_types.id', $productSearch);
+    }
+
+    // Asset tag filter (from employee asset page)
+    if ($assetTag) {
+        $query->where('stores.asset_tag', $assetTag);
+    }
+
+    // General search
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%")
+                ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%");
+        });
+    }
+
+    // Order newest first
+    $query->orderBy('stores.id', 'desc');
+
+    // Pagination
+    if ($perPage === 'all') {
+        $stores = $query->select('stores.*')->get();
+    } else {
+        $stores = $query->select('stores.*')
+            ->paginate((int) $perPage)
+            ->appends($request->except('page'));
+    }
+
+    return view('admin.store.store_list', [
+        'stores'             => $stores,
+        'search'             => $search,
+        'perPage'            => $perPage,
+        'productSearch'      => $productSearch,
+        'companyFilter'      => $companyFilter,
+        'showDeleted'        => $showDeleted,
+        'all_product_types'  => ProductType::all(),
+        'all_departments'    => Department::all(),
+        'all_brands'         => Brand::all(),
+        'all_SizeMeasurement'=> SizeMaseurment::all(),
+        'all_status'         => Status::all(),
+        'all_supplier'       => Supplier::all(),
+        'all_company'        => Company::all(),
+        'employee'           => Employee::all(),
+        'all_issue'          => Issue::all(),
+    ]);
+}
+
 
     function add_product()
     {
@@ -1480,17 +1484,55 @@ class StoreController extends Controller
 
 
     //store Info
-    function store_info($stores_id)
-    {
-        $stores = Store::with(['rel_to_ProductType', 'rel_to_brand', 'rel_to_SizeMaseurment', 'rel_to_Supplier', 'rel_to_Status', 'rel_to_Company', 'rel_to_Department', 'rel_to_Designation'])->findOrFail($stores_id);
+    public function store_info($stores_id)
+{
+    // Get the store with all relations
+    $stores = Store::with([
+        'rel_to_ProductType', 
+        'rel_to_brand', 
+        'rel_to_SizeMaseurment', 
+        'rel_to_Supplier', 
+        'rel_to_Status', 
+        'rel_to_Company', 
+        'rel_to_Department', 
+        'rel_to_Designation'
+    ])->findOrFail($stores_id);
 
-        $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
-        $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
-        $showDeleted = false; // ✅ default value
+    // Get all issues for this asset
+    $issues = Issue::where('asset_tag', $stores->asset_tag)->get();
 
-        $qrCode = Store::find($stores_id);
-        return view('admin.store.store_info', compact('stores', 'issues', 'maintenances', 'showDeleted', 'qrCode'));
+    // Get maintenances for this asset
+    $maintenances = Maintenance::where('asset_tag', $stores->asset_tag)->get();
+
+    $showDeleted = false; // default
+
+    // 🔹 Get employee info from issues table where return_date is null
+    $employeeFromIssue = Issue::where('asset_tag', $stores->asset_tag)
+                                ->whereNull('return_date')
+                                ->first(); // get the first active issue
+
+    // Optional: if no active issue, it will be null
+    $employee = null;
+    if ($employeeFromIssue) {
+        $employee = [
+            'emp_id' => $employeeFromIssue->emp_id,
+            'emp_name' => $employeeFromIssue->emp_name,
+        ];
     }
+
+    // QR code placeholder (same as your code)
+    $qrCode = $stores;
+
+    return view('admin.store.store_info', compact(
+        'stores',
+        'issues',
+        'maintenances',
+        'showDeleted',
+        'qrCode',
+        'employee' // pass to view
+    ));
+}
+
 
     //store Clone - Show edit page with cloned data
     function store_clone($stores_id)

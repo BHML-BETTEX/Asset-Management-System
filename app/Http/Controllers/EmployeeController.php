@@ -66,93 +66,115 @@ class EmployeeController extends Controller
         }
     }
     //Employee
-    public function employee_list(Request $request)
-    {
-        $role = auth()->user()->roles[0];
-        $search = $request->input('search', '');
-        $perPage = $request->input('per_page', 10);
-        $showAll = $request->input('show_all', false);
+public function employee_list(Request $request)
+{
+    $role = auth()->user()->roles[0];
 
-        // Get filter parameters
-        $departmentFilter = $request->input('department_filter', '');
-        $designationFilter = $request->input('designation_filter', '');
-        $companyFilter = $request->input('company_filter', '');
-        $joinDateFrom = $request->input('join_date_from', '');
-        $joinDateTo = $request->input('join_date_to', '');
-        $hasPicture = $request->input('has_picture', '');
-        $sortBy = $request->input('sort_by', 'emp_id');
+    $search      = $request->input('search');
+    $perPage     = $request->input('per_page', 10);
+    $showAll     = $request->input('show_all', false);
+    $employeeId  = $request->input('emp_id'); // from store info click
 
-        // Get allowed companies based on role
-        $companies = [];
-        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
-        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
-        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
-        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+    // Filters
+    $departmentFilter   = $request->input('department_filter');
+    $designationFilter  = $request->input('designation_filter');
+    $companyFilter      = $request->input('company_filter');
+    $joinDateFrom       = $request->input('join_date_from');
+    $joinDateTo         = $request->input('join_date_to');
+    $hasPicture         = $request->input('has_picture');
+    $sortBy             = $request->input('sort_by', 'emp_id');
 
-        // Base query with filters
-        $query = Employee::whereIn('company', $companies);
+    // Allowed companies by role
+    $companies = [];
+    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
 
-        // Apply filters & search (same logic)
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('emp_id', 'LIKE', "%{$search}%")
-                    ->orWhere('emp_name', 'LIKE', "%{$search}%")
-                    ->orWhere('phone_number', 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%");
-            });
-        }
-        if (!empty($departmentFilter)) $query->where('department_id', $departmentFilter);
-        if (!empty($designationFilter)) $query->where('designation_id', $designationFilter);
-        if (!empty($companyFilter)) $query->where('company', $companyFilter);
-        if (!empty($joinDateFrom)) $query->whereDate('join_date', '>=', $joinDateFrom);
-        if (!empty($joinDateTo)) $query->whereDate('join_date', '<=', $joinDateTo);
-        if ($hasPicture === 'yes') {
-            $query->whereNotNull('picture')->where('picture', '!=', '')->where('picture', '!=', 'default.png');
-        } elseif ($hasPicture === 'no') {
-            $query->where(function ($q) {
-                $q->whereNull('picture')->orWhere('picture', '')->orWhere('picture', 'default.png');
-            });
-        }
+    // Base query
+    $query = Employee::whereIn('company', $companies);
 
-        // Sorting
-        switch ($sortBy) {
-            case 'emp_name':
-                $query->orderBy('emp_name', 'asc');
-                break;
-            case 'join_date':
-                $query->orderBy('join_date', 'desc');
-                break;
-            case 'created_at':
-                $query->orderBy('created_at', 'desc');
-                break;
-            default:
-                $query->orderBy('emp_id', 'asc');
-                break;
-        }
-
-        // 👇 Split into active/inactive
-        $activeEmployees = (clone $query)->where('status', 'Active');
-        $inactiveEmployees = (clone $query)->where('status', 'In-Active');
-
-        if ($showAll || $perPage === 'all') {
-            $employees_active = $activeEmployees->get();
-            $employees_inactive = $inactiveEmployees->get();
-        } else {
-            $employees_active = $activeEmployees->paginate((int)$perPage)->appends($request->all());
-            $employees_inactive = $inactiveEmployees->paginate((int)$perPage, ['*'], 'inactive_page')->appends($request->all());
-        }
-
-        return view('admin.employee.employee_list', [
-            'departments' => Department::all(),
-            'designation' => Designation::all(),
-            'employees_active' => $employees_active,
-            'employees_inactive' => $employees_inactive,
-            'company' => Company::all(),
-            'search' => $search,
-            'perPage' => $perPage,
-            'showAll' => $showAll,
-        ]);
+    // 🔹 Filter by employee ID (from store info page)
+    if ($employeeId) {
+        $query->where('emp_id', $employeeId);
     }
+
+    // 🔹 Search
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('emp_id', 'LIKE', "%{$search}%")
+              ->orWhere('emp_name', 'LIKE', "%{$search}%")
+              ->orWhere('phone_number', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%");
+        });
+    }
+
+    // 🔹 Filters
+    if ($departmentFilter)   $query->where('department_id', $departmentFilter);
+    if ($designationFilter)  $query->where('designation_id', $designationFilter);
+    if ($companyFilter)      $query->where('company', $companyFilter);
+    if ($joinDateFrom)       $query->whereDate('join_date', '>=', $joinDateFrom);
+    if ($joinDateTo)         $query->whereDate('join_date', '<=', $joinDateTo);
+
+    // 🔹 Picture filter
+    if ($hasPicture === 'yes') {
+        $query->whereNotNull('picture')
+              ->where('picture', '!=', '')
+              ->where('picture', '!=', 'default.png');
+    } elseif ($hasPicture === 'no') {
+        $query->where(function ($q) {
+            $q->whereNull('picture')
+              ->orWhere('picture', '')
+              ->orWhere('picture', 'default.png');
+        });
+    }
+
+    // 🔹 Sorting
+    switch ($sortBy) {
+        case 'emp_name':
+            $query->orderBy('emp_name', 'asc');
+            break;
+        case 'join_date':
+            $query->orderBy('join_date', 'desc');
+            break;
+        case 'created_at':
+            $query->orderBy('created_at', 'desc');
+            break;
+        default:
+            $query->orderBy('emp_id', 'asc');
+            break;
+    }
+
+    // 🔹 Split Active / In-Active
+    $activeEmployees   = (clone $query)->where('status', 'Active');
+    $inactiveEmployees = (clone $query)->where('status', 'In-Active');
+
+    if ($showAll || $perPage === 'all') {
+        $employees_active   = $activeEmployees->get();
+        $employees_inactive = $inactiveEmployees->get();
+    } else {
+        $employees_active = $activeEmployees
+            ->paginate((int)$perPage)
+            ->appends($request->all());
+
+        $employees_inactive = $inactiveEmployees
+            ->paginate((int)$perPage, ['*'], 'inactive_page')
+            ->appends($request->all());
+    }
+
+    return view('admin.employee.employee_list', [
+        'departments'        => Department::all(),
+        'designation'        => Designation::all(),
+        'employees_active'   => $employees_active,
+        'employees_inactive' => $employees_inactive,
+        'company'            => Company::all(),
+        'search'             => $search,
+        'perPage'            => $perPage,
+        'showAll'            => $showAll,
+        'employeeId'         => $employeeId, // optional (for UI)
+    ]);
+}
+
 
     public function inactive_list(Request $request)
     {
