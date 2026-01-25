@@ -788,7 +788,7 @@
                                         <a href="{{ route('departments_asset', $employee->department_id) }}"><span class="department-badge">{{ $employee->rel_to_departmet->department_name }}</span></a>
                                     </td>
                                     <td>
-                                        <span class="designation-badge">{{ $employee->rel_to_designation->designation_name }}</span>
+                                        <span class="designation-badge">{{ $employee?->rel_to_designation?->designation_name }}</span>
                                     </td>
                                     <td>
                                         <span class="text-muted">{{ \Carbon\Carbon::parse($employee->join_date)->format('M d, Y') }}</span>
