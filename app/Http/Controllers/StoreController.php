@@ -1356,68 +1356,81 @@ public function store(Request $request)
         return redirect()->back()->with('success_wast', 'Waste product saved successfully.');
     }
 
-    public function wastproduct_list(Request $request)
-    {
-        $search = $request->input('search', '');
-        $assetType = $request->input('asset_type', '');
-        $company = $request->input('company', '');
-        $dateFrom = $request->input('date_from', '');
-        $dateTo = $request->input('date_to', '');
-        $purchaseDateFrom = $request->input('purchase_date_from', '');
-        $purchaseDateTo = $request->input('purchase_date_to', '');
-        $perPage = $request->input('per_page', 15);
+ public function wastproduct_list(Request $request)
+{
+    $search = $request->input('search', '');
+    $assetType = $request->input('asset_type', '');
+    $company = $request->input('company', '');
 
-        $query = WastProduct::query();
+    // Per page handling (supports "all")
+    $perPageInput = $request->input('per_page', 15);
 
-        // Search
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('asset_tag', 'LIKE', "%$search%")
-                    ->orWhere('asset_type', 'LIKE', "%$search%")
-                    ->orWhere('model', 'LIKE', "%$search%")
-                    ->orWhere('description', 'LIKE', "%$search%")
-                    ->orWhere('asset_sl_no', 'LIKE', "%$search%")
-                    ->orWhere('others', 'LIKE', "%$search%")
-                    ->orWhere('note', 'LIKE', "%$search%");
-            });
-        }
+    $query = WastProduct::query();
 
-        // Filters
-        if ($assetType) {
-            $query->where('asset_type', $assetType);
-        }
-
-        if ($company) {
-            $query->where('others', $company); // Assuming 'others' stores company name
-        }
-
-
-        // Paginate
-        $wastproduct = $query->orderBy('date', 'desc')->paginate($perPage);
-
-        // Dropdown data
-        $assetTypes = WastProduct::distinct()->pluck('asset_type')->filter()->sort()->values();
-        $companies = WastProduct::distinct()->pluck('others')->filter()->sort()->values();
-
-        // Statistics
-        $statistics = [
-            'total' => WastProduct::count(),
-            'this_month' => WastProduct::whereMonth('date', now()->month)
-                ->whereYear('date', now()->year)
-                ->count(),
-            'this_year' => WastProduct::whereYear('date', now()->year)->count(),
-            'total_value' => 0
-        ];
-
-        return view('admin.store.wastproduct.wastproduct_list', compact(
-            'wastproduct',
-            'search',
-            'assetTypes',
-            'companies',
-            'statistics'
-        ));
+    // Search
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('asset_tag', 'LIKE', "%{$search}%")
+              ->orWhere('asset_type', 'LIKE', "%{$search}%")
+              ->orWhere('model', 'LIKE', "%{$search}%")
+              ->orWhere('description', 'LIKE', "%{$search}%")
+              ->orWhere('asset_sl_no', 'LIKE', "%{$search}%")
+              ->orWhere('others', 'LIKE', "%{$search}%")
+              ->orWhere('note', 'LIKE', "%{$search}%");
+        });
     }
 
+    // Filters
+    if (!empty($assetType)) {
+        $query->where('asset_type', $assetType);
+    }
+
+    if (!empty($company)) {
+        $query->where('others', $company);
+    }
+
+    // ✅ Handle "All" safely while keeping paginator
+    if ($perPageInput === 'all') {
+        $perPage = $query->count(); // show all records
+    } else {
+        $perPage = max((int) $perPageInput, 1);
+    }
+
+    // Pagination (always paginator)
+    $wastproduct = $query
+        ->orderBy('date', 'desc')
+        ->paginate($perPage)
+        ->appends($request->query()); // keep filters on pagination links
+
+    // Dropdown data
+    $assetTypes = WastProduct::whereNotNull('asset_type')
+        ->distinct()
+        ->orderBy('asset_type')
+        ->pluck('asset_type');
+
+    $companies = WastProduct::whereNotNull('others')
+        ->distinct()
+        ->orderBy('others')
+        ->pluck('others');
+
+    // Statistics
+    $statistics = [
+        'total' => WastProduct::count(),
+        'this_month' => WastProduct::whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
+            ->count(),
+        'this_year' => WastProduct::whereYear('date', now()->year)->count(),
+        'total_value' => 0,
+    ];
+
+    return view('admin.store.wastproduct.wastproduct_list', compact(
+        'wastproduct',
+        'search',
+        'assetTypes',
+        'companies',
+        'statistics'
+    ));
+}
 
 
     function wastproduct_edit($id)
