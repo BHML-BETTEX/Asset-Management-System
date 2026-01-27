@@ -372,11 +372,7 @@
             });
 
             function initSessionTimeout() {
-                const timeout = {
-                    {
-                        config('session.timeout', 30)
-                    }
-                }; // minutes
+                const timeout = {{ config('session.timeout', 30) }}; // minutes
                 const warningTime = Math.max(5, Math.floor(timeout * 0.1)); // Warn 10% before timeout (min 5 min)
                 const checkInterval = 60000; // Check every minute
 

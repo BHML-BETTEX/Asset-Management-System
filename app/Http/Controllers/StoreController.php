@@ -43,7 +43,8 @@ public function store(Request $request)
     $productSearch  = $request->input('product_search');
     $assetTag       = $request->input('asset_tag'); // from employee asset click
     $companyFilter  = $request->input('company_filter');
-    $perPage        = $request->input('per_page', 10);
+    $perPage        = $request->input('per_page', session('asset_per_page', 10));
+    session(['asset_per_page' => $perPage]);
     $showDeleted    = $request->input('show_deleted', false);
 
     // Determine which companies the user can view
@@ -184,7 +185,8 @@ public function store(Request $request)
         $search = $request->input('search', '');
         $productSearch = $request->input('product_search');
         $companyFilter = $request->input('company_filter');
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', session('asset_per_page', 10));
+        session(['asset_per_page' => $perPage]);
 
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
@@ -249,7 +251,8 @@ public function store(Request $request)
         $search = $request->input('search', '');
         $productSearch = $request->input('product_search');
         $companyFilter = $request->input('company_filter');
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', session('asset_per_page', 10));
+        session(['asset_per_page' => $perPage]);
 
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
@@ -328,7 +331,8 @@ public function store(Request $request)
         $search = $request->input('search', '');
         $productSearch = $request->input('product_search');
         $companyFilter = $request->input('company_filter');
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', session('asset_per_page', 10));
+        session(['asset_per_page' => $perPage]);
 
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
@@ -1115,7 +1119,8 @@ public function store(Request $request)
         $search = $request->input('search', '');
         $productSearch = $request->input('product_search');
         $companyFilter = $request->input('company_filter');
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', session('asset_per_page', 10));
+        session(['asset_per_page' => $perPage]);
 
         $companies = [];
         if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;

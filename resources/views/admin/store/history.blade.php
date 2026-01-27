@@ -258,7 +258,7 @@
             <!-- Info Tab -->
             <li class="nav-item">
                 <a class="nav-link"
-                    href="">
+                    href="{{ route('store_info', $stores->id) }}">
                     Info
                 </a>
             </li>
