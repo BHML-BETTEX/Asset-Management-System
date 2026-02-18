@@ -1105,7 +1105,7 @@
                                         @php $options = [10, 25, 50, 100, 'all']; @endphp
                                         @foreach ($options as $option)
                                             <option value="{{ $option }}"
-                                                {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                                                {{ session('asset_per_page', 10) == $option ? 'selected' : '' }}>
                                                 {{ is_numeric($option) ? $option : 'All' }}
                                             </option>
                                         @endforeach
