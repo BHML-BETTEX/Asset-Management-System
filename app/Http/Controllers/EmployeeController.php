@@ -533,27 +533,29 @@ public function employee_list(Request $request)
 
 
     //Employee Asset Details
-    function employee_assets(Request $request, $emp_id)
-    {
-        $role = auth()->user()->roles[0];
-        $search = $request->input('search', '');
-        $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
-        $query = issue::where('emp_id', $employee->emp_id);
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->orWhere('asset_tag', 'LIKE', "%{$search}%")
-                    ->orWhere('asset_type', 'LIKE', "%{$search}%");
-            });
-        }
+   function employee_assets(Request $request, $emp_id)
+{
+    $role = auth()->user()->roles[0];
+    $search = $request->input('search', '');
 
-        // Paginate or show all (optional)
-        $issues = $query->paginate(20); // Or use ->get() for all
+    $employee = Employee::where('emp_id', $emp_id)->firstOrFail();
 
-        // Send data to view
-        $stores = Store::all();
-        return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores', 'search'));
+    $query = issue::where('emp_id', $employee->emp_id);
+
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->orWhere('asset_tag', 'LIKE', "%{$search}%")
+              ->orWhere('asset_type', 'LIKE', "%{$search}%");
+        });
     }
+
+    // Get all assets without pagination
+    $issues = $query->get();
+
+    $stores = Store::all();
+
+    return view('admin.employee.employee_assets', compact('issues', 'employee', 'stores', 'search'));
+}
 
     //employee asset pdf download
     public function history_generatePDF(Request $request, $emp_id)

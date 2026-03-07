@@ -270,6 +270,128 @@
             background-color: #007bff;
             border-color: #007bff;
         }
+
+        /* Pagination info styling */
+        .pagination-info {
+            font-size: 0.875rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Pagination wrapper styling */
+        .pagination-wrapper nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pagination-wrapper .pagination {
+            margin: 0;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-wrapper .page-link {
+            color: #667eea;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            padding: 0.375rem 0.75rem;
+            margin: 0;
+            border-radius: 6px !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pagination-wrapper .page-link:hover {
+            color: #fff;
+            background-color: #667eea;
+            border-color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .pagination-wrapper .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination-wrapper .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+        }
+
+        /* Pagination nav styling */
+        .d-flex nav {
+            width: 100%;
+        }
+
+        /* Pagination container */
+        .pagination-container {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+            margin-top: 1rem;
+        }
+
+        .pagination-container nav {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination-container .pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0;
+            gap: 4px;
+        }
+
+        .pagination-container .page-item {
+            display: inline-block;
+        }
+
+        .pagination-container .page-link {
+            color: #667eea;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            padding: 0.375rem 0.75rem;
+            margin: 0;
+            border-radius: 6px !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-container .page-link:hover {
+            color: #fff;
+            background-color: #667eea;
+            border-color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .pagination-container .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination-container .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+        }
     </style>
 
     <div class="container">
@@ -339,11 +461,11 @@
                 <!-- Right-aligned Search and Export -->
                 <div class="d-flex align-items-center gap-3">
                     <div class="search-box">
-                        <form method="GET" action="{{ route('employee_consumable', ['emp_id' => $employee->emp_id]) }}"
+                        <form method="GET" action="{{ route('employee_assets', ['emp_id' => $employee->emp_id]) }}"
                             class="mb-0">
                             <i class="fa fa-search search-icon"></i>
                             <input type="search" class="form-control rounded-pill" name="search"
-                                placeholder="Search consumables..." value="{{ request('search') }}">
+                                placeholder="Search assets..." value="{{ request('search') }}">
                         </form>
                     </div>
 
@@ -391,7 +513,13 @@
                     <h5 class="mb-0">
                         <i class="fa fa-laptop me-2"></i> Assigned Assets
                     </h5>
-                    <span class="badge bg-primary rounded-pill text-white">{{ count($issues) }} Items</span>
+                    <span class="badge bg-primary rounded-pill text-white">
+                        @if ($issues instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            {{ $issues->total() }}
+                        @else
+                            {{ $issues->count() }}
+                        @endif Items
+                    </span>
                 </div>
 
                 <!-- Uploads Modal -->
@@ -524,6 +652,7 @@
                                         more</small>
                                 </div>
                             </form>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -606,6 +735,12 @@
             </div>
         </div>
 
+        <!-- Summary Section -->
+        <div style="margin-top: 2rem; padding: 1.5rem; border-top: 1px solid #dee2e6; background-color: #f8f9fa; border-radius: 8px;">
+            <span style="font-size: 0.875rem; color: #6c757d; font-weight: 500;">
+                Total Assets: <strong>{{ $issues->count() }}</strong>
+            </span>
+        </div>
     </div>
 @endsection
 
@@ -785,7 +920,7 @@
             Swal.fire({
                 title: 'Success!',
                 text: '{{ session('
-                                        return_success ') }}',
+                                                        return_success ') }}',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
