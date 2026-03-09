@@ -44,7 +44,7 @@ class HomeController extends Controller
         $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
         $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
         $product_summary_bt_ind = DB::select("CALL sp_product_summary_bt_ind()");
-        // //dd($product_summary_bhml);
+        //dd($product_summary_bhml);
 
 
         foreach ($product_summary_bt as $product_summary) {

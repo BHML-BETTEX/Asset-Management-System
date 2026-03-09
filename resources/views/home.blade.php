@@ -247,6 +247,7 @@
                                         <th>Total Asset</th>
                                         <th>Units</th>
                                         <th>Issue Qty</th>
+                                        <th>Wast Qty</th>
                                         <th>Stock Qty</th>
                                     </tr>
                                 </thead>
@@ -257,6 +258,7 @@
                                             <td>{{ $product_summary->TotalAssets }}</td>
                                             <td>{{ $product_summary->units->size }}</td>
                                             <td>{{ $product_summary->IssueQty }}</td>
+                                            <td>{{ $product_summary->WastProduct }}</td>
                                             <td>{{ $product_summary->StockQty }}</td>
                                         </tr>
                                     @endforeach
@@ -280,6 +282,7 @@
                                         <th>Total Asset</th>
                                         <th>Units</th>
                                         <th>Issue Qty</th>
+                                        <th>Wast Qty</th>
                                         <th>Stock Qty</th>
                                     </tr>
                                 </thead>
@@ -290,6 +293,7 @@
                                             <td>{{ $product_summary_bhml->TotalAssets }}</td>
                                             <td>{{ $product_summary_bhml->units->size }}</td>
                                             <td>{{ $product_summary_bhml->IssueQty }}</td>
+                                            <td>{{ $product_summary_bhml->WastProduct }}</td>
                                             <td>{{ $product_summary_bhml->StockQty }}</td>
                                         </tr>
                                     @endforeach
@@ -313,6 +317,7 @@
                                         <th>Total Asset</th>
                                         <th>Units</th>
                                         <th>Issue Qty</th>
+                                        <th>Wast Qty</th>
                                         <th>Stock Qty</th>
                                     </tr>
                                 </thead>
@@ -323,6 +328,7 @@
                                             <td>{{ $product_summary_bp->TotalAssets }}</td>
                                             <td>{{ $product_summary_bp->units->size }}</td>
                                             <td>{{ $product_summary_bp->IssueQty }}</td>
+                                            <td>{{ $product_summary_bp->WastProduct }}</td>
                                             <td>{{ $product_summary_bp->StockQty }}</td>
                                         </tr>
                                     @endforeach
@@ -350,6 +356,7 @@
                                         <th>Total Asset</th>
                                         <th>Units</th>
                                         <th>Issue Qty</th>
+                                        <th>Wast Qty</th>
                                         <th>Stock Qty</th>
                                     </tr>
                                 </thead>
@@ -360,6 +367,7 @@
                                             <td>{{ $product_summarys->TotalAssets }}</td>
                                             <td>{{ $product_summary_bp->units->size }}</td>
                                             <td>{{ $product_summarys->IssueQty }}</td>
+                                            <td>{{ $product_summarys->WastProduct }}</td>
                                             <td>{{ $product_summarys->StockQty }}</td>
                                         </tr>
                                     @endforeach
