@@ -312,12 +312,16 @@ public function store(Request $request)
 
 
     //delete start
-    public function store_delete($stores_id)
+    public function store_delete(Request $request, $stores_id)
     {
         $store = Store::find($stores_id);
 
         if ($store) {
-            $store->update(['checkstatus' => 'DELETE']);
+            $comment = $request->input('delete_comment', '');
+            $store->update([
+                'checkstatus' => 'DELETE',
+                'others' => $comment
+            ]);
             return back()->with('delete_success', 'Store record marked as deleted.');
         }
 
