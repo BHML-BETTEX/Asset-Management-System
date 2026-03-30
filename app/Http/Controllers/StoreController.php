@@ -388,12 +388,16 @@ public function store(Request $request)
         ]);
     }
 
-    public function store_archive($stores_id)
+    public function store_archive(Request $request, $stores_id)
     {
         $store = Store::find($stores_id);
 
         if ($store) {
-            $store->update(['checkstatus' => 'ARCHIVE']);
+            $comment = $request->input('archive_comment', '');
+            $store->update([
+                'checkstatus' => 'ARCHIVE',
+                'others' => $comment
+            ]);
             return back()->with('archive_success', 'Store record archived successfully.');
         }
 

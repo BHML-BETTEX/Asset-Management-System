@@ -166,12 +166,12 @@
                                 </div>
                                 <div class="col-lg-12" style="padding-top: 2px;">
                                     {{-- Archive Asset --}}
-                                    <a href="{{ route('store.archive', $stores->id) }}"
+                                    <button type="button"
                                         class="btn btn-block btn-sm btn-warning btn-social hidden-print
        @if ($stores->checkstatus != 'INSTOCK') disabled opacity-50 pointer-events-none @endif"
-                                        onclick="return confirm('Are you sure you want to archive this asset?')">
+                                        data-bs-toggle="modal" data-bs-target="#archiveModal">
                                         <i class="fa fa-archive me-1"></i> Archive
-                                    </a>
+                                    </button>
                                 </div>
 
                                 <!--Checkin button disable after delete-->
@@ -245,3 +245,29 @@
 
     </div>
 @endsection
+
+<!-- Archive Modal -->
+<div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveModalLabel">Archive Asset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('store.archive.post', $stores->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="archive_comment" class="form-label">Archive Comment (Optional)</label>
+                        <textarea class="form-control" id="archive_comment" name="archive_comment" rows="3" placeholder="Enter a comment for archiving this asset..."></textarea>
+                    </div>
+                    <p class="text-muted">Are you sure you want to archive this asset? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Archive Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
