@@ -53,20 +53,20 @@ class HomeController extends Controller
 
         // counts for dashboard tiles (company filtered; Admin/Manager sees all)
         if ($isAdminManager) {
-            $assetCount = Store::count();
-            $laptopCount = Store::where('asset_type', 1)->count();
-            $desktopCount = Store::where('asset_type', 2)->count();
-            $printerCount = Store::where('asset_type', 4)->count();
+            $assetCount = Store::whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $laptopCount = Store::where('asset_type', 1)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $desktopCount = Store::where('asset_type', 2)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $printerCount = Store::where('asset_type', 4)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
 
-            $employeeCount = DB::table('employees')->count();
+            $employeeCount = DB::table('employees')->where('status', 'Active')->count();
             $userCount = DB::table('users')->count();
         } else {
-            $assetCount = Store::whereIn('company_id', $companies)->count();
-            $laptopCount = Store::whereIn('company_id', $companies)->where('asset_type', 1)->count();
-            $desktopCount = Store::whereIn('company_id', $companies)->where('asset_type', 2)->count();
-            $printerCount = Store::whereIn('company_id', $companies)->where('asset_type', 4)->count();
+            $assetCount = Store::whereIn('company_id', $companies)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $laptopCount = Store::whereIn('company_id', $companies)->where('asset_type', 1)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $desktopCount = Store::whereIn('company_id', $companies)->where('asset_type', 2)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
+            $printerCount = Store::whereIn('company_id', $companies)->where('asset_type', 4)->whereNotIn('checkstatus', ['DELETE', 'ARCHIVE'])->count();
 
-            $employeeCount = DB::table('employees')->whereIn('company', $companies)->count();
+            $employeeCount = DB::table('employees')->whereIn('company', $companies)->where('status', 'Active')->count();
             $userCount = DB::table('users')->count();
         }
 
