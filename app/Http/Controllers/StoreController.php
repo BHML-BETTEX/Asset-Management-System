@@ -387,6 +387,84 @@ public function store(Request $request)
             'all_issue' => Issue::all(),
         ]);
     }
+
+    public function store_archive($stores_id)
+    {
+        $store = Store::find($stores_id);
+
+        if ($store) {
+            $store->update(['checkstatus' => 'ARCHIVE']);
+            return back()->with('archive_success', 'Store record archived successfully.');
+        }
+
+        return back()->with('error', 'Store record not found.');
+    }
+
+    public function store_archive_list(Request $request)
+    {
+        $role = auth()->user()->roles[0];
+
+        $search = $request->input('search', '');
+        $productSearch = $request->input('product_search');
+        $companyFilter = $request->input('company_filter');
+        $perPage = $request->input('per_page', session('asset_per_page', 10));
+        session(['asset_per_page' => $perPage]);
+
+        $companies = [];
+        if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+        if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+        if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+        if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+
+        $query = Store::query()
+            ->join('brands', 'brands.id', '=', 'stores.brand_id')
+            ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
+            ->whereIn('stores.company_id', $companies)
+            ->where('stores.checkstatus', 'ARCHIVE'); // Only archived
+
+        if ($companyFilter) {
+            $query->where('stores.company_id', $companyFilter);
+        }
+
+        if ($search || $productSearch) {
+            $query->where(function ($q) use ($search, $productSearch) {
+                if ($productSearch) {
+                    $q->where('product_types.id', '=', $productSearch);
+                }
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('stores.asset_tag', 'LIKE', "%{$search}%")
+                            ->orWhere('brands.brand_name', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.vendor', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.asset_sl_no', 'LIKE', "%{$search}%")
+                            ->orWhere('stores.checkstatus', 'LIKE', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        $query->orderBy('stores.id', 'desc');
+
+        $stores = $perPage === 'all'
+            ? $query->select('stores.*')->get()
+            : $query->select('stores.*')->paginate((int)$perPage)->appends($request->except('page'));
+
+        return view('admin.store.store_list', [
+            'stores' => $stores,
+            'search' => $search,
+            'perPage' => $perPage,
+            'productSearch' => $productSearch,
+            'companyFilter' => $companyFilter,
+            'showDeleted' => true,
+            'showArchived' => true,
+            'all_product_types' => ProductType::all(),
+            'all_brands' => Brand::all(),
+            'all_company' => Company::all(),
+            'employee' => Employee::all(),
+            'all_issue' => Issue::all(),
+        ]);
+    }
+
     //delete end
 
 

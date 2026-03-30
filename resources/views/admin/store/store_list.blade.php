@@ -1029,6 +1029,9 @@
                                                 @elseif ($store->checkstatus == 'DELETE')
                                                     <span
                                                         class="badge bg-danger text-white">{{ $store->checkstatus }}</span>
+                                                @elseif ($store->checkstatus == 'ARCHIVE')
+                                                    <span
+                                                        class="badge bg-secondary text-white">{{ $store->checkstatus }}</span>
                                                 @else
                                                     <span
                                                         class="badge bg-primary text-white">{{ $store->checkstatus }}</span>

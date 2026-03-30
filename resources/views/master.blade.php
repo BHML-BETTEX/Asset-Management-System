@@ -42,17 +42,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
     <style>
-.navbar-profile-photo {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
+        .navbar-profile-photo {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
-    
-    
-    </head>
+
+
+</head>
 
 <body class="nav-md">
     <div class="container body">
@@ -92,6 +91,8 @@
                                                 List</a></li>
                                         <li><a href="{{ route('store_delete_list') }}"><i
                                                     class="fa fa-close"></i>Delete List</a></li>
+                                        <li><a href="{{ route('store_archive_list') }}"><i
+                                                    class="fa fa-archive"></i>Archive</a></li>
 
                                         <li><a href="{{ route('maintenance_view') }}"><i
                                                     class="fa fa-gears"></i>Maintenance
@@ -192,8 +193,7 @@
                                     </ul>
                                 </li>
 
-                                <li><a><i class="fa fa-gear"></i>Settings<span
-                                            class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-gear"></i>Settings<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('profile') }}">Profile</a></li>
                                     </ul>

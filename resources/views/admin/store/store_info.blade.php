@@ -53,6 +53,16 @@
                                     </div>
                                 @endif
 
+                                {{-- Archive Success --}}
+                                @if (session('archive_success'))
+                                    <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center"
+                                        role="alert">
+                                        <span>{{ session('archive_success') }}</span>
+                                        <button type="button" class="border-0 bg-warning text-white fw-bold px-2 rounded"
+                                            data-bs-dismiss="alert" aria-label="Close">X</button>
+                                    </div>
+                                @endif
+
                                 <h5 class="mb-0">{{ $stores->asset_tag }}/{{ $stores->model }}/Profile</h5>
                             </div>
                             <div class="card-body">
@@ -152,6 +162,15 @@
        @if ($stores->checkstatus != 'INSTOCK') disabled opacity-50 pointer-events-none @endif"
                                         onclick="return confirm('Are you sure you want to delete this asset?')">
                                         <i class="fa fa-trash me-1"></i> Delete
+                                    </a>
+                                </div>
+                                <div class="col-lg-12" style="padding-top: 2px;">
+                                    {{-- Archive Asset --}}
+                                    <a href="{{ route('store.archive', $stores->id) }}"
+                                        class="btn btn-block btn-sm btn-warning btn-social hidden-print
+       @if ($stores->checkstatus != 'INSTOCK') disabled opacity-50 pointer-events-none @endif"
+                                        onclick="return confirm('Are you sure you want to archive this asset?')">
+                                        <i class="fa fa-archive me-1"></i> Archive
                                     </a>
                                 </div>
 
