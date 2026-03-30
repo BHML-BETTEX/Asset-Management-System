@@ -92,7 +92,7 @@ Route::get('/designation/edit/{designation_id}', [CategoryController::class, 'de
 Route::post('/designation/update', [CategoryController::class, 'designation_update'])->name('designation.update');
 
 //product
-Route::get('/producttype', [CategoryController::class, 'product_type'])->name('producttype_list');
+Route::get('/producttype', [CategoryController::class, 'product_type'])->name('product_type');
 Route::post('/producttype/store', [CategoryController::class, 'product_type_store'])->name('product.store');
 Route::get('/producttype/delete/{ProductType_id}', [CategoryController::class, 'product_type_delete'])->name('product.delete');
 

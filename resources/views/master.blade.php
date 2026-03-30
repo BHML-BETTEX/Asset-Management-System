@@ -179,7 +179,7 @@
                                         <li><a href="{{ route('size') }}">Size Mesurment</a></li>
                                         <li><a href="{{ route('color') }}">Color</a></li>
                                         <li><a href="{{ route('company.list') }}">Company</a></li>
-                                        <li><a href="{{ route('producttype_list') }}">Asset Type</a></li>
+                                        <li><a href="{{ route('product_type') }}">Asset Type</a></li>
                                     </ul>
                                 </li>
 
