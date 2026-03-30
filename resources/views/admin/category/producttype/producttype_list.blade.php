@@ -2,6 +2,17 @@
 
 @section('content')
 
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
 
 <div class="row">
     <div class="col-lg-8">
@@ -10,6 +21,19 @@
                 <h3>Product List</h3>
             </div>
             <div class="card-body">
+                <!-- Search Form -->
+                <form method="GET" action="{{ route('product_type') }}" class="mb-3">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-9">
+                            <label for="search" class="form-label">Search</label>
+                            <input type="text" class="form-control" id="search" name="search" value="{{ $search }}" placeholder="Search products...">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </div>
+                </form>
+
                 <table class="table table-striped">
                     <tr>
                         <th>SL</th>
@@ -17,7 +41,7 @@
                         <th>Action</th>
                     </tr>
 
-                    
+
                 @if (session ('delete_producttype'))
                     <div class="alert alert-success">{{ session('delete_producttype') }}</div>
                 @endif
@@ -34,12 +58,46 @@
                         </tr>
 
                     @endforeach
-                    
+
                     <tr>
 
                     </tr>
                 </table>
-                {{$all_producttypes->links()}}
+
+                <!-- Pagination -->
+                @if ($all_producttypes instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                        {{-- Left: Showing X to Y of Z --}}
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="me-2">
+                                Showing {{ $all_producttypes->firstItem() }} to {{ $all_producttypes->lastItem() }} of {{ $all_producttypes->total() }} rows
+                            </span>
+
+                            {{-- Dropdown --}}
+                            <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                                <select name="per_page" class="form-select form-select-sm w-auto me-1" onchange="this.form.submit()">
+                                    @php $options = [10, 25, 50, 100, 'all']; @endphp
+                                    @foreach ($options as $option)
+                                    <option value="{{ $option }}" {{ request('per_page', 13) == $option ? 'selected' : '' }}>
+                                        {{ is_numeric($option) ? $option : 'All' }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <span>rows per page</span>
+
+                                {{-- Keep filters --}}
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                            </form>
+                        </div>
+
+                        {{-- Right: Pagination links --}}
+                        <div class="mb-2">
+                            <div class="pagination-wrapper">
+                                {{ $all_producttypes->appends(request()->query())->links() }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

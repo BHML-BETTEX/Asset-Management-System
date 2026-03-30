@@ -1,6 +1,18 @@
 @extends('master')
 @section('content')
 
+<style>
+    .pagination-wrapper nav {
+        margin-bottom: 0;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        height: auto;
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-8">
         <div class="card p-1">
@@ -8,9 +20,22 @@
                 <div class="card-header text-white" style="background-color: #0cb0b7;">
                     <h3>Brand List</h3>
                 </div>
-             
+
         <div class="card-body">
-          <table class="table table-bordered">          
+            <!-- Search Form -->
+            <form method="GET" action="{{ route('brand') }}" class="mb-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-9">
+                        <label for="search" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="search" name="search" value="{{ $search }}" placeholder="Search brands...">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </div>
+            </form>
+
+          <table class="table table-bordered">
             <tr>
                 <th>SL</th>
                 <th>Brand</th>
@@ -20,13 +45,13 @@
 
             @if (session ('brand_delete'))
                     <div class="alert alert-success">{{ session('brand_delete') }}</div>
-                @endif    
+                @endif
 
-            @foreach($all_brand as $key=>$brand)        
+            @foreach($all_brand as $key=>$brand)
                <tr class="" style="height: 25px;">
                     <td>{{$key+1}}</td>
                     <td>{{$brand->brand_name}}</td>
-                    <td></td>
+                    <td>{{$brand->others}}</td>
                     <td>
                     <button class="border-0 bg-white"><a class="text-primary" href=""><i class="fa fa-edit " style="font-size:20px;"></a></i></button>
                     <!--<button class="border-0  bg-white"><a class="text-danger" href="{{route('brand.delete',$brand->id )}}"><i class="fa fa-trash " style="font-size:20px;"></a></i></button>-->
@@ -36,11 +61,44 @@
 
         </table>
 
-        {{$all_brand->links()}}
+        <!-- Pagination -->
+        @if ($all_brand instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                {{-- Left: Showing X to Y of Z --}}
+                <div class="d-flex align-items-center mb-2">
+                    <span class="me-2">
+                        Showing {{ $all_brand->firstItem() }} to {{ $all_brand->lastItem() }} of {{ $all_brand->total() }} rows
+                    </span>
+
+                    {{-- Dropdown --}}
+                    <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center">
+                        <select name="per_page" class="form-select form-select-sm w-auto me-1" onchange="this.form.submit()">
+                            @php $options = [10, 25, 50, 100, 'all']; @endphp
+                            @foreach ($options as $option)
+                            <option value="{{ $option }}" {{ request('per_page', 13) == $option ? 'selected' : '' }}>
+                                {{ is_numeric($option) ? $option : 'All' }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <span>rows per page</span>
+
+                        {{-- Keep filters --}}
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    </form>
+                </div>
+
+                {{-- Right: Pagination links --}}
+                <div class="mb-2">
+                    <div class="pagination-wrapper">
+                        {{ $all_brand->appends(request()->query())->links() }}
+                    </div>
+                </div>
+            </div>
+        @endif
             </div>
           </div>
         </div>
-       
+
     </div>
     <div class="col-lg-4">
         <div class="card p-1" >

@@ -19,11 +19,27 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    function department()
+    function department(Request $request)
     {
-        $all_departments = Department::paginate(13);
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 13);
+
+        $query = Department::query();
+
+        if ($search) {
+            $query->where('department_name', 'LIKE', "%{$search}%");
+        }
+
+        $query->orderBy('department_name', 'asc');
+
+        $all_departments = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->except('page'));
+
         return view('admin.category.department', [
             'all_departments' => $all_departments,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -62,11 +78,27 @@ class CategoryController extends Controller
 
 
     //designation
-    function designation()
+    function designation(Request $request)
     {
-        $all_designations = Designation::paginate(13);
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 13);
+
+        $query = Designation::query();
+
+        if ($search) {
+            $query->where('designation_name', 'LIKE', "%{$search}%");
+        }
+
+        $query->orderBy('designation_name', 'asc');
+
+        $all_designations = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->except('page'));
+
         return view('admin.category.designation', [
             'all_designations' => $all_designations,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -101,11 +133,27 @@ class CategoryController extends Controller
     }
 
     //product Type
-    function product_type()
+    function product_type(Request $request)
     {
-        $all_producttypes = ProductType::paginate(13);
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 13);
+
+        $query = ProductType::query();
+
+        if ($search) {
+            $query->where('product', 'LIKE', "%{$search}%");
+        }
+
+        $query->orderBy('product', 'asc');
+
+        $all_producttypes = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->except('page'));
+
         return view('admin.category.producttype.producttype_list', [
             'all_producttypes' => $all_producttypes,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -125,11 +173,31 @@ class CategoryController extends Controller
     }
 
     // Supplier
-    function supplier()
+    function supplier(Request $request)
     {
-        $all_supplier = Supplier::paginate(13);
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 13);
+
+        $query = Supplier::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('supplier_name', 'LIKE', "%{$search}%")
+                  ->orWhere('phone', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $query->orderBy('supplier_name', 'asc');
+
+        $all_supplier = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->except('page'));
+
         return view('admin.category.supplier', [
             'all_supplier' => $all_supplier,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -156,11 +224,27 @@ class CategoryController extends Controller
 
 
     //brand
-    function brand()
+    function brand(Request $request)
     {
-        $all_brand = Brand::paginate(13);
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 13);
+
+        $query = Brand::query();
+
+        if ($search) {
+            $query->where('brand_name', 'LIKE', "%{$search}%");
+        }
+
+        $query->orderBy('brand_name', 'asc');
+
+        $all_brand = $perPage === 'all'
+            ? $query->get()
+            : $query->paginate((int)$perPage)->appends($request->except('page'));
+
         return view('admin.category.brand.brand', [
             'all_brand' => $all_brand,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
 
