@@ -28,18 +28,57 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-    // Store list with optional filter
-    $query = Store::query();
+        // User role company permission check (same logic as instock_list)
+        $role = auth()->user()->roles[0];
 
-    if ($request->filled('asset_type')) {
-        $query->where('asset_type', $request->asset_type);
-    }
+        $isAdminManager = in_array($role->name, ['Admin', 'Manager']);
 
-    $stores = $query->get();
-        $stores = Store::all();
-        $desktops = DB::select("SELECT * FROM stores WHERE asset_type = 2");
-        $laptops = DB::select("SELECT * FROM stores WHERE asset_type = 1");
-        $printers = DB::select("SELECT * FROM stores WHERE asset_type = 3");
+        if ($isAdminManager) {
+            $companies = [1, 2, 3, 4];
+        } else {
+            $companies = [];
+            if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 1;
+            if ($role->hasPermissionTo('view BETTEX')) $companies[] = 2;
+            if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 3;
+            if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 4;
+        }
+
+        $query = $isAdminManager ? Store::query() : Store::whereIn('company_id', $companies);
+
+        if ($request->filled('asset_type')) {
+            $query->where('asset_type', $request->asset_type);
+        }
+
+        $stores = $query->get();
+
+        // counts for dashboard tiles (company filtered; Admin/Manager sees all)
+        if ($isAdminManager) {
+            $assetCount = Store::count();
+            $laptopCount = Store::where('asset_type', 1)->count();
+            $desktopCount = Store::where('asset_type', 2)->count();
+            $printerCount = Store::where('asset_type', 4)->count();
+
+            $employeeCount = DB::table('employees')->count();
+            $userCount = DB::table('users')->count();
+        } else {
+            $assetCount = Store::whereIn('company_id', $companies)->count();
+            $laptopCount = Store::whereIn('company_id', $companies)->where('asset_type', 1)->count();
+            $desktopCount = Store::whereIn('company_id', $companies)->where('asset_type', 2)->count();
+            $printerCount = Store::whereIn('company_id', $companies)->where('asset_type', 4)->count();
+
+            $employeeCount = DB::table('employees')->whereIn('company', $companies)->count();
+            $userCount = DB::table('users')->count();
+        }
+
+        if ($isAdminManager) {
+            $desktops = DB::select("SELECT * FROM stores WHERE asset_type = 2");
+            $laptops = DB::select("SELECT * FROM stores WHERE asset_type = 1");
+            $printers = DB::select("SELECT * FROM stores WHERE asset_type = 3");
+        } else {
+            $desktops = DB::select("SELECT * FROM stores WHERE asset_type = 2 AND company_id IN (" . implode(',', $companies) . ")");
+            $laptops = DB::select("SELECT * FROM stores WHERE asset_type = 1 AND company_id IN (" . implode(',', $companies) . ")");
+            $printers = DB::select("SELECT * FROM stores WHERE asset_type = 3 AND company_id IN (" . implode(',', $companies) . ")");
+        }
         $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
         $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
         $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
@@ -92,7 +131,12 @@ class HomeController extends Controller
             'product_summary_bhml' => $product_summary_bhml,
             'product_summary_bp' => $product_summary_bp,
             'product_summary_bt_ind' => $product_summary_bt_ind,
-
+            'assetCount' => $assetCount,
+            'laptopCount' => $laptopCount,
+            'desktopCount' => $desktopCount,
+            'printerCount' => $printerCount,
+            'employeeCount' => $employeeCount,
+            'userCount' => $userCount,
         ]);
     }
 

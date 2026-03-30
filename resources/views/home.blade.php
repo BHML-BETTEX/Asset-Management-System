@@ -15,7 +15,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('users')->count() }}
+                                    {{ $userCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Users</p>
                             </div>
@@ -38,7 +38,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('employees')->count() }}
+                                    {{ $employeeCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Employees</p>
                             </div>
@@ -60,7 +60,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('stores')->count() }}
+                                    {{ $assetCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Assets</p>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('stores')->where('asset_type', 1)->count() }}
+                                    {{ $laptopCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Laptops</p>
                             </div>
@@ -104,7 +104,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('stores')->where('asset_type', 2)->count() }}
+                                    {{ $desktopCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Desktops</p>
                             </div>
@@ -126,7 +126,7 @@
                         <div class="p-3 flex-grow-1 d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
-                                    {{ DB::table('stores')->where('asset_type', 4)->count() }}
+                                    {{ $printerCount }}
                                 </h2>
                                 <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Printers</p>
                             </div>
