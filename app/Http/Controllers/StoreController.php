@@ -612,8 +612,8 @@ public function store(Request $request)
             'created_at' => Carbon::now(),
         ]);
 
-        // Redirect to the specific store info page
-        return redirect()->route('issue_list')
+        // Redirect to the instock list page
+        return redirect()->route('instock_list')
             ->with('issue_success', 'Product issued successfully!');
     }
     //issue end
