@@ -301,9 +301,20 @@
 
                                 <tbody style="height: 5px !important; overflow: scroll;">
                                     @forelse ($wastproduct as $key => $waste)
+                                        @php
+                                            $store = \App\Models\Store::where('asset_tag', $waste->asset_tag)->first();
+                                        @endphp
                                         <tr>
                                             <td class="fw-semibold">{{ $wastproduct->firstItem() + $key }}</td>
-                                            <td>{{ $waste->asset_tag }}</td>
+                                            <td>
+                                                @if($store)
+                                                    <a href="{{ route('store_info', $store->id) }}" class="text-primary text-decoration-none">
+                                                        {{ $waste->asset_tag }}
+                                                    </a>
+                                                @else
+                                                    {{ $waste->asset_tag }}
+                                                @endif
+                                            </td>
                                             <td>{{ $waste->asset_type }}</td>
                                             <td>{{ $waste->model }}</td>
                                             <td>{{ $waste->purchase_date }}</td>
