@@ -1419,9 +1419,20 @@ public function store(Request $request)
     //wastproduct start..
         public function wastproduct()
         {
-            $issued_products = Store::where('checkstatus', 'INSTOCK')->get();
+            $role = auth()->user()->roles[0];
 
-            $companies = Company::pluck('company', 'id');
+            // Get allowed companies based on role permissions
+            $allowedCompanyIds = [];
+            if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $allowedCompanyIds[] = 1;
+            if ($role->hasPermissionTo('view BETTEX')) $allowedCompanyIds[] = 2;
+            if ($role->hasPermissionTo('view BETTEX PREMIUM')) $allowedCompanyIds[] = 3;
+            if ($role->hasPermissionTo('view BETTEX BRIDGE')) $allowedCompanyIds[] = 4;
+
+            $issued_products = Store::where('checkstatus', 'INSTOCK')
+                ->whereIn('company_id', $allowedCompanyIds)
+                ->get();
+
+            $companies = Company::whereIn('id', $allowedCompanyIds)->pluck('company', 'id');
 
             return view('admin.store.wastproduct.wastproduct', compact(
                 'issued_products',
@@ -1449,6 +1460,8 @@ public function store(Request $request)
 
  public function wastproduct_list(Request $request)
 {
+    $role = auth()->user()->roles[0];
+
     $search = $request->input('search', '');
     $assetType = $request->input('asset_type', '');
     $company = $request->input('company', '');
@@ -1456,7 +1469,17 @@ public function store(Request $request)
     // Per page handling (supports "all")
     $perPageInput = $request->input('per_page', 15);
 
+    // Get allowed companies based on role permissions
+    $companies = [];
+    if ($role->hasPermissionTo('view BHML INDUSTRIES LTD.')) $companies[] = 'BHML INDUSTRIES LTD';
+    if ($role->hasPermissionTo('view BETTEX')) $companies[] = 'BETTEX HK LTD';
+    if ($role->hasPermissionTo('view BETTEX PREMIUM')) $companies[] = 'BETTEX PREMIUM';
+    if ($role->hasPermissionTo('view BETTEX BRIDGE')) $companies[] = 'BETTEX INDIA';
+
     $query = WastProduct::query();
+
+    // Filter by allowed companies (role-based)
+    $query->whereIn('others', $companies);
 
     // Search
     if (!empty($search)) {
@@ -1493,24 +1516,28 @@ public function store(Request $request)
         ->paginate($perPage)
         ->appends($request->query()); // keep filters on pagination links
 
-    // Dropdown data
-    $assetTypes = WastProduct::whereNotNull('asset_type')
+    // Dropdown data (only from allowed companies)
+    $assetTypes = WastProduct::whereIn('others', $companies)
+        ->whereNotNull('asset_type')
         ->distinct()
         ->orderBy('asset_type')
         ->pluck('asset_type');
 
-    $companies = WastProduct::whereNotNull('others')
+    $companyList = WastProduct::whereIn('others', $companies)
+        ->whereNotNull('others')
         ->distinct()
         ->orderBy('others')
         ->pluck('others');
 
-    // Statistics
+    // Statistics (only from allowed companies)
     $statistics = [
-        'total' => WastProduct::count(),
-        'this_month' => WastProduct::whereMonth('date', now()->month)
+        'total' => WastProduct::whereIn('others', $companies)->count(),
+        'this_month' => WastProduct::whereIn('others', $companies)
+            ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->count(),
-        'this_year' => WastProduct::whereYear('date', now()->year)->count(),
+        'this_year' => WastProduct::whereIn('others', $companies)
+            ->whereYear('date', now()->year)->count(),
         'total_value' => 0,
     ];
 
@@ -1518,7 +1545,7 @@ public function store(Request $request)
         'wastproduct',
         'search',
         'assetTypes',
-        'companies',
+        'companyList',
         'statistics'
     ));
 }
