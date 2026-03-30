@@ -173,7 +173,7 @@ public function store(Request $request)
             ]);
         }
 
-        return redirect()->back()->with('success', 'Product added...!');
+        return redirect()->route('instock_list')->with('success', 'Product added...!');
     }
 
 
