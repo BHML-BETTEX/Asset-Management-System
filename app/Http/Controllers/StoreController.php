@@ -58,7 +58,8 @@ public function store(Request $request)
     $query = Store::query()
         ->join('brands', 'brands.id', '=', 'stores.brand_id')
         ->join('product_types', 'product_types.id', '=', 'stores.asset_type')
-        ->whereIn('stores.company_id', $companies);
+        ->whereIn('stores.company_id', $companies)
+        ->whereNotIn('stores.checkstatus', ['DELETE', 'ARCHIVE']);
 
     // Company filter
     if ($companyFilter) {
@@ -1523,7 +1524,7 @@ public function store(Request $request)
         ->orderBy('asset_type')
         ->pluck('asset_type');
 
-    $companyList = WastProduct::whereIn('others', $companies)
+    $companya = WastProduct::whereIn('others', $companies)
         ->whereNotNull('others')
         ->distinct()
         ->orderBy('others')
