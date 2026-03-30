@@ -40,7 +40,7 @@
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
                                     {{ $employeeCount }}
                                 </h2>
-                                <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Employees</p>
+                                <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Active Employees</p>
                             </div>
                             <i class="fa fa-id-card text-white" style="font-size:48px; opacity:0.2;"></i>
                         </div>
@@ -62,7 +62,7 @@
                                 <h2 class="fw-bold m-0" style="font-size:2.2rem;">
                                     {{ $assetCount }}
                                 </h2>
-                                <p class="mb-0 fw-semibold" style="font-size:1.1rem;">Assets</p>
+                                <p class="mb-0 fw-semibold" style="font-size:1.1rem;">All Assets</p>
                             </div>
                             <i class="fa fa-barcode text-white" style="font-size:48px; opacity:0.2;"></i>
                         </div>
