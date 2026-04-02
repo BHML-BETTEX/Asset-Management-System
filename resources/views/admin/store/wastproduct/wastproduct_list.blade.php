@@ -228,7 +228,7 @@
                             <label class="form-label">Company</label>
                             <select name="company" class="form-control form-control-sm select2-filter">
                                 <option value="">All Companies</option>
-                                @foreach ($companyList as $company)
+                                @foreach ($companya as $company)
                                     <option value="{{ $company }}"
                                         {{ request('company') == $company ? 'selected' : '' }}>
                                         {{ $company }}

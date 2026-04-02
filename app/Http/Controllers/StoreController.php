@@ -1546,7 +1546,7 @@ public function store(Request $request)
         'wastproduct',
         'search',
         'assetTypes',
-        'companyList',
+        'companya',
         'statistics'
     ));
 }
