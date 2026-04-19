@@ -250,11 +250,13 @@ class CategoryController extends Controller
 
     function brand_store(Request $request)
     {
-        Brand::insert([
-            'brand_name' => $request->brand_name,
-            'others' => $request->others,
+        $request->validate([
+            'brand_name' => 'required|unique:brands,brand_name',
+            'others' => 'nullable|string',
         ]);
-        return back()->with('');
+
+        Brand::create($request->only(['brand_name', 'others']));
+        return back()->with('brand_add', 'Brand added successfully');
     }
 
     function brand_delete($brand_id)
