@@ -114,6 +114,9 @@
                     <div class="mb-3">
                         <label for="" class="form-label">Brand_name</label>
                             <input type="text" class="form-control" name="brand_name" placeholder="brand_name">
+                            @error('brand_name')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Note</label>

@@ -45,12 +45,16 @@ class CategoryController extends Controller
 
     function department_store(Request $request)
     {
+        $request->validate([
+            'department_name' => 'required|unique:departments,department_name',
+        ]);
+
         department::insert([
             'department_name' => $request->department_name,
             'created_at' => Carbon::now(),
 
         ]);
-        return back();
+        return back()->with('department_add', 'Department added successfully');
     }
 
     function department_delete($department_id)
@@ -69,10 +73,14 @@ class CategoryController extends Controller
 
     function department_update(Request $request)
     {
+        $request->validate([
+            'department_name' => 'required|unique:departments,department_name,' . $request->department_id,
+        ]);
+
         Department::find($request->department_id)->update([
             'department_name' => $request->department_name,
         ]);
-        return redirect('department')->with('category_update', 'Category Update Successfull');
+        return redirect('department')->with('category_update', 'Department Update Successfull');
     }
 
 
@@ -104,11 +112,14 @@ class CategoryController extends Controller
 
     function designation_store(Request $request)
     {
-        designation::insert([
-            'designation_name' => $request->designation_name,
-            'created_at' => Carbon::now(),
+        $request->validate([
+            'designation_name' => 'required|unique:designations,designation_name',
         ]);
-        return back();
+
+        Designation::create([
+            'designation_name' => $request->designation_name,
+        ]);
+        return back()->with('add_designation', 'Designation added successfully');
     }
     function designation_delete($designation_id)
     {
@@ -126,6 +137,10 @@ class CategoryController extends Controller
 
     function designation_update(Request $request)
     {
+        $request->validate([
+            'designation_name' => 'required|unique:designations,designation_name,' . $request->designation_id,
+        ]);
+
         Designation::find($request->designation_id)->update([
             'designation_name' => $request->designation_name,
         ]);
@@ -159,11 +174,15 @@ class CategoryController extends Controller
 
     function product_type_store(Request $request)
     {
+        $request->validate([
+            'product' => 'required|unique:product_types,product',
+        ]);
+
         ProductType::insert([
             'product' => $request->product,
             'created_at' => Carbon::now(),
         ]);
-        return back();
+        return back()->with('add_producttype', 'Product Type added successfully');
     }
 
     function product_type_delete($ProductType_id)

@@ -99,6 +99,9 @@
             <div class="card-header " style="background-color: #0cb0b7;">
                 <h3 class="text-white">Add Department</h3>
             </div>
+            @if (session ('department_add'))
+                <div class="alert alert-success">{{ session('department_add') }}</div>
+            @endif
             <div class="card-body">
                 <form action="{{route ('department.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf

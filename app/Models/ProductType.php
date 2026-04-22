@@ -9,6 +9,7 @@ class ProductType extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['product'];
 
     function rel_to_user(){
         return $this->belongsTo(User::class, 'added_by');

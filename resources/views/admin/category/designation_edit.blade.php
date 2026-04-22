@@ -20,8 +20,8 @@
                             <input type="hidden" value="{{ $designation->id }}" name="designation_id">
                             <input type="text" class="form-control" name="designation_name" value ={{$designation->designation_name}}>
 
-                            @error('designation_update')
-                                <strong>{{ $message }}</strong>
+                            @error('designation_name')
+                                <strong class="text-danger">{{ $message }}</strong>
                             @enderror
                         </div>
                         <div class="mb-3">

@@ -46,6 +46,10 @@
                     <div class="alert alert-success">{{ session('delete_producttype') }}</div>
                 @endif
 
+                @if (session ('add_producttype'))
+                    <div class="alert alert-success">{{ session('add_producttype') }}</div>
+                @endif
+
                     @foreach($all_producttypes as $key=>$ProductType)
 
                         <tr>
@@ -114,10 +118,9 @@
                         <label for="" class="form-label">Product</label>
                         <input type="text" class="form-control" name="product">
                         
-                        <!-- @error('designation_name')
-                                <strong>{{$message}}</strong>
-
-                        @enderror -->
+                        @error('product')
+                            <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <button class="btn btn-primary" type="submit">submit</button>

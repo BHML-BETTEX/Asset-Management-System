@@ -49,6 +49,10 @@
                     <div class="alert alert-primary">{{ session('designation_update') }}</div>
                     @endif
 
+                    @if (session('add_designation'))
+                    <div class="alert alert-success">{{ session('add_designation') }}</div>
+                    @endif
+
                     @foreach ($all_designations as $key => $designation)
                     <tr>
                         <td>{{ $key + 1 }}</td>
@@ -118,7 +122,7 @@
                         <input type="text" class="form-control" name="designation_name">
 
                         @error('designation_name')
-                        <strong>{{ $message }}</strong>
+                        <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
                     <div class="mb-3">
