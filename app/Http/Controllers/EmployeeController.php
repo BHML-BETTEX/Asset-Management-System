@@ -36,6 +36,9 @@ class EmployeeController extends Controller
             'company' => 'required|exists:companies,id',
             'join_date' => 'required|date',
             'others' => 'nullable|string'
+        ], [
+            'emp_id.unique' => 'The Employee ID has already been taken. Please choose a different one.',
+            'email.unique' => 'The Email address has already been taken. Please choose a different one.',
         ]);
 
         try {
@@ -347,6 +350,21 @@ public function employee_list(Request $request)
 
     function employee_store(Request $request)
     {
+        $request->validate([
+            'emp_id' => 'required|string|max:255|unique:employees,emp_id',
+            'emp_name' => 'nullable|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'designation_id' => 'nullable|exists:designations,id',
+            'join_date' => 'required|date',
+            'phone_number' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'company' => 'required|exists:companies,id',
+            'status' => 'nullable|string|max:255',
+            'picture' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:10240',
+        ], [
+            'emp_id.unique' => 'The Employee ID has already been taken. Please choose a different one.',
+        ]);
+
         $employee_id = Employee::insertGetId([
             'emp_id' => $request->emp_id,
             'emp_name' => $request->emp_name,
@@ -403,6 +421,21 @@ public function employee_list(Request $request)
     function employee_update(Request $request)
     {
         $employee = Employee::findOrFail($request->employee_id);
+
+        $request->validate([
+            'emp_id' => 'required|string|max:255|unique:employees,emp_id,' . $employee->id,
+            'emp_name' => 'nullable|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'designation_id' => 'nullable|exists:designations,id',
+            'join_date' => 'required|date',
+            'phone_number' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'company' => 'required|exists:companies,id',
+            'status' => 'nullable|string|max:255',
+            'picture' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:10240',
+        ], [
+            'emp_id.unique' => 'The Employee ID has already been taken. Please choose a different one.',
+        ]);
 
         // Handle image upload
         $imageName = $employee->picture;
