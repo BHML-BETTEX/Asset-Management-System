@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\HistoryExport;
+use App\Exports\StockSummaryExport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
@@ -28,10 +29,10 @@ use App\Models\Maintenance;
 use App\Exports\MaintenanceExport;
 use App\Models\WastProduct;
 use App\Models\SizeMeasurement;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\stores_file;
 use App\Exports\WastProductExport;
 use App\Imports\StoreImport;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class StoreController extends Controller
 {
@@ -887,6 +888,280 @@ public function store(Request $request)
             'stores'        => $stores,
             'maintenances' => $maintenances,
         ]);
+    }
+
+    //Stock Summary
+    function stock_summary(Request $request)
+    {
+        $assetName = $request->input('asset_name');
+
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
+        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 4) : '';
+
+        $stock_summary = Store::select('asset_type', 'company_id', DB::raw('COUNT(*) as total'))
+            ->whereIn('company_id', $companies)
+            ->groupBy('asset_type', 'company_id')
+            ->with('rel_to_ProductType', 'rel_to_Company')
+            ->get();
+
+        // Get product summaries from stored procedures for each company
+        $product_summary_bhml = [];
+        $product_summary_bt = [];
+        $product_summary_bp = [];
+        $product_summary_bt_ind = [];
+
+        if (in_array(1, $companies)) {
+            $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
+            foreach ($product_summary_bhml as $product_summary) {
+                $product_type = ProductType::find($product_summary->asset_type);
+                $units = SizeMaseurment::find($product_summary->units_id);
+                $product_summary->asset_type = $product_type;
+                $product_summary->units = $units;
+            }
+            if ($assetName) {
+                $product_summary_bhml = array_values(array_filter($product_summary_bhml, function ($product_summary) use ($assetName) {
+                    return stripos($product_summary->asset_type->product ?? '', $assetName) !== false;
+                }));
+            }
+        }
+
+        if (in_array(2, $companies)) {
+            $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
+            foreach ($product_summary_bt as $product_summary) {
+                $product_type = ProductType::find($product_summary->asset_type);
+                $units = SizeMaseurment::find($product_summary->units_id);
+                $product_summary->asset_type = $product_type;
+                $product_summary->units = $units;
+            }
+            if ($assetName) {
+                $product_summary_bt = array_values(array_filter($product_summary_bt, function ($product_summary) use ($assetName) {
+                    return stripos($product_summary->asset_type->product ?? '', $assetName) !== false;
+                }));
+            }
+        }
+
+        if (in_array(3, $companies)) {
+            $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
+            foreach ($product_summary_bp as $product_summary) {
+                $product_type = ProductType::find($product_summary->asset_type);
+                $units = SizeMaseurment::find($product_summary->units_id);
+                $product_summary->asset_type = $product_type;
+                $product_summary->units = $units;
+            }
+            if ($assetName) {
+                $product_summary_bp = array_values(array_filter($product_summary_bp, function ($product_summary) use ($assetName) {
+                    return stripos($product_summary->asset_type->product ?? '', $assetName) !== false;
+                }));
+            }
+        }
+
+        if (in_array(4, $companies)) {
+            $product_summary_bt_ind = DB::select("CALL sp_product_summary_bt_ind()");
+            foreach ($product_summary_bt_ind as $product_summary) {
+                $product_type = ProductType::find($product_summary->asset_type);
+                $units = SizeMaseurment::find($product_summary->units_id);
+                $product_summary->asset_type = $product_type;
+                $product_summary->units = $units;
+            }
+            if ($assetName) {
+                $product_summary_bt_ind = array_values(array_filter($product_summary_bt_ind, function ($product_summary) use ($assetName) {
+                    return stripos($product_summary->asset_type->product ?? '', $assetName) !== false;
+                }));
+            }
+        }
+
+        return view('admin.store.stock_summary.index', [
+            'stock_summary' => $stock_summary,
+            'product_summary_bhml' => $product_summary_bhml,
+            'product_summary_bt' => $product_summary_bt,
+            'product_summary_bp' => $product_summary_bp,
+            'product_summary_bt_ind' => $product_summary_bt_ind,
+        ]);
+    }
+
+    // Export Stock Summary to Excel
+    public function stock_summary_export_excel(Request $request)
+    {
+        $company = $request->input('company');
+        $assetName = $request->input('asset_name');
+        
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
+        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 4) : '';
+
+        $data = [];
+
+        if (!$company || $company == 1) {
+            if (in_array(1, $companies)) {
+                $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
+                foreach ($product_summary_bhml as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bhml = array_values(array_filter($product_summary_bhml, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BHML INDUSTRIES LTD.'] = $product_summary_bhml;
+            }
+        }
+
+        if (!$company || $company == 2) {
+            if (in_array(2, $companies)) {
+                $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
+                foreach ($product_summary_bt as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bt = array_values(array_filter($product_summary_bt, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX'] = $product_summary_bt;
+            }
+        }
+
+        if (!$company || $company == 3) {
+            if (in_array(3, $companies)) {
+                $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
+                foreach ($product_summary_bp as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bp = array_values(array_filter($product_summary_bp, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX PREMIUM'] = $product_summary_bp;
+            }
+        }
+
+        if (!$company || $company == 4) {
+            if (in_array(4, $companies)) {
+                $product_summary_bt_ind = DB::select("CALL sp_product_summary_bt_ind()");
+                foreach ($product_summary_bt_ind as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bt_ind = array_values(array_filter($product_summary_bt_ind, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX BRIDGE'] = $product_summary_bt_ind;
+            }
+        }
+
+        return Excel::download(new StockSummaryExport($data), 'stock-summary-' . date('Y-m-d-H-i-s') . '.xlsx');
+    }
+
+    // Export Stock Summary to PDF
+    public function stock_summary_export_pdf(Request $request)
+    {
+        $company = $request->input('company');
+        $assetName = $request->input('asset_name');
+        
+        $companies = [];
+        $role = auth()->user()->roles[0];
+        $role->hasPermissionTo('view BHML INDUSTRIES LTD.') ? array_push($companies, 1) : '';
+        $role->hasPermissionTo('view BETTEX') ? array_push($companies, 2) : '';
+        $role->hasPermissionTo('view BETTEX PREMIUM') ? array_push($companies, 3) : '';
+        $role->hasPermissionTo('view BETTEX BRIDGE') ? array_push($companies, 4) : '';
+
+        $data = [];
+
+        if (!$company || $company == 1) {
+            if (in_array(1, $companies)) {
+                $product_summary_bhml = DB::select("CALL sp_product_summary_bhml()");
+                foreach ($product_summary_bhml as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bhml = array_values(array_filter($product_summary_bhml, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BHML INDUSTRIES LTD.'] = $product_summary_bhml;
+            }
+        }
+
+        if (!$company || $company == 2) {
+            if (in_array(2, $companies)) {
+                $product_summary_bt = DB::select("CALL sp_product_summary_bt()");
+                foreach ($product_summary_bt as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bt = array_values(array_filter($product_summary_bt, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX'] = $product_summary_bt;
+            }
+        }
+
+        if (!$company || $company == 3) {
+            if (in_array(3, $companies)) {
+                $product_summary_bp = DB::select("CALL sp_product_summary_bp()");
+                foreach ($product_summary_bp as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bp = array_values(array_filter($product_summary_bp, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX PREMIUM'] = $product_summary_bp;
+            }
+        }
+
+        if (!$company || $company == 4) {
+            if (in_array(4, $companies)) {
+                $product_summary_bt_ind = DB::select("CALL sp_product_summary_bt_ind()");
+                foreach ($product_summary_bt_ind as $product) {
+                    $product_type = ProductType::find($product->asset_type);
+                    $units = SizeMaseurment::find($product->units_id);
+                    $product->asset_type = $product_type;
+                    $product->units = $units;
+                }
+                if ($assetName) {
+                    $product_summary_bt_ind = array_values(array_filter($product_summary_bt_ind, function ($product) use ($assetName) {
+                        return stripos($product->asset_type->product ?? '', $assetName) !== false;
+                    }));
+                }
+                $data['BETTEX BRIDGE'] = $product_summary_bt_ind;
+            }
+        }
+
+        $pdf = PDF::loadView('admin.store.stock_summary.export_pdf', ['data' => $data]);
+        return $pdf->download('stock-summary-' . date('Y-m-d-H-i-s') . '.pdf');
     }
 
 

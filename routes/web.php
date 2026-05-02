@@ -141,6 +141,9 @@ Route::post('/store/archive/{stores_id}', [StoreController::class, 'store_archiv
 Route::get('/store/archive', [StoreController::class, 'store_archive_list'])->name('store_archive_list'); //archive_list
 Route::get('/store/instock/list', [StoreController::class, 'instock_list'])->name('instock_list'); //INSTOCK_list
 Route::get('/store/issued/list', [StoreController::class, 'issue_list'])->name('issue_list'); //ISSUED_list
+Route::get('/store/stock_summary', [StoreController::class, 'stock_summary'])->name('stock_summary'); //ISSUED_list
+Route::get('/store/stock_summary/export/excel', [StoreController::class, 'stock_summary_export_excel'])->name('stock_summary.export.excel');
+Route::get('/store/stock_summary/export/pdf', [StoreController::class, 'stock_summary_export_pdf'])->name('stock_summary.export.pdf');
 
 
 

@@ -99,6 +99,7 @@
                                                 List</a></li>
                                         <li><a href="{{ route('wastproduct_list') }}"><i class="fa fa-gears"></i>Wast
                                                 Product</a></li>
+                                        <li><a href="{{ route('stock_summary') }}"><i class="fa fa-bar-chart-o"></i>Stock Summary</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-exchange"></i>Transfer Management<span
