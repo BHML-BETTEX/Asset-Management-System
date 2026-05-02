@@ -1,6 +1,12 @@
 @extends('master')
 
 @section('content')
+    <style>
+        .company-link:hover h2 {
+            color: #007bff !important;
+            text-decoration: underline;
+        }
+    </style>
     </div>
     <div class="right_col" role="main">
         <!-- top tiles -->
@@ -237,7 +243,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="h5">BETTEX HK LTD.</h2>
+                            <a href="{{ route('stock_summary', ['company' => 2]) }}" style="text-decoration: none; cursor: pointer;" class="text-dark company-link">
+                                <h2 class="h5" style="margin: 0; transition: color 0.3s;">BETTEX HK LTD.</h2>
+                            </a>
                         </div>
                         <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-striped table-bordered">
@@ -272,7 +280,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="h5">BHML INDUSTRIES LTD.</h2>
+                            <a href="{{ route('stock_summary', ['company' => 1]) }}" style="text-decoration: none; cursor: pointer;" class="text-dark company-link">
+                                <h2 class="h5" style="margin: 0; transition: color 0.3s;">BHML INDUSTRIES LTD.</h2>
+                            </a>
                         </div>
                         <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-striped table-bordered">
@@ -307,7 +317,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="h5">BETTEX PREMIUM</h2>
+                            <a href="{{ route('stock_summary', ['company' => 3]) }}" style="text-decoration: none; cursor: pointer;" class="text-dark company-link">
+                                <h2 class="h5" style="margin: 0; transition: color 0.3s;">BETTEX PREMIUM</h2>
+                            </a>
                         </div>
                         <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-striped table-bordered">
@@ -346,7 +358,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="h5">UNIONTEX INDIA</h2>
+                            <a href="{{ route('stock_summary', ['company' => 4]) }}" style="text-decoration: none; cursor: pointer;" class="text-dark company-link">
+                                <h2 class="h5" style="margin: 0; transition: color 0.3s;">UNIONTEX INDIA</h2>
+                            </a>
                         </div>
                         <div class="card-body scrollable" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-striped table-bordered">

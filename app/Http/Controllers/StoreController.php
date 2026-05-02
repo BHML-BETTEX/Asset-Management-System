@@ -1160,7 +1160,9 @@ public function store(Request $request)
             }
         }
 
-        $pdf = PDF::loadView('admin.store.stock_summary.export_pdf', ['data' => $data]);
+        $pdf = PDF::loadView('admin.store.stock_summary.export_pdf', ['data' => $data])
+            ->setPaper('a4', 'portrait');
+
         return $pdf->download('stock-summary-' . date('Y-m-d-H-i-s') . '.pdf');
     }
 

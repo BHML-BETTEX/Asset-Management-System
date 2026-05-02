@@ -889,16 +889,17 @@
                     <div class="row">
                         <!-- BHML INDUSTRIES LTD. Summary -->
                         @if ((isset($product_summary_bhml) && count($product_summary_bhml) > 0) && (!request('company') || request('company') == '1'))
-                            <div class="col-lg-12 col-xl-12 mb-4">
+                            <div class="col-lg-10 col-xl-10 mb-4" style="margin: 0 auto;"> 
                                 <div class="card border-0 shadow-sm h-100">
                                     <div class="card-header bg-info text-white" style="border-radius: 12px 12px 0 0;">
                                         <h5 class="mb-0"><i class="fa fa-industry"></i> BHML INDUSTRIES LTD.</h5>
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="table-responsive">
-                                            <table class="table table-sm table-hover mb-0">
+                                            <table class="table table-sm table-hover mb-0 table-bordered">
                                                 <thead>
-                                                    <tr style="background-color: #17a2b8; color: white;">
+                                                    <tr style="background-color: #60BDC9; color: white;">
+                                                        <th>Sl No</th>
                                                         <th>Asset Name</th>
                                                         <th class="text-center">Total Asset</th>
                                                         <th class="text-center">Units</th>
@@ -910,6 +911,7 @@
                                                 <tbody>
                                                     @foreach ($product_summary_bhml as $product)
                                                         <tr>
+                                                            <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $product->asset_type->product ?? 'N/A' }}</td>
                                                             <td class="text-center fw-bold">{{ $product->TotalAssets ?? 0 }}</td>
                                                             <td class="text-center">{{ $product->units->size ?? 'N/A' }}</td>
@@ -928,16 +930,17 @@
 
                         <!-- BETTEX Summary -->
                         @if ((isset($product_summary_bt) && count($product_summary_bt) > 0) && (!request('company') || request('company') == '2'))
-                            <div class="col-lg-12 col-xl-12 mb-4">
+                            <div class="col-lg-10 col-xl-10 mb-4" style="margin: 0 auto;">
                                 <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-header bg-success text-white" style="border-radius: 12px 12px 0 0;">
+                                    <div class="card-header bg-info text-white" style="border-radius: 12px 12px 0 0;">
                                         <h5 class="mb-0"><i class="fa fa-building"></i> BETTEX</h5>
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="table-responsive">
                                             <table class="table table-sm table-hover mb-0">
                                                 <thead>
-                                                    <tr style="background-color: #28a745; color: white;">
+                                                    <tr style="background-color: #60BDC9; color: white;">
+                                                        <th>Sl No</th>
                                                         <th>Asset Name</th>
                                                         <th class="text-center">Total Asset</th>
                                                         <th class="text-center">Units</th>
@@ -949,6 +952,7 @@
                                                 <tbody>
                                                     @foreach ($product_summary_bt as $product)
                                                         <tr>
+                                                            <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $product->asset_type->product ?? 'N/A' }}</td>
                                                             <td class="text-center fw-bold">{{ $product->TotalAssets ?? 0 }}</td>
                                                             <td class="text-center">{{ $product->units->size ?? 'N/A' }}</td>
@@ -967,16 +971,17 @@
 
                         <!-- BETTEX PREMIUM Summary -->
                         @if ((isset($product_summary_bp) && count($product_summary_bp) > 0) && (!request('company') || request('company') == '3'))
-                            <div class="col-lg-12 col-xl-12 mb-4">
+                            <div class="col-lg-10 col-xl-10 mb-4" style="margin: 0 auto;">
                                 <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-header bg-warning text-dark" style="border-radius: 12px 12px 0 0;">
+                                    <div class="card-header bg-info text-white" style="border-radius: 12px 12px 0 0;">
                                         <h5 class="mb-0"><i class="fa fa-star"></i> BETTEX PREMIUM</h5>
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="table-responsive">
                                             <table class="table table-sm table-hover mb-0">
                                                 <thead>
-                                                    <tr style="background-color: #ffc107; color: #212529;">
+                                                    <tr style="background-color: #60BDC9; color: white;">
+                                                        <th>Sl No</th>
                                                         <th>Asset Name</th>
                                                         <th class="text-center">Total Asset</th>
                                                         <th class="text-center">Units</th>
@@ -988,6 +993,7 @@
                                                 <tbody>
                                                     @foreach ($product_summary_bp as $product)
                                                         <tr>
+                                                            <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $product->asset_type->product ?? 'N/A' }}</td>
                                                             <td class="text-center fw-bold">{{ $product->TotalAssets ?? 0 }}</td>
                                                             <td class="text-center">{{ $product->units->size ?? 'N/A' }}</td>
@@ -1006,16 +1012,17 @@
 
                         <!-- BETTEX BRIDGE Summary -->
                         @if ((isset($product_summary_bt_ind) && count($product_summary_bt_ind) > 0) && (!request('company') || request('company') == '4'))
-                            <div class="col-lg-12 col-xl-12 mb-4">
+                            <div class="col-lg-10 col-xl-10 mb-4" style="margin: 0 auto;">
                                 <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-header bg-danger text-white" style="border-radius: 12px 12px 0 0;">
+                                    <div class="card-header bg-info text-white" style="border-radius: 12px 12px 0 0;">
                                         <h5 class="mb-0"><i class="fa fa-bridge"></i> BETTEX BRIDGE</h5>
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="table-responsive">
                                             <table class="table table-sm table-hover mb-0">
                                                 <thead>
-                                                    <tr style="background-color: #dc3545; color: white;">
+                                                    <tr style="background-color: #60BDC9; color: white;">
+                                                        <th>Sl No</th>
                                                         <th>Asset Name</th>
                                                         <th class="text-center">Total Asset</th>
                                                         <th class="text-center">Units</th>
@@ -1027,6 +1034,7 @@
                                                 <tbody>
                                                     @foreach ($product_summary_bt_ind as $product)
                                                         <tr>
+                                                            <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $product->asset_type->product ?? 'N/A' }}</td>
                                                             <td class="text-center fw-bold">{{ $product->TotalAssets ?? 0 }}</td>
                                                             <td class="text-center">{{ $product->units->size ?? 'N/A' }}</td>

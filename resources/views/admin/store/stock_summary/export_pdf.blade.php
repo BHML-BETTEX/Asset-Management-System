@@ -4,32 +4,36 @@
     <meta charset="utf-8">
     <title>Stock Summary Report</title>
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 20px;
+        }
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
+            margin: 0;
+            background-color: #eff4f5;
         }
         .header {
             text-align: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #333;
+            border-bottom: 2px solid #60BDC9;
             padding-bottom: 10px;
         }
         .header h1 {
             margin: 0;
-            color: #333;
+            color: #60BDC9;
         }
         .header p {
             margin: 5px 0;
-            color: #666;
+            color: #60BDC9;
             font-size: 12px;
         }
         .company-section {
             margin-bottom: 30px;
-            page-break-inside: avoid;
+            page-break-inside: auto;
         }
         .company-title {
-            background-color: #495057;
+            background-color: #60BDC9;
             color: white;
             padding: 10px 15px;
             margin-bottom: 10px;
@@ -72,7 +76,7 @@
         .footer {
             margin-top: 30px;
             text-align: center;
-            color: #666;
+            color: #60BDC9;
             font-size: 12px;
             border-top: 1px solid #ddd;
             padding-top: 10px;
@@ -80,14 +84,15 @@
         .no-data {
             text-align: center;
             padding: 20px;
-            color: #666;
+            color: #60BDC9;
             font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Asset Stock Summary Report</h1>
+        <h1>BETTEX HK Ltd</h1>
+        <p>Asset Stock Summary Report</p>
         <p>Generated on {{ date('Y-m-d H:i:s') }}</p>
     </div>
 
@@ -96,7 +101,7 @@
             <div class="company-title">{{ $company }}</div>
             <table>
                 <thead>
-                    <tr style="background-color: #495057; color: white;">
+                    <tr style="background-color: #60BDC9; color: black;">
                         <th>Asset Name</th>
                         <th class="text-center">Total Asset</th>
                         <th class="text-center">Units</th>
