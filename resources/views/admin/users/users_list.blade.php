@@ -744,6 +744,7 @@ function editUser(userId) {
     .then(data => {
         if (data.success) {
             contentElement.innerHTML = data.html;
+            bindUserEditForm();
         } else {
             contentElement.innerHTML = `
                 <div class="alert alert-danger">
@@ -965,6 +966,140 @@ function showAlert(type, message) {
             if (alert) alert.remove();
         });
     }, 5000);
+}
+
+function bindUserEditForm() {
+    const form = document.getElementById('userEditForm');
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        clearValidation();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
+        submitBtn.disabled = true;
+
+        if (!validateForm()) {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const formData = new FormData(this);
+        submitUserUpdate(formData, currentUserId);
+    });
+}
+
+function validateForm() {
+    let isValid = true;
+
+    const name = document.getElementById('editName');
+    if (!name.value.trim()) {
+        showFieldError(name, 'Name is required');
+        isValid = false;
+    }
+
+    const email = document.getElementById('editEmail');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.value.trim()) {
+        showFieldError(email, 'Email is required');
+        isValid = false;
+    } else if (!emailRegex.test(email.value)) {
+        showFieldError(email, 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    const password = document.getElementById('editPassword');
+    const passwordConfirm = document.getElementById('editPasswordConfirm');
+
+    if (password.value) {
+        if (password.value.length < 8) {
+            showFieldError(password, 'Password must be at least 8 characters');
+            isValid = false;
+        }
+
+        if (password.value !== passwordConfirm.value) {
+            showFieldError(passwordConfirm, 'Passwords do not match');
+            isValid = false;
+        }
+    }
+
+    const roleCheckboxes = document.querySelectorAll('input[name="role[]"]');
+    const roleChecked = Array.from(roleCheckboxes).some(cb => cb.checked);
+
+    if (!roleChecked) {
+        const roleContainer = document.querySelector('.role-options');
+        roleContainer.style.borderColor = '#dc3545';
+        if (!roleContainer.parentNode.querySelector('.text-danger')) {
+            roleContainer.insertAdjacentHTML('afterend', '<div class="text-danger small mt-1">Please select at least one role</div>');
+        }
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function showFieldError(field, message) {
+    field.classList.add('is-invalid');
+    const feedback = field.parentNode.querySelector('.invalid-feedback');
+    if (feedback) {
+        feedback.textContent = message;
+        feedback.style.display = 'block';
+    }
+}
+
+function clearValidation() {
+    document.querySelectorAll('.form-control').forEach(field => {
+        field.classList.remove('is-invalid', 'is-valid');
+    });
+
+    document.querySelectorAll('.invalid-feedback').forEach(feedback => {
+        feedback.style.display = 'none';
+    });
+
+    const roleContainer = document.querySelector('.role-options');
+    if (roleContainer) {
+        roleContainer.style.borderColor = '#e9ecef';
+        const roleError = roleContainer.parentNode.querySelector('.text-danger');
+        if (roleError) {
+            roleError.remove();
+        }
+    }
+}
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentAvatar').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removePhoto() {
+    document.getElementById('currentAvatar').src = '{{ asset("images/user.png") }}';
+    document.getElementById('profilePhoto').value = '';
+}
+
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const btn = field.nextElementSibling.querySelector('i');
+
+    if (field.type === 'password') {
+        field.type = 'text';
+        btn.classList.remove('fa-eye');
+        btn.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        btn.classList.remove('fa-eye-slash');
+        btn.classList.add('fa-eye');
+    }
 }
 
 // Update User Form Submit (for when edit form is loaded)
