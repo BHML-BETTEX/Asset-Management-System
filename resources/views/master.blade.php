@@ -59,7 +59,9 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view ">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="#" class="site_title"> <span>BETTEX HK LTD</span></a>
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('uploads/AMS_White.png') }}" alt="Logo" style="width: 100%; height: auto;">
+                        </a>
                     </div>
 
                     <div class="clearfix"></div>
